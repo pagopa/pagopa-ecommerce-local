@@ -8,8 +8,6 @@ for more details you can read [eCommerce pagoPA Design Review](https://pagopa.at
 
 ### Configure
 
-Configuration is done by editing your local .env file
-
 In the _.env_ file there are a configurations related to conainers that can be customized, in particular the container ports and the services git branch to run a given version of microservices.
 
 | name                              | description                                                                                                                 |
