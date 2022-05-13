@@ -35,8 +35,8 @@ docker-compose up
 If you use the default configurations, we will have the following services exposed:
 * `nodo-mock`: http://localhost:3002/webservices/pof/PagamentiTelematiciPspNodoservice
 * `pagopa-ecommerce-sessions-service`: http://localhost:8082/sessions
-* `pagopa-ecommerce-transactions-service`: http://localhost:8080
+* `pagopa-ecommerce-transactions-service`: http://localhost:8080/transactions
 
-When running with the Docker container you can check data persisted to either Mongo or Redis with their respective web interfaces (Mongo express/Redis Insight). To do so, go to:
+You can check data persisted to either Mongo or Redis with their respective web interfaces (Mongo express/Redis Insight). To do so, go to:
  * http://localhost:8001 for Redis Insight
  * http://localhost:8081 for Mongo Express
