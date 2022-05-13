@@ -4,7 +4,7 @@ All you need to start the whole pagopa eCommerce platform locally for developmen
 
 ![image arch](arch-ecommerce.png)
 
-for more details you can read [ecommerce details](https://pagopa.atlassian.net/wiki/spaces/I/pages/492339720/eCommerce+pagoPA+Design+Review+draft "eCommerce pagoPA Design Review") 
+for more details you can read [eCommerce pagoPA Design Review](https://pagopa.atlassian.net/wiki/spaces/I/pages/492339720/eCommerce+pagoPA+Design+Review+draft "eCommerce pagoPA Design Review") 
 
 ### Configure
 
