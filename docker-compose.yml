@@ -55,14 +55,25 @@ services:
       - pagopa-ecommerce-net    
 
   pagopa-ecommerce-sessions-service:
-      container_name: pagopa-ecommerce-sessions-service
-      build:
-        context: .
-        dockerfile: pagopa-ecommerce-sessions-service/Dockerfile.sessions-service
-      ports:
-          - "${ECOMMERCE_SESSIONS_PORT}:8080"
-      networks:
-        - pagopa-ecommerce-net
+    container_name: pagopa-ecommerce-sessions-service
+    build:
+      context: .
+      dockerfile: pagopa-ecommerce-sessions-service/Dockerfile.sessions-service
+    ports:
+        - "${ECOMMERCE_SESSIONS_PORT}:8080"
+    networks:
+      - pagopa-ecommerce-net
+
+  pagopa-ecommerce-transactions-service:
+    container_name: pagopa-ecommerce-transactions-service
+    build:
+      context: .
+      dockerfile: pagopa-ecommerce-transactions-service/Dockerfile.transactions-service
+    ports:
+        - "${ECOMMERCE_TRANSACTIONS_PORT}:8080"
+    networks:
+      - pagopa-ecommerce-net
+
 networks:
   pagopa-ecommerce-net:
     name: pagopa-ecommerce-net

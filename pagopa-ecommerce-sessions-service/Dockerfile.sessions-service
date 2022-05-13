@@ -1,13 +1,15 @@
 ### 1. Cloning stage
 FROM alpine/git:latest AS clone
-WORKDIR /workspace/sessions-service
-RUN git clone https://github.com/pagopa/pagopa-ecommerce-sessions-service
+WORKDIR /workspace/pagopa-ecommerce-sessions-service
+RUN rm -rf * && \
+    git clone https://github.com/pagopa/pagopa-ecommerce-sessions-service.git /workspace/pagopa-ecommerce-sessions-service && \
+    git checkout ${ECOMMERCE_SESSIONS_COMMIT_SHA} 
 
 ### 2. Build stage
 FROM maven:3.8.3-openjdk-17 AS build
-WORKDIR /workspace/sessions-service/
+WORKDIR /workspace/pagopa-ecommerce-sessions-service/
 
-ARG REPO=/workspace/sessions-service/pagopa-ecommerce-sessions-service
+ARG REPO=/workspace/pagopa-ecommerce-sessions-service
 
 COPY --from=clone ${REPO}/ .
 RUN mvn -f ./pom.xml clean package
@@ -18,7 +20,7 @@ FROM openjdk:17-slim
 RUN addgroup --system user && adduser --ingroup user --system user
 USER user:user
 
-ARG EXTRACTED=/workspace/sessions-service/target/
+ARG EXTRACTED=/workspace/pagopa-ecommerce-sessions-service/target/
 
 COPY --from=build --chown=spring ${EXTRACTED} .
 
