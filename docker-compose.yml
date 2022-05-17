@@ -76,6 +76,17 @@ services:
     networks:
       - pagopa-ecommerce-net
 
+  pagopa-ecommerce-payment-instruments-service:
+    container_name: pagopa-ecommerce-payment-instruments-service
+    env_file: pagopa-ecommerce-payment-instruments-service/payment-instruments-service.env
+    build:
+      context: .
+      dockerfile: pagopa-ecommerce-payment-instruments-service/Dockerfile.payment-instruments-service
+    ports:
+        - "${ECOMMERCE_PAYMENT_INSTRUMENTS_PORT}:8080"
+    networks:
+      - pagopa-ecommerce-net
+
 networks:
   pagopa-ecommerce-net:
     name: pagopa-ecommerce-net
