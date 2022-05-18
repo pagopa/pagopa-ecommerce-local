@@ -1,14 +1,14 @@
 FROM node:10.14.2-alpine
 
+ARG NODO_MOCK_COMMIT_SHA
+
 RUN apk update && apk upgrade && \
     apk add --no-cache bash ca-certificates git openssh openssl
 
 WORKDIR /usr/src/app
 
 RUN rm -rf * && \
-    git clone https://github.com/pagopa/io-pagopa-node-mock.git /usr/src/app && \
-    git checkout ${NODO_MOCK_COMMIT_SHA} 
-
+  git clone --branch ${NODO_MOCK_COMMIT_SHA} https://github.com/pagopa/io-pagopa-node-mock.git /usr/src/app
 RUN yarn install && \
     yarn build
 
