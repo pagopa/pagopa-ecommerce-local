@@ -22,7 +22,7 @@ USER user:user
 
 ARG EXTRACTED=/workspace/pagopa-ecommerce-payment-instruments-service/target/
 
-COPY --from=build --chown=spring ${EXTRACTED} .
+COPY --from=build --chown=user ${EXTRACTED} .
 
 ARG JAR_FILE=*.jar
 ENV APP_NAME=$JAR_FILE
