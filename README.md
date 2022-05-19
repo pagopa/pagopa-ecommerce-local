@@ -50,3 +50,8 @@ You can check data persisted to either Mongo or Redis with their respective web 
 | --------------------------------------- | -------------------------------------------------------------------------- |
 | `Redis Insight`                         | http://localhost:8001                                                      |
 | `Mongo Express`                         | http://localhost:8081                                                      |
+
+When changing configuration parameters, remember to rebuild containers with
+```sh
+docker-compose build SERVICE_NAME [--no-cache]
+```
