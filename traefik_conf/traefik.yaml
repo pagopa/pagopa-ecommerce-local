@@ -1,0 +1,14 @@
+log:
+  level: DEBUG
+  filePath: "/traefik_logs/traefik.log"
+
+entryPoints:
+  web:
+    address: ":80"
+
+providers:
+  file:
+    filename: "/etc/traefik/conf.yaml"
+
+api:
+  insecure: true

@@ -104,6 +104,19 @@ services:
     networks:
       - pagopa-ecommerce-net
 
+  traefik:
+    container_name: pagopa-ecommerce-traefik
+    image: traefik:v2.7
+    ports:
+      - "8000:80"
+      - "8090:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/traefik_conf:/etc/traefik
+      - $PWD/traefik_logs:/traefik_logs
+    networks:
+      - pagopa-ecommerce-net
+
 networks:
   pagopa-ecommerce-net:
     name: pagopa-ecommerce-net
