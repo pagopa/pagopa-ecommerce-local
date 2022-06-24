@@ -1,6 +1,9 @@
 ### 1. Cloning stage
 FROM alpine/git:latest AS clone
 WORKDIR /workspace/pagopa-ecommerce-sessions-service
+
+ARG ECOMMERCE_SESSIONS_COMMIT_SHA
+
 RUN rm -rf * && \
     git clone https://github.com/pagopa/pagopa-ecommerce-sessions-service.git /workspace/pagopa-ecommerce-sessions-service && \
     git checkout ${ECOMMERCE_SESSIONS_COMMIT_SHA} 
