@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 
 RUN rm -rf * && \
   git clone https://github.com/pagopa/io-pagopa-node-mock.git /usr/src/app && \
-  git checkout ${ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA}
+  git checkout ${NODO_MOCK_COMMIT_SHA}
 
 RUN yarn install && \
     yarn build
