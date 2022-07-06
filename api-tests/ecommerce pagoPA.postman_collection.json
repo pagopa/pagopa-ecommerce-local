@@ -74,7 +74,7 @@
 									"  const responseJson = pm.response.json();",
 									"  pm.expect(responseJson.paymentToken).to.be.a('string');",
 									"  pm.expect(responseJson.paymentToken).to.have.length.greaterThan(0);",
-									"  pm.environment.set(\"PAYMENT_TOKEN\", responseJson.paymentToken);",
+									"  pm.environment.set(\"TRANSACTION_ID\", responseJson.transactionId);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -82,11 +82,21 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJycHRJZCI6Ijc3Nzc3Nzc3Nzc3MzAyMDAwMTAwMDAwMDE5NDIxIiwiZW1haWwiOiJ0ZXN0QHRlc3QuaXQiLCJwYXltZW50VG9rZW4iOiJhMjBhOGE0Yy04MTI2LTRhZmYtOGZlNi03ZTZiOGQ4Y2M1M2EiLCJqdGkiOiI0MzU2MzM3NDI4MTk5MzgifQ.0wd4PwV0Iuo3g_MUqC_REGA4tptWfA0nQx2YTS9txpaIEuvCjPopoxwM3jw4TSV3HhoLe2_MeS6Om8xrYeHNKQ",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"rptId\": \"77777777777302016723749670001\",\n    \"email\": \"test@example.com\"\n}",
+							"raw": "{\n    \"rptId\": \"77777777777302016723749670001\",\n    \"email\": \"test@example.com\",\n    \"amount\": 100\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -108,12 +118,12 @@
 					"response": []
 				},
 				{
-					"name": "Get tramsaction info",
+					"name": "Get transaction info",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/transactions/{{PAYMENT_TOKEN}}",
+							"raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -121,7 +131,67 @@
 							"port": "8080",
 							"path": [
 								"transactions",
-								"{{PAYMENT_TOKEN}}"
+								"{{TRANSACTION_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Request authorization",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 100,\n    \"fee\": 0,\n    \"paymentInstrumentId\": \"a\",\n    \"pspId\": \"MARIOGAM\",\n    \"language\": \"IT\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}/auth-request",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions",
+								"{{TRANSACTION_ID}}",
+								"auth-request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update authorization status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"authorizationResult\": \"OK\",\n    \"timestampOperation\": \"2022-07-04T17:17:33+02:00\",\n    \"authorizationCode\": \"OK\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}/auth-request",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions",
+								"{{TRANSACTION_ID}}",
+								"auth-request"
 							]
 						}
 					},
