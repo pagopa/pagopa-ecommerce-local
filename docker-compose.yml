@@ -95,6 +95,20 @@ services:
     networks:
       - pagopa-ecommerce-net
 
+  pagopa-ecommerce-scheduler-service:
+    container_name: pagopa-ecommerce-scheduler-service
+    env_file: pagopa-ecommerce-scheduler-service/scheduler-service.env
+    build:
+      context: .
+      args:
+        ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA: ${ECOMMERCE_SCHEDULER_COMMIT_SHA}
+      dockerfile: pagopa-ecommerce-scheduler-service/Dockerfile.scheduler-service
+    ports:
+        - "${ECOMMERCE_SCHEDULER_PORT}:8080"
+    networks:
+      - pagopa-ecommerce-net
+
+
   pagopa-api-config-mock:
     container_name: pagopa-api-config-mock
     build:
