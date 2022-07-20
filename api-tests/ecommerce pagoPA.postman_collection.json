@@ -144,7 +144,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"amount\": 100,\n    \"fee\": 0,\n    \"paymentInstrumentId\": \"a\",\n    \"pspId\": \"MARIOGAM\",\n    \"language\": \"IT\"\n}",
+							"raw": "{\n    \"amount\": 100,\n    \"fee\": 0,\n    \"paymentInstrumentId\": \"a\",\n    \"pspId\": \"ABI01030\",\n    \"language\": \"IT\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -192,6 +192,35 @@
 								"transactions",
 								"{{TRANSACTION_ID}}",
 								"auth-request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update transaction status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"authorizationResult\": \"OK\",\n    \"timestamp\": \"2022-07-20T11:20:56+02:00\",\n    \"authorizationCode\": \"OK\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions",
+								"{{TRANSACTION_ID}}"
 							]
 						}
 					},
@@ -361,6 +390,19 @@
 								"{{PAYMENT_INSTRUMENT_ID}}"
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "pagopa-notifications-service",
+			"item": [
+				{
+					"name": "Send email",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
