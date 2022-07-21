@@ -3,7 +3,7 @@ FROM alpine/git:latest AS clone
 WORKDIR /workspace/pagopa-payment-transactions-gateway
 RUN rm -rf * && \
     git clone https://github.com/pagopa/pagopa-payment-transactions-gateway.git /workspace/pagopa-payment-transactions-gateway && \
-    git checkout local-env-ecommerce
+    git checkout CHK-453-postgres-liquibase
 
 ### 2. Build stage
 FROM maven:3.8.3-openjdk-17 AS build
@@ -12,7 +12,7 @@ WORKDIR /workspace/pagopa-payment-transactions-gateway/
 ARG REPO=/workspace/pagopa-payment-transactions-gateway
 
 COPY --from=clone ${REPO}/ .
-RUN mvn -f ./pom.xml clean package -P local
+RUN mvn -f ./pom.xml clean package -Pcloud
 
 ### 3. Run stage
 FROM openjdk:17-slim
@@ -27,4 +27,4 @@ COPY --from=build --chown=user ${EXTRACTED} .
 ARG JAR_FILE=*.jar
 ENV APP_NAME=$JAR_FILE
 
-CMD java -Dspring.config.additional-location=application.properties -jar $APP_NAME 
+CMD java -jar $APP_NAME 
