@@ -1,0 +1,19 @@
+http:
+  routers:
+    router1:
+      service: "pagopa-payment-transactions-gateway"
+      rule: "PathPrefix(`/`)"
+      middlewares:
+      - gateway-headers
+
+  middlewares:
+    gateway-headers:
+      headers:
+        customRequestHeaders:
+          X-Client-ID: "WEB"
+
+  services:
+    pagopa-payment-transactions-gateway:
+      loadBalancer:
+        servers:
+        - url: "http://pagopa-payment-transactions-gateway:8080"

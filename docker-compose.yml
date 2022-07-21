@@ -61,6 +61,8 @@ services:
     env_file: pagopa-ecommerce-sessions-service/sessions-service.env
     build:
       context: .
+      args:
+        ECOMMERCE_SESSIONS_COMMIT_SHA: ${ECOMMERCE_SESSIONS_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-sessions-service/Dockerfile.sessions-service
     ports:
         - "${ECOMMERCE_SESSIONS_PORT}:8080"
@@ -72,6 +74,8 @@ services:
     env_file: pagopa-ecommerce-transactions-service/transactions-service.env
     build:
       context: .
+      args:
+        ECOMMERCE_TRANSACTIONS_COMMIT_SHA: ${ECOMMERCE_TRANSACTIONS_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-transactions-service/Dockerfile.transactions-service
     ports:
         - "${ECOMMERCE_TRANSACTIONS_PORT}:8080"
@@ -83,6 +87,8 @@ services:
     env_file: pagopa-ecommerce-payment-instruments-service/payment-instruments-service.env
     build:
       context: .
+      args:
+        ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA: ${ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-payment-instruments-service/Dockerfile.payment-instruments-service
     ports:
         - "${ECOMMERCE_PAYMENT_INSTRUMENTS_PORT}:8080"
@@ -121,6 +127,59 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+
+  pagopa-ecommerce-scheduler-service:
+    container_name: pagopa-ecommerce-scheduler-service
+    env_file: pagopa-ecommerce-scheduler-service/scheduler-service.env
+    build:
+      context: .
+      args:
+        ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA: ${ECOMMERCE_SCHEDULER_COMMIT_SHA}
+      dockerfile: pagopa-ecommerce-scheduler-service/Dockerfile.scheduler-service
+    ports:
+        - "${ECOMMERCE_SCHEDULER_PORT}:8080"
+    networks:
+      - pagopa-ecommerce-net
+
+  pagopa-api-config-mock:
+    container_name: pagopa-api-config-mock
+    build:
+      context: .
+      dockerfile: api-config-mock/Dockerfile.api-config-mock
+    volumes:
+      - type: bind
+        source: ./api-config-mock
+        target: /config
+        read_only: true
+    ports:
+      - "${APICONFIG_PORT}:3000"
+    networks:
+      - pagopa-ecommerce-net
+
+  traefik:
+    container_name: pagopa-ecommerce-traefik
+    image: traefik:v2.7
+    ports:
+      - "8000:80"
+      - "8090:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/traefik_conf:/etc/traefik
+      - $PWD/traefik_logs:/traefik_logs
+    networks:
+      - pagopa-ecommerce-net
+
+  storage:
+    image: mcr.microsoft.com/azure-storage/azurite:3.18.0
+    container_name: azurite
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    volumes:
+      - ./.data:/opt/azurite/folder
+    networks:
+      - pagopa-ecommerce-net
 
 networks:
   pagopa-ecommerce-net:

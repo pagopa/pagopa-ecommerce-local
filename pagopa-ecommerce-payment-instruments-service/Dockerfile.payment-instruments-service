@@ -1,6 +1,9 @@
 ### 1. Cloning stage
 FROM alpine/git:latest AS clone
 WORKDIR /workspace/pagopa-ecommerce-payment-instruments-service
+
+ARG ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA
+
 RUN rm -rf * && \
     git clone https://github.com/pagopa/pagopa-ecommerce-payment-instruments-service.git /workspace/pagopa-ecommerce-payment-instruments-service && \
     git checkout ${ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA} 
