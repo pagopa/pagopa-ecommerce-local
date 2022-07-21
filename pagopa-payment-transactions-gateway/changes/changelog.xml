@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.9.xsd"
+		>
+		<changeSet id="202206131620" author="Simone Infante" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+			<createTable tableName="PP_BPAY_PAYMENT_RESPONSE">
+				<column name="ID" type="NUMERIC NOT NULL">
+					<constraints primaryKey="true" primaryKeyName="PK_BPAY_PAYMENT_RESPONSE" />
+				</column>
+				<column name="OUTCOME" type="NUMERIC"></column>
+				<column name="ERROR_CODE" type="VARCHAR(5)"></column>
+				<column name="MESSAGE" type="VARCHAR(100)"></column>
+				<column name="CORRELATION_ID" type="VARCHAR(50)"></column>
+				<column name="ID_PAGOPA" type="NUMERIC"></column>
+				<column name="CLIENT_GUID" type="VARCHAR(40)"></column>
+				<column name="IS_PROCESSED" type="NUMERIC"></column>
+				<column name="MDC_INFO" type="VARCHAR(500)"></column>
+			</createTable>
+			<createSequence sequenceName="SEQ_BPAY_PAYMENT_RESPONSE" incrementBy="1" startValue="1" />
+		    <createIndex indexName="BPAY_CORRELATION_ID_IDX" tableName="PP_BPAY_PAYMENT_RESPONSE">
+				<column name="CORRELATION_ID"/>
+			</createIndex>
+			<createIndex indexName="BPAY_ID_PAGOPA_IDX" tableName="PP_BPAY_PAYMENT_RESPONSE">
+				<column name="ID_PAGOPA"/>
+			</createIndex>
+		</changeSet>
+		<changeSet id="202206131700" author="Simone Infante" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+			<createTable tableName="PP_PGS_REQUEST_INFO">
+				<column name="ID" type="NUMERIC NOT NULL">
+					<constraints primaryKey="true" primaryKeyName="PK_PP_PGS_REQUEST_INFO" />
+				</column>
+				<column name="ENDPOINT" type="VARCHAR(50) NOT NULL"></column>
+				<column name="GUID" type="VARCHAR(40) NOT NULL"></column>
+				<column name="CLIENT_ID" type="VARCHAR(150) NOT NULL"></column>
+				<column name="ID_TRANSACTION" type="NUMERIC NOT NULL"></column>
+				<column name="CORRELATION_ID" type="VARCHAR(50)"></column>
+				<column name="AUTH_OUTCOME" type="BOOLEAN"></column>
+				<column name="AUTH_URL" type="VARCHAR(50) NOT NULL"></column>
+				<column name="AUTH_CODE" type="VARCHAR(50)"></column>
+				<column name="REQUEST" type="VARCHAR(500)"></column>
+				<column name="RESOURCE_PATH" type="VARCHAR(150)"></column>
+				<column name="IS_PROCESSED" type="BOOLEAN"></column>
+				<column name="MDC_INFO" type="VARCHAR(500)"></column>
+				<column name="ERROR_CODE" type="VARCHAR(50)"></column>
+				<column name="IS_REFUNDED" type="BOOLEAN"></column>
+				<column name="IS_ONBOARDING" type="BOOLEAN"></column>
+			</createTable>
+			<createSequence sequenceName="SEQ_PGS_REQUEST_INFO" incrementBy="1" startValue="1" />
+		    <createIndex indexName="PGS_REQUEST_GUID_IDX" tableName="PP_PGS_REQUEST_INFO">
+				<column name="GUID"/>
+			</createIndex>
+		    <createIndex indexName="PGS_REQUEST_CORRELATION_ID_IDX" tableName="PP_PGS_REQUEST_INFO">
+				<column name="CORRELATION_ID"/>
+			</createIndex>
+			<createIndex indexName="PGS_REQUEST_ID_TRANSACTION_IDX" tableName="PP_PGS_REQUEST_INFO">
+				<column name="ID_TRANSACTION"/>
+			</createIndex>
+		</changeSet>
+</databaseChangeLog>
