@@ -101,7 +101,7 @@ services:
     build:
       context: .
       args:
-        ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA: ${ECOMMERCE_SCHEDULER_COMMIT_SHA}
+        ECOMMERCE_SCHEDULER_COMMIT_SHA: ${ECOMMERCE_SCHEDULER_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-scheduler-service/Dockerfile.scheduler-service
     ports:
         - "${ECOMMERCE_SCHEDULER_PORT}:8080"
