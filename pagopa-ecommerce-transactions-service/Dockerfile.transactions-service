@@ -15,7 +15,7 @@ WORKDIR /workspace/pagopa-ecommerce-transactions-service/
 ARG REPO=/workspace/pagopa-ecommerce-transactions-service
 
 COPY --from=clone ${REPO}/ .
-RUN mvn -f ./pom.xml clean package
+RUN mvn -f ./pom.xml clean package -DskipTests
 
 ### 3. Run stage
 FROM openjdk:17-slim
@@ -30,4 +30,4 @@ COPY --from=build --chown=user ${EXTRACTED} .
 ARG JAR_FILE=*.jar
 ENV APP_NAME=$JAR_FILE
 
-CMD java -jar $APP_NAME
+CMD java --enable-preview -jar $APP_NAME
