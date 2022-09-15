@@ -1,0 +1,17 @@
+FROM node:14.16-alpine
+
+ARG NOTIFICATIONS_SERVICE_COMMIT_SHA
+
+RUN apk update && apk upgrade && \
+    apk add --no-cache bash ca-certificates git openssh openssl
+
+WORKDIR /usr/src/app
+
+RUN rm -rf * && \
+  git clone https://github.com/pagopa/pagopa-notifications-service.git /usr/src/app && \
+  git checkout ${NOTIFICATIONS_SERVICE_COMMIT_SHA}
+
+RUN yarn install && \
+    yarn build
+
+CMD ["yarn", "start"]

@@ -124,6 +124,19 @@ services:
     networks:
       - pagopa-ecommerce-net
 
+  pagopa-notifications-service:
+    container_name: pagopa-notifications-service
+    build:
+      context: .
+      args:
+        NOTIFICATIONS_SERVICE_COMMIT_SHA: ${NOTIFICATIONS_SERVICE_COMMIT_SHA}
+      dockerfile: pagopa-notifications-service/Dockerfile.nodo-mock
+    env_file: pagopa-notifications-service/nodo-mock.env
+    ports:
+      - "${NOTIFICATIONS_SERVICE_PORT}:3000"
+    networks:
+      - pagopa-ecommerce-net
+
   traefik:
     container_name: pagopa-ecommerce-traefik
     image: traefik:v2.7
