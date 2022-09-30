@@ -130,8 +130,8 @@ services:
       context: .
       args:
         NOTIFICATIONS_SERVICE_COMMIT_SHA: ${NOTIFICATIONS_SERVICE_COMMIT_SHA}
-      dockerfile: pagopa-notifications-service/Dockerfile.nodo-mock
-    env_file: pagopa-notifications-service/nodo-mock.env
+      dockerfile: pagopa-notifications-service/Dockerfile.notifications-service
+    env_file: pagopa-notifications-service/notifications-service.env
     ports:
       - "${NOTIFICATIONS_SERVICE_PORT}:3000"
     networks:
