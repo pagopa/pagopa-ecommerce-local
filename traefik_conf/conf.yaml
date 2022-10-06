@@ -2,25 +2,36 @@ http:
   routers:
     pgs-router:
       service: "pagopa-payment-transactions-gateway"
-      rule: "PathPrefix(`/`)"
+      rule: "PathPrefix(`/transactions-gateway`)"
       middlewares:
       - gateway-headers
+      - gateway-prefix
+
     notifications-router:
       service: "pagopa-notifications-service"
       rule: "PathPrefix(`/notifications-service`)"
       middlewares:
         - notifications-headers
+        - notifications-prefix
 
   middlewares:
     gateway-headers:
       headers:
         customRequestHeaders:
           X-Client-ID: "WEB"
+    gateway-prefix:
+      stripPrefix:
+        prefixes:
+          - "/transactions-gateway"
 
     notifications-headers:
       headers:
         customRequestHeaders:
           X-Client-ID: "CLIENT_ECOMMERCE"
+    notifications-prefix:
+      stripPrefix:
+        prefixes:
+          - "/notifications-service"
 
   services:
     pagopa-payment-transactions-gateway:
@@ -31,4 +42,4 @@ http:
     pagopa-notifications-service:
       loadBalancer:
         servers:
-          - url: "http://pagopa-notifications-service:8080"
+          - url: "http://pagopa-notifications-service:3000"
