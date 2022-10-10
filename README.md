@@ -25,6 +25,9 @@ In the _.env_ file there are a configurations related to conainers that can be c
 | ECOMMERCE_TRANSACTIONS_COMMIT_SHA        | The branch or commit SHA of pagopa-ecommerce-transactions-service you want to build from. Used when the code is fetched from remote repo.        |
 | ECOMMERCE_PAYMENT_INSTRUMENTS_PORT       | The port the pagopa-ecommerce-payment-instruments-service listens to.                                                                            |
 | ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA | The branch or commit SHA of pagopa-ecommerce-payment-instruments-service you want to build from. Used when the code is fetched from remote repo. |
+| NOTIFICATIONS_SERVICE_PORT               | The port the pagopa-notifications-service listens to.                                                                                            |
+| NOTIFICATIONS_SERVICE_COMMIT_SHA         | The branch or commit SHA of pagopa-notifications-service you want to build from. Used when the code is fetched from remote repo.                 |
+
 
 In addiction, the parameters of the individual microservices can also be customized by editing the env file contained in the folder of the specific service.
 
