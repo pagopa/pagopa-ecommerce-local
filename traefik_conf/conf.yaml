@@ -14,6 +14,12 @@ http:
         - notifications-headers
         - notifications-prefix
 
+    nodo-mock-router:
+      service: "nodo-mock"
+      rule: "PathPrefix(`/nodo`) || PathPrefix(`/webservices`)"
+      middlewares:
+        - nodo-prefix
+
   middlewares:
     gateway-headers:
       headers:
@@ -33,6 +39,12 @@ http:
         prefixes:
           - "/notifications-service"
 
+    nodo-prefix:
+      stripPrefix:
+        prefixes:
+          - "/nodo"
+
+
   services:
     pagopa-payment-transactions-gateway:
       loadBalancer:
@@ -43,3 +55,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://pagopa-notifications-service:3000"
+
+    nodo-mock:
+      loadBalancer:
+        servers:
+          - url: "http://pagopa-node-mock:3002"
