@@ -58,3 +58,15 @@ When changing configuration parameters, remember to rebuild containers with
 ```sh
 docker-compose build SERVICE_NAME [--no-cache]
 ```
+
+### Troubleshooting
+
+To fix:
+```sh
+#0 135.0 [output clipped, log limit 1MiB reached]
+```
+
+run docker compose with:
+```sh
+DOCKER_BUILDKIT=1DOCKER
+```
