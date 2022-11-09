@@ -27,6 +27,8 @@ In the _.env_ file there are a configurations related to conainers that can be c
 | ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA | The branch or commit SHA of pagopa-ecommerce-payment-instruments-service you want to build from. Used when the code is fetched from remote repo. |
 | NOTIFICATIONS_SERVICE_PORT               | The port the pagopa-notifications-service listens to.                                                                                            |
 | NOTIFICATIONS_SERVICE_COMMIT_SHA         | The branch or commit SHA of pagopa-notifications-service you want to build from. Used when the code is fetched from remote repo.                 |
+| ECOMMERCE_PAYMENT_REQUESTS_COMMIT_SHA    | The branch or commit SHA of pagopa-ecommerce-payment-requests-service you want to build from. Used when the code is fetched from remote repo.    | 
+| ECOMMERCE_PAYMENT_REQUESTS               | The port the pagopa-ecommerce-payment-requests-service listens to.                                                                               |
 
 
 In addiction, the parameters of the individual microservices can also be customized by editing the env file contained in the folder of the specific service.
@@ -45,6 +47,7 @@ If you use the default configurations, we will have the following services expos
 | `pagopa-ecommerce-sessions-service`            | http://localhost:8082/sessions                                          |
 | `pagopa-ecommerce-transactions-service`        | http://localhost:8080/transactions                                      |
 | `pagopa-ecommerce-payment-instruments-service` | http://localhost:8083/payment-instruments                               |
+| `pagopa-ecommerce-payment-requests-service`    | http://localhost:8088/payment-requests and http://localhost:8088/carts  |
 
 
 You can check data persisted to either Mongo or Redis with their respective web interfaces (Mongo express/Redis Insight). To do so, go to:
