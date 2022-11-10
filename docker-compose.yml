@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
- 
+
   mongo:
     container_name: pagopa-ecommerce-mongo
     image: mongo
@@ -23,8 +23,7 @@ services:
     networks:
       - pagopa-ecommerce-net
     depends_on:
-      mongo:
-        condition: service_healthy
+      - mongo
 
   redis:
     container_name: pagopa-ecommerce-redis
