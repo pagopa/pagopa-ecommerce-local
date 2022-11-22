@@ -123,6 +123,31 @@ services:
     networks:
       - pagopa-ecommerce-net
 
+  pagopa-notifications-service:
+    container_name: pagopa-notifications-service
+    build:
+      context: .
+      args:
+        NOTIFICATIONS_SERVICE_COMMIT_SHA: ${NOTIFICATIONS_SERVICE_COMMIT_SHA}
+      dockerfile: pagopa-notifications-service/Dockerfile.notifications-service
+    env_file: pagopa-notifications-service/notifications-service.env
+    ports:
+      - "${NOTIFICATIONS_SERVICE_PORT}:3000"
+    networks:
+      - pagopa-ecommerce-net
+
+  pagopa-ecommerce-payment-requests-service:
+    container_name: pagopa-ecommerce-payment-requests-service
+    env_file: pagopa-ecommerce-payment-requests-service/payment-requests-service.env
+    build:
+      context: .
+      args:
+        ECOMMERCE_PAYMENT_REQUESTS_COMMIT_SHA: ${ECOMMERCE_PAYMENT_REQUESTS_COMMIT_SHA}
+      dockerfile: pagopa-ecommerce-payment-requests-service/Dockerfile.payment-requests-service
+    ports:
+      - "${ECOMMERCE_PAYMENT_REQUESTS_PORT}:8080"
+    networks:
+      - pagopa-ecommerce-net
   traefik:
     container_name: pagopa-ecommerce-traefik
     image: traefik:v2.7

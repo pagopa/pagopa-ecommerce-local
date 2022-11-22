@@ -1,19 +1,62 @@
 http:
   routers:
-    router1:
+    pgs-router:
       service: "pagopa-payment-transactions-gateway"
-      rule: "PathPrefix(`/`)"
+      rule: "PathPrefix(`/transactions-gateway`)"
       middlewares:
       - gateway-headers
+      - gateway-prefix
+
+    notifications-router:
+      service: "pagopa-notifications-service"
+      rule: "PathPrefix(`/notifications-service`)"
+      middlewares:
+        - notifications-headers
+        - notifications-prefix
+
+    nodo-mock-router:
+      service: "nodo-mock"
+      rule: "PathPrefix(`/nodo`) || PathPrefix(`/webservices`)"
+      middlewares:
+        - nodo-prefix
 
   middlewares:
     gateway-headers:
       headers:
         customRequestHeaders:
           X-Client-ID: "WEB"
+    gateway-prefix:
+      stripPrefix:
+        prefixes:
+          - "/transactions-gateway"
+
+    notifications-headers:
+      headers:
+        customRequestHeaders:
+          X-Client-ID: "CLIENT_ECOMMERCE"
+    notifications-prefix:
+      stripPrefix:
+        prefixes:
+          - "/notifications-service"
+
+    nodo-prefix:
+      stripPrefix:
+        prefixes:
+          - "/nodo"
+
 
   services:
     pagopa-payment-transactions-gateway:
       loadBalancer:
         servers:
         - url: "http://pagopa-payment-transactions-gateway:8080"
+
+    pagopa-notifications-service:
+      loadBalancer:
+        servers:
+          - url: "http://pagopa-notifications-service:3000"
+
+    nodo-mock:
+      loadBalancer:
+        servers:
+          - url: "http://pagopa-node-mock:3002"

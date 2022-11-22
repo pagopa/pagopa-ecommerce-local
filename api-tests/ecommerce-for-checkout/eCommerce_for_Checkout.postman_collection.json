@@ -1,0 +1,292 @@
+{
+	"info": {
+		"_postman_id": "6f9163d9-cc2b-4ea6-8fc9-ba5f80a0752b",
+		"name": "eCommerce for Checkout",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Payment Request Info NM3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"\", () => {",
+							"",
+							"  const responseJson = pm.response.json();",
+							"  pm.environment.set(\"PAYMENT_TOKEN\", responseJson.paymentToken);",
+							"  pm.environment.set(\"RPT_ID\", responseJson.rptId);",
+							"  pm.environment.set(\"PAYMENT_CONTEXT_CODE\", responseJson.paymentContextCode);",
+							"  pm.environment.set(\"AMOUNT\", responseJson.amount);",
+							"  ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"RPTID_NM3\", \"77777777777\"+_.random(302001000000000000, 302001999999999999));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://{{HOSTNAME}}/checkout/ecommerce/v1/payment-requests/{{RPTID_NM3}}?recaptchaResponse=test",
+					"protocol": "https",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"checkout",
+						"ecommerce",
+						"v1",
+						"payment-requests",
+						"{{RPTID_NM3}}"
+					],
+					"query": [
+						{
+							"key": "recaptchaResponse",
+							"value": "test"
+						}
+					]
+				},
+				"description": "1. recupero info relativi alla request payment con verificaRPT se non presente in cache dato rptId\n2. cache info su redis dato rptId"
+			},
+			"response": []
+		},
+		{
+			"name": "Nuova transaction NM3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"\", () => {",
+							"",
+							"  const responseJson = pm.response.json();",
+							"  pm.environment.set(\"TRANSACTION_ID\", responseJson.transactionId);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"rptId\": \"{{RPT_ID}}\",\n    \"paymentContextCode\" : \"{{PAYMENT_CONTEXT_CODE}}\",\n    \"email\": \"test@test.it\",\n    \"amount\" : {{AMOUNT}}\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{HOSTNAME}}/checkout/ecommerce/v1/transactions?test=debug",
+					"protocol": "https",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"checkout",
+						"ecommerce",
+						"v1",
+						"transactions"
+					],
+					"query": [
+						{
+							"key": "test",
+							"value": "debug"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get transaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"\", () => {",
+							"",
+							"  const responseJson = pm.response.json();",
+							"  pm.environment.set(\"PAYMENT_TOKEN\", responseJson.paymentToken);",
+							"",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{HOSTNAME}}/checkout/ecommerce/v1/transactions/{{TRANSACTION_ID}}",
+					"protocol": "https",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"checkout",
+						"ecommerce",
+						"v1",
+						"transactions",
+						"{{TRANSACTION_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get payment methods",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"\", () => {",
+							"",
+							"  const responseJson = pm.response.json();",
+							"  pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson[0].id);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{HOSTNAME}}/checkout/ecommerce/v1/payment-methods?amount={{AMOUNT}}",
+					"protocol": "https",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"checkout",
+						"ecommerce",
+						"v1",
+						"payment-methods"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "{{AMOUNT}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get PSPs by payment method",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{HOSTNAME}}/checkout/ecommerce/v1/payment-methods/{{PAYMENT_METHOD_ID}}/psps&amount={{AMOUNT}}",
+					"protocol": "https",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"checkout",
+						"ecommerce",
+						"v1",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID}}",
+						"psps&amount={{AMOUNT}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request authorization",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": 100,\n    \"paymentInstrumentId\": \"19d8771f-e8d1-4ead-bcc0-b9b8bc6a2c4f\",\n    \"pspId\": \"PPAYITR1XXX\",\n    \"language\": \"IT\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{HOSTNAME}}/checkout/ecommerce/v1/transactions/{{TRANSACTION_ID}}/auth-requests",
+					"protocol": "https",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"checkout",
+						"ecommerce",
+						"v1",
+						"transactions",
+						"{{TRANSACTION_ID}}",
+						"auth-requests"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
