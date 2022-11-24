@@ -92,7 +92,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"rptId\": \"{{RPT_ID}}\",\n    \"paymentContextCode\" : \"{{PAYMENT_CONTEXT_CODE}}\",\n    \"email\": \"simone.infante@pagopa.it\",\n    \"amount\" : {{AMOUNT}}\n}\n",
+					"raw": "{\n    \"rptId\": \"{{RPT_ID}}\",\n    \"paymentContextCode\" : \"{{PAYMENT_CONTEXT_CODE}}\",\n    \"email\": \"test@test.it\",\n    \"amount\" : {{AMOUNT}}\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
