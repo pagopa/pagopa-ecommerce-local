@@ -15,6 +15,7 @@ WORKDIR /workspace/pagopa-ecommerce-scheduler-service/
 ARG REPO=/workspace/pagopa-ecommerce-scheduler-service
 
 COPY --from=clone ${REPO}/ .
+RUN mvn -f ./pom.xml validate
 RUN mvn -f ./pom.xml clean package
 
 ### 3. Run stage
