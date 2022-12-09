@@ -16,7 +16,7 @@ ARG REPO=/workspace/pagopa-ecommerce-scheduler-service
 
 COPY --from=clone ${REPO}/ .
 RUN mvn -f ./pom.xml validate
-RUN mvn -f ./pom.xml clean package
+RUN mvn -f ./pom.xml package
 
 ### 3. Run stage
 FROM openjdk:17-slim
