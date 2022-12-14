@@ -1,0 +1,57 @@
+{
+	"info": {
+		"_postman_id": "132151e5-c3ae-4c73-bf6e-35c1857c32b9",
+		"name": "Payment-request-local",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24209240"
+	},
+	"item": [
+		{
+			"name": "Post carts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 302 with one payment notice\", () => {",
+							"  pm.expect(pm.response.code).to.eql(302);",
+							"  pm.expect(pm.response.to.have.header(\"Location\"))",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "blue",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"77777777777\",\n            \"amount\": 10000,\n            \"companyName\": \"companyName\",\n            \"description\": \"description\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOSTNAME}}/carts",
+					"protocol": "http",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"carts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
