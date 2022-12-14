@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "d6f471b3-4be6-44bc-a0a0-8080c51f6468",
+		"_postman_id": "9074a149-362b-4901-9185-2b2085444c25",
 		"name": "Transaction service for local eCommerce",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "24209240"
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -31,7 +31,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"rptId\": \"{{RPT_ID}}\",\n    \"paymentContextCode\" : \"{{PAYMENT_CONTEXT_CODE}}\",\n    \"email\": \"{{EMAIL}}\",\n    \"amount\" : {{AMOUNT}}\n}\n",
+					"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"paymentContextCode\": \"{{PAYMENT_CONTEXT_CODE}}\",\n        \"amount\": {{AMOUNT}}\n    }]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
