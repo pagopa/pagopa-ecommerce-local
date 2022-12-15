@@ -16,6 +16,7 @@
 							"pm.test(\"Status code is 302 with one payment notice\", () => {",
 							"  pm.expect(pm.response.code).to.eql(302);",
 							"  pm.expect(pm.response.to.have.header(\"Location\"))",
+							"  pm.environment.set(\"CART_ID\", pm.response.headers.get(\"Location\").substring((pm.response.headers.get(\"Location\").lastIndexOf(\"/\"))+1));",
 							"});"
 						],
 						"type": "text/javascript"
@@ -48,6 +49,49 @@
 					],
 					"path": [
 						"carts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 retrieving cart\", () => {",
+							"  pm.expect(pm.response.code).to.eql(200);",
+							"  var jsonData = pm.response.json();",
+							"  pm.expect(jsonData.paymentNotices).to.not.be.empty",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "blue",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{HOSTNAME}}/carts/{{CART_ID}}",
+					"protocol": "http",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"carts",
+						"{{CART_ID}}"
 					]
 				}
 			},
