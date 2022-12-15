@@ -15,7 +15,7 @@ WORKDIR /workspace/pagopa-ecommerce-sessions-service/
 ARG REPO=/workspace/pagopa-ecommerce-sessions-service
 
 COPY --from=clone ${REPO}/ .
-RUN mvn -f ./pom.xml clean package
+RUN mvn -f ./pom.xml clean package -DskipTests
 
 ### 3. Run stage
 FROM openjdk:17-slim
