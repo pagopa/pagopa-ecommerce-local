@@ -1,4 +1,4 @@
-FROM node:14.16-alpine
+FROM node:14.21.2-alpine
 
 ARG NOTIFICATIONS_SERVICE_COMMIT_SHA
 
