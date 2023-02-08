@@ -16,7 +16,7 @@
 							"pm.test(\"Status code is 302 with one payment notice\", () => {",
 							"  pm.expect(pm.response.code).to.eql(302);",
 							"  pm.expect(pm.response.to.have.header(\"Location\"))",
-							"  pm.environment.set(\"CART_ID\", pm.response.headers.get(\"Location\").substring((pm.response.headers.get(\"Location\").lastIndexOf(\"/\"))+1));",
+							"  pm.environment.set(\"CART_ID\", pm.response.headers.get(\"Location\").split(\"/\")[7]);",
 							"});"
 						],
 						"type": "text/javascript"
