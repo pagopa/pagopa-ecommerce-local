@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "9074a149-362b-4901-9185-2b2085444c25",
+		"_postman_id": "080628d3-b30e-470f-ac9c-9b71fc71cd21",
 		"name": "Transaction service for local eCommerce",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23963988"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -28,10 +27,16 @@
 			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"paymentContextCode\": \"{{PAYMENT_CONTEXT_CODE}}\",\n        \"amount\": {{AMOUNT}}\n    }]\n}",
+					"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
