@@ -23,9 +23,7 @@ RUN mvn validate -DskipTests
 
 RUN mkdir -p /home/site/wwwroot
 RUN mvn clean package -DskipTests
-RUN cd ./target/azure-functions/
-RUN cd $(ls -d */|head -n 1) 
-RUN cp -a . /home/site/wwwroot
+RUN cd ./target/azure-functions/ && cd $(ls -d */|head -n 1)  && cp -a . /home/site/wwwroot
 
 FROM mcr.microsoft.com/azure-functions/java:4-java$JAVA_VERSION-slim
 
