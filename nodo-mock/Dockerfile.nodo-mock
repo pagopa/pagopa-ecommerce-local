@@ -1,4 +1,4 @@
-FROM node:14.16-alpine
+FROM node:18.13.0-alpine
 
 ARG NODO_MOCK_COMMIT_SHA
 
