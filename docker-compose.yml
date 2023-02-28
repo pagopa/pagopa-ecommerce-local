@@ -149,19 +149,18 @@ services:
     networks:
       - pagopa-ecommerce-net
 
-  pagopa-ecommerce-transactions-functions:
-    container_name: pagopa-ecommerce-transactions-functions
-    env_file: pagopa-ecommerce-transactions-functions/transactions-functions.env
+  pagopa-ecommerce-transactions-scheduler-service:
+    container_name: pagopa-ecommerce-transactions-scheduler-service
+    env_file: pagopa-ecommerce-transactions-scheduler-service/transactions-scheduler-service.env
     build:
       context: .
       args:
-        ECOMMERCE_TRANSACTIONS_FUNCTIONS_COMMIT_SHA: ${ECOMMERCE_TRANSACTIONS_FUNCTIONS_COMMIT_SHA}
-      dockerfile: pagopa-ecommerce-transactions-functions/Dockerfile.transactions-functions
+        ECOMMERCE_TRANSACTIONS_SCHEDULER_COMMIT_SHA: ${ECOMMERCE_TRANSACTIONS_SCHEDULER_COMMIT_SHA}
+      dockerfile: pagopa-ecommerce-transactions-scheduler-service/Dockerfile.transactions-scheduler-service
     ports:
-      - "${ECOMMERCE_TRANSACTIONS_FUNCTIONS_PORT}:80"
+      - "${ECOMMERCE_TRANSACTIONS_SCHEDULER_PORT}:80"
     networks:
       - pagopa-ecommerce-net
-      
   traefik:
     container_name: pagopa-ecommerce-traefik
     image: traefik:v2.7
