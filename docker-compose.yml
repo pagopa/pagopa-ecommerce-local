@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
- 
+
   mongo:
     container_name: pagopa-ecommerce-mongo
     image: mongo
@@ -23,8 +23,7 @@ services:
     networks:
       - pagopa-ecommerce-net
     depends_on:
-      mongo:
-        condition: service_healthy
+      - mongo
 
   redis:
     container_name: pagopa-ecommerce-redis
@@ -148,6 +147,19 @@ services:
       - "${ECOMMERCE_PAYMENT_REQUESTS_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
+
+  pagopa-ecommerce-transactions-scheduler-service:
+    container_name: pagopa-ecommerce-transactions-scheduler-service
+    env_file: pagopa-ecommerce-transactions-scheduler-service/transactions-scheduler-service.env
+    build:
+      context: .
+      args:
+        ECOMMERCE_TRANSACTIONS_SCHEDULER_COMMIT_SHA: ${ECOMMERCE_TRANSACTIONS_SCHEDULER_COMMIT_SHA}
+      dockerfile: pagopa-ecommerce-transactions-scheduler-service/Dockerfile.transactions-scheduler-service
+    ports:
+      - "${ECOMMERCE_TRANSACTIONS_SCHEDULER_PORT}:80"
+    networks:
+      - pagopa-ecommerce-net
   traefik:
     container_name: pagopa-ecommerce-traefik
     image: traefik:v2.7
@@ -162,7 +174,7 @@ services:
       - pagopa-ecommerce-net
 
   storage:
-    image: mcr.microsoft.com/azure-storage/azurite:3.18.0
+    image: mcr.microsoft.com/azure-storage/azurite:3.21.0
     container_name: azurite
     ports:
       - "10000:10000"

@@ -1,0 +1,80 @@
+{
+	"info": {
+		"_postman_id": "080628d3-b30e-470f-ac9c-9b71fc71cd21",
+		"name": "Transaction service for local eCommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Nuova transaction NM3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Payment Request response HTTP code 200\", () => {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Payment Request TRANSACTION_ID valued in response\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.environment.set(\"TRANSACTION_ID\", responseJson.transactionId);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOSTNAME}}/transactions",
+					"protocol": "http",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

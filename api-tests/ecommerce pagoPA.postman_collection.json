@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "06ff1eef-f3f2-45ff-8225-aad377d6d554",
+		"_postman_id": "6b74a224-bfe9-4a1f-b4f0-b38b91abbee4",
 		"name": "ecommerce pagoPA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -72,9 +72,20 @@
 									"",
 									"  pm.expect(pm.response.code).to.eql(200);  ",
 									"  const responseJson = pm.response.json();",
-									"  pm.expect(responseJson.paymentToken).to.be.a('string');",
-									"  pm.expect(responseJson.paymentToken).to.have.length.greaterThan(0);",
+									"",
 									"  pm.environment.set(\"TRANSACTION_ID\", responseJson.transactionId);",
+									"});",
+									"",
+									"pm.test(\"[pagopa-ecommerce-transactions-service] Total amount is correct\", () => {",
+									"  const responseJson = pm.response.json();",
+									"  const totalAmount = _.reduce(responseJson.payments, (partial, p) => {",
+									"      return partial + p.amount;",
+									"  }, 0);",
+									"",
+									"  pm.expect(totalAmount).to.be.not.eq(undefined);",
+									"  pm.expect(totalAmount).to.be.at.least(0);",
+									"",
+									"  pm.environment.set(\"TOTAL_AMOUNT\", totalAmount);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -96,7 +107,74 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"rptId\": \"77777777777302016723749670001\",\n    \"email\": \"test@example.com\",\n    \"amount\": 100\n}",
+							"raw": "{\n    \"paymentNotices\": [\n        {\n            \"rptId\": \"77777777777302016723749670001\",\n            \"amount\": 120\n        }\n    ],\n    \"email\": \"test@example.com\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a new transaction with cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"[pagopa-ecommerce-transactions-service] Status code is 200 with valid response json\", () => {",
+									"",
+									"  pm.expect(pm.response.code).to.eql(200);  ",
+									"  const responseJson = pm.response.json();",
+									"",
+									"  pm.environment.set(\"TRANSACTION_ID\", responseJson.transactionId);",
+									"});",
+									"",
+									"pm.test(\"[pagopa-ecommerce-transactions-service] Total amount is correct\", () => {",
+									"  const responseJson = pm.response.json();",
+									"  const totalAmount = _.reduce(responseJson.payments, (partial, p) => {",
+									"      return partial + p.amount;",
+									"  }, 0);",
+									"",
+									"  pm.expect(totalAmount != null);",
+									"  pm.expect(totalAmount >= 0);",
+									"",
+									"  pm.environment.set(\"TOTAL_AMOUNT\", totalAmount);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJycHRJZCI6Ijc3Nzc3Nzc3Nzc3MzAyMDAwMTAwMDAwMDE5NDIxIiwiZW1haWwiOiJ0ZXN0QHRlc3QuaXQiLCJwYXltZW50VG9rZW4iOiJhMjBhOGE0Yy04MTI2LTRhZmYtOGZlNi03ZTZiOGQ4Y2M1M2EiLCJqdGkiOiI0MzU2MzM3NDI4MTk5MzgifQ.0wd4PwV0Iuo3g_MUqC_REGA4tptWfA0nQx2YTS9txpaIEuvCjPopoxwM3jw4TSV3HhoLe2_MeS6Om8xrYeHNKQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"paymentNotices\": [\n        {\n            \"rptId\": \"77777777777302016723749670001\",\n            \"amount\": 100\n        },\n        {\n            \"rptId\": \"77777777777302016723749670002\",\n            \"amount\": 200\n        }\n    ],\n    \"email\": \"test@example.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -141,10 +219,16 @@
 					"name": "Request authorization",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "X-PGS-Id",
+								"value": "XPAY",
+								"type": "default"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"amount\": 100,\n    \"fee\": 0,\n    \"paymentInstrumentId\": \"a\",\n    \"pspId\": \"ABI01030\",\n    \"language\": \"IT\"\n}",
+							"raw": "{\n    \"amount\": {{TOTAL_AMOUNT}},\n    \"fee\": 10000,\n    \"paymentInstrumentId\": \"85604a51-bcb7-4759-81f9-c77a8e781f26\",\n    \"pspId\": \"PPAYITR1XXX\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"postepay\",\n        \"accountEmail\": \"foo@example.com\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -152,7 +236,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}/auth-request",
+							"raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}/auth-requests",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -161,7 +245,7 @@
 							"path": [
 								"transactions",
 								"{{TRANSACTION_ID}}",
-								"auth-request"
+								"auth-requests"
 							]
 						}
 					},
@@ -182,7 +266,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}/auth-request",
+							"raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}/auth-requests",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -191,36 +275,7 @@
 							"path": [
 								"transactions",
 								"{{TRANSACTION_ID}}",
-								"auth-request"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update transaction status",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"authorizationResult\": \"OK\",\n    \"timestamp\": \"2022-07-20T11:20:56+02:00\",\n    \"authorizationCode\": \"OK\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"transactions",
-								"{{TRANSACTION_ID}}"
+								"auth-requests"
 							]
 						}
 					},
@@ -288,9 +343,9 @@
 									"",
 									"  pm.expect(pm.response.code).to.eql(200);  ",
 									"  const responseJson = pm.response.json();",
-									"  pm.expect(responseJson.data.id).to.be.a('string');",
-									"  pm.expect(responseJson.data.id).to.have.length.greaterThan(0);",
-									"  pm.environment.set(\"PAYMENT_INSTRUMENT_ID\", responseJson.data.id);",
+									"  pm.expect(responseJson[0].id).to.be.a('string');",
+									"  pm.expect(responseJson[0].id).to.have.length.greaterThan(0);",
+									"  pm.environment.set(\"PAYMENT_INSTRUMENT_ID\", responseJson[0].id);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -301,14 +356,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8083/payment-instruments/",
+							"raw": "http://localhost:8083/payment-methods/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8083",
 							"path": [
-								"payment-instruments",
+								"payment-methods",
 								""
 							]
 						}
@@ -332,14 +387,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8083/payment-instruments/{{PAYMENT_INSTRUMENT_ID}}",
+							"raw": "http://localhost:8083/payment-methods/{{PAYMENT_INSTRUMENT_ID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8083",
 							"path": [
-								"payment-instruments",
+								"payment-methods",
 								"{{PAYMENT_INSTRUMENT_ID}}"
 							]
 						}
@@ -402,7 +457,10 @@
 					"name": "Send email",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				}
