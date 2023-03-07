@@ -31,4 +31,4 @@ COPY --from=build --chown=user ${EXTRACTED} .
 ARG JAR_FILE=*.jar
 ENV APP_NAME=$JAR_FILE
 
-CMD java -jar $APP_NAME
+CMD java --enable-preview -jar $APP_NAME
