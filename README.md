@@ -48,6 +48,7 @@ If you use the default configurations, we will have the following services expos
 | `pagopa-ecommerce-transactions-service`        | http://localhost:8080/transactions                                      |
 | `pagopa-ecommerce-payment-instruments-service` | http://localhost:8083/payment-instruments                               |
 | `pagopa-ecommerce-payment-requests-service`    | http://localhost:8088/payment-requests and http://localhost:8088/carts  |
+| `pagopa-payment-transactions-gateway`          | http://localhost:8092/payment-requests                                  |
 
 
 You can check data persisted to either Mongo or Redis with their respective web interfaces (Mongo express/Redis Insight). To do so, go to:

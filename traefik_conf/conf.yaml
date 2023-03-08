@@ -24,7 +24,7 @@ http:
     gateway-headers:
       headers:
         customRequestHeaders:
-          X-Client-ID: "WEB"
+          X-Client-ID: "ECOMMERCE_WEB"
     gateway-prefix:
       stripPrefix:
         prefixes:

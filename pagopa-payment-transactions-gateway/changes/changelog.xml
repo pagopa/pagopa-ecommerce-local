@@ -39,10 +39,10 @@
 				<column name="ENDPOINT" type="VARCHAR(50) NOT NULL"></column>
 				<column name="GUID" type="VARCHAR(40) NOT NULL"></column>
 				<column name="CLIENT_ID" type="VARCHAR(150) NOT NULL"></column>
-				<column name="ID_TRANSACTION" type="NUMERIC NOT NULL"></column>
+				<column name="ID_TRANSACTION" type="VARCHAR(36) NOT NULL"></column>
 				<column name="CORRELATION_ID" type="VARCHAR(50)"></column>
 				<column name="AUTH_OUTCOME" type="BOOLEAN"></column>
-				<column name="AUTH_URL" type="VARCHAR(50) NOT NULL"></column>
+				<column name="AUTH_URL" type="VARCHAR(500) NOT NULL"></column>
 				<column name="AUTH_CODE" type="VARCHAR(50)"></column>
 				<column name="REQUEST" type="VARCHAR(500)"></column>
 				<column name="RESOURCE_PATH" type="VARCHAR(150)"></column>
@@ -51,6 +51,13 @@
 				<column name="ERROR_CODE" type="VARCHAR(50)"></column>
 				<column name="IS_REFUNDED" type="BOOLEAN"></column>
 				<column name="IS_ONBOARDING" type="BOOLEAN"></column>
+				<column name="STATUS" type="VARCHAR(20)"></column>
+				<column name="REQUEST_TIMESTAMP" type="VARCHAR(40)"></column>
+				<column name="HTML" type="VARCHAR(50)"></column>
+				<column name="NONCE" type="TEXT"></column>
+				<column name="ERROR_MESSAGE" type="VARCHAR(50)"></column>
+				<column name="IS_FIRST_PAYMENT" type="BOOLEAN"></column>
+				<column name="RESPONSE_TYPE" type="VARCHAR(15)"></column>
 			</createTable>
 			<createSequence sequenceName="SEQ_PGS_REQUEST_INFO" incrementBy="1" startValue="1" />
 		    <createIndex indexName="PGS_REQUEST_GUID_IDX" tableName="PP_PGS_REQUEST_INFO">
