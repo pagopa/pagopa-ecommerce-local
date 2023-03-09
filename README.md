@@ -23,8 +23,8 @@ In the _.env_ file there are a configurations related to conainers that can be c
 | ECOMMERCE_SESSIONS_COMMIT_SHA            | The branch or commit SHA of pagopa-ecommerce-sessions-service you want to build from. Used when the code is fetched from remote repo.            | 
 | ECOMMERCE_TRANSACTIONS_PORT              | The port the pagopa-ecommerce-transactions-service listens to.                                                                                   |
 | ECOMMERCE_TRANSACTIONS_COMMIT_SHA        | The branch or commit SHA of pagopa-ecommerce-transactions-service you want to build from. Used when the code is fetched from remote repo.        |
-| ECOMMERCE_PAYMENT_INSTRUMENTS_PORT       | The port the pagopa-ecommerce-payment-instruments-service listens to.                                                                            |
-| ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA | The branch or commit SHA of pagopa-ecommerce-payment-instruments-service you want to build from. Used when the code is fetched from remote repo. |
+| ECOMMERCE_PAYMENT_METHODS_PORT       | The port the pagopa-ecommerce-payment-methods-service listens to.                                                                            |
+| ECOMMERCE_PAYMENT_METHODS_COMMIT_SHA | The branch or commit SHA of pagopa-ecommerce-payment-methods-service you want to build from. Used when the code is fetched from remote repo. |
 | NOTIFICATIONS_SERVICE_PORT               | The port the pagopa-notifications-service listens to.                                                                                            |
 | NOTIFICATIONS_SERVICE_COMMIT_SHA         | The branch or commit SHA of pagopa-notifications-service you want to build from. Used when the code is fetched from remote repo.                 |
 | ECOMMERCE_PAYMENT_REQUESTS_COMMIT_SHA    | The branch or commit SHA of pagopa-ecommerce-payment-requests-service you want to build from. Used when the code is fetched from remote repo.    | 
@@ -46,7 +46,7 @@ If you use the default configurations, we will have the following services expos
 | `nodo-mock`                                    | http://localhost:3002/webservices/pof/PagamentiTelematiciPspNodoservice |
 | `pagopa-ecommerce-sessions-service`            | http://localhost:8082/sessions                                          |
 | `pagopa-ecommerce-transactions-service`        | http://localhost:8080/transactions                                      |
-| `pagopa-ecommerce-payment-instruments-service` | http://localhost:8083/payment-instruments                               |
+| `pagopa-ecommerce-payment-methods-service`     | http://localhost:8083/payment-methods                                   |
 | `pagopa-ecommerce-payment-requests-service`    | http://localhost:8088/payment-requests and http://localhost:8088/carts  |
 
 
