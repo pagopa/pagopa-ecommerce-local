@@ -6,59 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "pagopa-ecommerce-sessions-service",
-			"item": [
-				{
-					"name": "Post sessions",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@test.it\",\n    \"rptId\": \"77777777777302000100000019421\",\n    \"paymentToken\": \"a20a8a4c-8126-4aff-8fe6-7e6b8d8cc53a\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8082/sessions",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"sessions"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
 			"name": "pagopa-ecommerce-transactions-service",
 			"item": [
 				{
@@ -284,7 +231,7 @@
 			]
 		},
 		{
-			"name": "pagopa-ecommerce-payment-instruments-service",
+			"name": "pagopa-ecommerce-payment-methods-service",
 			"item": [
 				{
 					"name": "Create new payment instrument",
@@ -293,7 +240,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"[pagopa-ecommerce-payment-instruments-service] Status code is 200 with valid response json\", () => {",
+									"pm.test(\"[pagopa-ecommerce-payment-methods-service] Status code is 200 with valid response json\", () => {",
 									"",
 									"  pm.expect(pm.response.code).to.eql(200);  ",
 									"  const responseJson = pm.response.json();",
@@ -319,27 +266,27 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8083/payment-instruments",
+							"raw": "http://localhost:8083/payment-methods",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8083",
 							"path": [
-								"payment-instruments"
+								"payment-methods"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "GET all payment instruments",
+					"name": "GET all payment methods",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"[pagopa-ecommerce-payment-instruments-service] Status code is 200 with valid response json\", () => {",
+									"pm.test(\"[pagopa-ecommerce-payment-methods-service] Status code is 200 with valid response json\", () => {",
 									"",
 									"  pm.expect(pm.response.code).to.eql(200);  ",
 									"  const responseJson = pm.response.json();",
@@ -408,7 +355,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"[pagopa-ecommerce-payment-instruments-service] Status code is 200 with valid response json\", () => {",
+									"pm.test(\"[pagopa-ecommerce-payment-methods-service] Status code is 200 with valid response json\", () => {",
 									"",
 									"  pm.expect(pm.response.code).to.eql(200);  ",
 									"  const responseJson = pm.response.json();",
@@ -434,14 +381,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8083/payment-instruments/{{PAYMENT_INSTRUMENT_ID}}",
+							"raw": "http://localhost:8083/payment-methods/{{PAYMENT_INSTRUMENT_ID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8083",
 							"path": [
-								"payment-instruments",
+								"payment-methods",
 								"{{PAYMENT_INSTRUMENT_ID}}"
 							]
 						}
