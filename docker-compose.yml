@@ -55,19 +55,6 @@ services:
     networks:
       - pagopa-ecommerce-net    
 
-  pagopa-ecommerce-sessions-service:
-    container_name: pagopa-ecommerce-sessions-service
-    env_file: pagopa-ecommerce-sessions-service/sessions-service.env
-    build:
-      context: .
-      args:
-        ECOMMERCE_SESSIONS_COMMIT_SHA: ${ECOMMERCE_SESSIONS_COMMIT_SHA}
-      dockerfile: pagopa-ecommerce-sessions-service/Dockerfile.sessions-service
-    ports:
-        - "${ECOMMERCE_SESSIONS_PORT}:8080"
-    networks:
-      - pagopa-ecommerce-net
-
   pagopa-ecommerce-transactions-service:
     container_name: pagopa-ecommerce-transactions-service
     env_file: pagopa-ecommerce-transactions-service/transactions-service.env
@@ -100,7 +87,7 @@ services:
     build:
       context: .
       args:
-        ECOMMERCE_PAYMENT_INSTRUMENTS_COMMIT_SHA: ${ECOMMERCE_SCHEDULER_COMMIT_SHA}
+        ECOMMERCE_SCHEDULER_COMMIT_SHA: ${ECOMMERCE_SCHEDULER_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-scheduler-service/Dockerfile.scheduler-service
     ports:
         - "${ECOMMERCE_SCHEDULER_PORT}:8080"

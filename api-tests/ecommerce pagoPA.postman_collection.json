@@ -6,59 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "pagopa-ecommerce-sessions-service",
-			"item": [
-				{
-					"name": "Post sessions",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@test.it\",\n    \"rptId\": \"77777777777302000100000019421\",\n    \"paymentToken\": \"a20a8a4c-8126-4aff-8fe6-7e6b8d8cc53a\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8082/sessions",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"sessions"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
 			"name": "pagopa-ecommerce-transactions-service",
 			"item": [
 				{
