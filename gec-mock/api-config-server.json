@@ -12,7 +12,7 @@
           "idCiBundle": "idCiBundle1",
           "idPsp": "idPsp1",
           "onUs": true,
-          "paymentMethod": "paymentMethod1",
+          "paymentMethod": "CP",
           "primaryCiIncurredFee": 0,
           "taxPayerFee": 0,
           "touchpoint": "touchpoint1"
