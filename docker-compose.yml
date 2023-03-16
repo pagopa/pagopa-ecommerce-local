@@ -94,22 +94,6 @@ services:
     networks:
       - pagopa-ecommerce-net
 
-
-  pagopa-api-config-mock:
-    container_name: pagopa-api-config-mock
-    build:
-      context: .
-      dockerfile: api-config-mock/Dockerfile.api-config-mock
-    volumes:
-      - type: bind
-        source: ./api-config-mock
-        target: /config
-        read_only: true
-    ports:
-      - "${APICONFIG_PORT}:3000"
-    networks:
-      - pagopa-ecommerce-net
-
   pagopa-gec-mock:
     build:
       context: .
@@ -121,7 +105,7 @@ services:
         target: /config
         read_only: true
     ports:
-      - "8085:3000"
+      - "${AFM_PORT}:3000"
     networks:
       - pagopa-ecommerce-net
 
