@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+
+  pagopa-pdv-tokenizer:
+    container_name: pagopa-pdv-tokenizer
+    build:
+      context: .
+      args:
+        PDV_PERSON_COMMIT_SHA: ${PDV_TOKENIZER_COMMIT_SHA}
+      dockerfile: pagopa-personal-data-vault/Dockerfile.pdv-tokenizer
+    env_file: pagopa-personal-data-vault/pdv.env
+    ports:
+      - "${PDV_TOKENIZER_PORT}:8080"
+    networks:
+      - pagopa-ecommerce-net
+
+networks:
+  pagopa-ecommerce-net:
+    name: pagopa-ecommerce-net
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450

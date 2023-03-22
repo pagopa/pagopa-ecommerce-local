@@ -1,0 +1,44 @@
+### 1. Cloning stage
+FROM alpine/git:latest AS clone
+WORKDIR /workspace/pagopa-pdv-tokenizer
+
+ARG PDV_TOKENIZER_COMMIT_SHA
+
+RUN rm -rf * && \
+    git clone https://github.com/pagopa/pdv-ms-tokenizer.git /workspace/pagopa-pdv-tokenizer && \
+    git checkout ${PDV_TOKENIZER_COMMIT_SHA}
+
+### 2 Setup DynamoDB stage
+FROM alpine:latest as unzipper
+RUN apk add unzip wget curl
+RUN mkdir /opt/ ; \
+  curl https://s3.eu-central-1.amazonaws.com/dynamodb-local-frankfurt/dynamodb_local_latest.tar.gz | tar xvzf - -C /opt
+
+### 2-test. Build stage
+FROM maven:3.8.3-openjdk-17 AS build
+WORKDIR /workspace/pagopa-pdv-tokenizer/app
+
+ARG REPO=/workspace/pagopa-pdv-tokenizer
+
+COPY --from=clone ${REPO}/ .
+RUN mvn -f ./pom.xml clean package -DskipTests
+
+### 3. Run stage
+FROM openjdk:17-slim
+
+RUN addgroup --system user && adduser --ingroup user --system user
+USER user:user
+
+### TEST
+ARG EXTRACTED=/workspace/pagopa-pdv-tokenizer/app/target/
+COPY --from=build --chown=user ${EXTRACTED} .
+ARG JAR_FILE=*.jar
+ENV APP_NAME=$JAR_FILE
+### TEST
+
+COPY --from=unzipper --chown=user /opt/ .
+COPY --from=clone --chown=user /workspace/pagopa-pdv-tokenizer .
+RUN chmod +x mvnw
+
+# CMD java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb & ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev-local
+CMD java -jar $APP_NAME
