@@ -227,6 +227,26 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "cancel transaction ",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions",
+								"{{TRANSACTION_ID}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
