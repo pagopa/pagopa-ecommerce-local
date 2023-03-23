@@ -172,6 +172,16 @@ services:
     networks:
       - pagopa-ecommerce-net
 
+  pagopa-pdv-mock:
+    container_name: pagopa-pdv-mock
+    build:
+      context: .
+      dockerfile: pagopa-personal-data-vault-tokenizer/Dockerfile.pdv
+    ports:
+      - "${PDV_MOCK_PORT}:8080"
+    networks:
+      - pagopa-ecommerce-net
+
 networks:
   pagopa-ecommerce-net:
     name: pagopa-ecommerce-net
