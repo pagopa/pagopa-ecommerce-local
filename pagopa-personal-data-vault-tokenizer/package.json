@@ -1,0 +1,14 @@
+{
+  "name": "pagopa-personal-data-vault-tokenizer",
+  "version": "1.0.0",
+  "description": "pagopa-pdv mock",
+  "main": "index.js",
+  "author": "Marco Greco - marco.grecp@pagopa.it",
+  "license": "MIT",
+  "dependencies": {
+    "json-server": "^0.17.3"
+  },
+  "scripts": {
+    "start": "json-server --watch src/db.json --routes src/routes.json --middlewares src/middleware.js --port 8080 --host 0.0.0.0"
+  }
+}
