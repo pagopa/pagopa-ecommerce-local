@@ -81,16 +81,16 @@ services:
     networks:
       - pagopa-ecommerce-net
 
-  pagopa-ecommerce-scheduler-service:
-    container_name: pagopa-ecommerce-scheduler-service
-    env_file: pagopa-ecommerce-scheduler-service/scheduler-service.env
+  pagopa-ecommerce-event-dispatcher-service:
+    container_name: pagopa-ecommerce-event-dispatcher-service
+    env_file: pagopa-ecommerce-event-dispatcher-service/scheduler-service.env
     build:
       context: .
       args:
-        ECOMMERCE_SCHEDULER_COMMIT_SHA: ${ECOMMERCE_SCHEDULER_COMMIT_SHA}
-      dockerfile: pagopa-ecommerce-scheduler-service/Dockerfile.scheduler-service
+        ECOMMERCE_SCHEDULER_COMMIT_SHA: ${ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA}
+      dockerfile: pagopa-ecommerce-event-dispatcher-service/Dockerfile.scheduler-service
     ports:
-        - "${ECOMMERCE_SCHEDULER_PORT}:8080"
+        - "${ECOMMERCE_EVENT_DISPATCHER_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
 
