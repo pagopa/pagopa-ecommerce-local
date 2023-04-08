@@ -59,6 +59,14 @@ When changing configuration parameters, remember to rebuild containers with
 docker-compose build SERVICE_NAME [--no-cache]
 ```
 
+### Create azurite queues
+
+The below command will read all module env files and create all queue that are in the ``pagopa-ecommerce-...-queue`` form
+
+```sh
+ create-queues.sh  
+ ```
+
 ### Troubleshooting
 
 To fix:
