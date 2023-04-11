@@ -1,6 +1,6 @@
 #!/bin/bash
 
-files="**/*.env"
+files="./env-files/*.env"
 for f in $files
 do
     queues=$(cat $f | sed -nr "s/^.*=(pagopa-ecommerce-.*-queue)$/\1/p")

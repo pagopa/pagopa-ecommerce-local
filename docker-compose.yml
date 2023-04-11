@@ -181,6 +181,16 @@ services:
       - "${PDV_MOCK_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
+  
+  azurite-init:
+    container_name: azurite-init
+    build:
+      context: .
+      dockerfile: azurite-init/Dockerfile.azuriteInit
+    depends_on:
+      - storage
+    networks:
+      - pagopa-ecommerce-net
 
 networks:
   pagopa-ecommerce-net:
