@@ -1,0 +1,5 @@
+{
+  "*/tokens": "/tokens",
+  "*/tokens/search": "/search",
+  "*/tokens/:token/pii": "/pii"
+}

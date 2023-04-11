@@ -81,31 +81,16 @@ services:
     networks:
       - pagopa-ecommerce-net
 
-  pagopa-ecommerce-scheduler-service:
-    container_name: pagopa-ecommerce-scheduler-service
-    env_file: pagopa-ecommerce-scheduler-service/scheduler-service.env
+  pagopa-ecommerce-event-dispatcher-service:
+    container_name: pagopa-ecommerce-event-dispatcher-service
+    env_file: pagopa-ecommerce-event-dispatcher-service/event-dispatcher-service.env
     build:
       context: .
       args:
-        ECOMMERCE_SCHEDULER_COMMIT_SHA: ${ECOMMERCE_SCHEDULER_COMMIT_SHA}
-      dockerfile: pagopa-ecommerce-scheduler-service/Dockerfile.scheduler-service
+        ECOMMERCE_SCHEDULER_COMMIT_SHA: ${ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA}
+      dockerfile: pagopa-ecommerce-event-dispatcher-service/Dockerfile.event-dispatcher-service
     ports:
-        - "${ECOMMERCE_SCHEDULER_PORT}:8080"
-    networks:
-      - pagopa-ecommerce-net
-
-  pagopa-api-config-mock:
-    container_name: pagopa-api-config-mock
-    build:
-      context: .
-      dockerfile: api-config-mock/Dockerfile.api-config-mock
-    volumes:
-      - type: bind
-        source: ./api-config-mock
-        target: /config
-        read_only: true
-    ports:
-      - "${APICONFIG_PORT}:3000"
+        - "${ECOMMERCE_EVENT_DISPATCHER_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
 
@@ -120,7 +105,7 @@ services:
         target: /config
         read_only: true
     ports:
-      - "8085:3000"
+      - "${AFM_PORT}:3000"
     networks:
       - pagopa-ecommerce-net
 
@@ -222,6 +207,16 @@ services:
         - "${PAYMENT_TRANSACTION_GATEWAY_PORT}:8080"
     depends_on:
       - postgres-liquibase
+    networks:
+      - pagopa-ecommerce-net
+
+  pagopa-pdv-mock:
+    container_name: pagopa-pdv-mock
+    build:
+      context: .
+      dockerfile: pagopa-personal-data-vault-tokenizer/Dockerfile.pdv
+    ports:
+      - "${PDV_MOCK_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
 
