@@ -1,0 +1,11 @@
+FROM alpine/git:latest AS clone
+WORKDIR /workspace/pagopa-payment-transactions-gateway
+RUN git clone https://github.com/pagopa/pagopa-payment-transactions-gateway.git /workspace/pagopa-payment-transactions-gateway && \
+    git checkout ${PAYMENT_TRANSACTION_GATEWAY_COMMIT_SHA}
+
+
+FROM liquibase/liquibase
+
+COPY --from=clone /workspace/pagopa-payment-transactions-gateway/.db/postgres/changes/changelog.xml .
+
+CMD /liquibase/docker-entrypoint.sh update --url=jdbc:postgresql://postgres:5432/${POSTGRES_DB}?user=${POSTGRES_USER}\&password=${POSTGRES_PASSWORD} --changeLogFile=./changelog.xml -Dschema=public

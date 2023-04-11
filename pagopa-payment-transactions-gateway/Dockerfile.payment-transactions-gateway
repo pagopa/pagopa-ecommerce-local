@@ -1,8 +1,7 @@
 ### 1. Cloning stage
 FROM alpine/git:latest AS clone
 WORKDIR /workspace/pagopa-payment-transactions-gateway
-RUN rm -rf * && \
-    git clone https://github.com/pagopa/pagopa-payment-transactions-gateway.git /workspace/pagopa-payment-transactions-gateway && \
+RUN git clone https://github.com/pagopa/pagopa-payment-transactions-gateway.git /workspace/pagopa-payment-transactions-gateway && \
     git checkout ${PAYMENT_TRANSACTION_GATEWAY_PORT}
 
 ### 2. Build stage
