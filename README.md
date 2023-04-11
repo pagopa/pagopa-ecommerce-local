@@ -63,7 +63,7 @@ docker-compose build SERVICE_NAME [--no-cache]
 
 There is the `azurite-init` container that automatically creates all queue and, once done, terminate it's execution.
 
-For recreate queues simply run again the above container.
+To recreate the queues simply run again the above container.
 
 If env files have been changed build the azurite-init image without cache:
 
