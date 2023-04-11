@@ -61,11 +61,15 @@ docker-compose build SERVICE_NAME [--no-cache]
 
 ### Create azurite queues
 
-The below command will read all module env files and create all queue that are in the ``pagopa-ecommerce-...-queue`` form
+There is the `azurite-init` container that automatically creates all queue and, once done, terminate it's execution.
+
+For recreate queues simply run again the above container.
+
+If env files have been changed build the azurite-init image without cache:
 
 ```sh
- create-queues.sh  
- ```
+docker compose build --no-cache azurite-init
+```
 
 ### Troubleshooting
 
