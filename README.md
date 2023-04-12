@@ -60,6 +60,18 @@ When changing configuration parameters, remember to rebuild containers with
 docker-compose build SERVICE_NAME [--no-cache]
 ```
 
+### Create azurite queues
+
+There is the `azurite-init` container that automatically creates all queue and, once done, terminate it's execution.
+
+To recreate the queues simply run again the above container.
+
+If env files have been changed build the azurite-init image without cache:
+
+```sh
+docker compose build --no-cache azurite-init
+```
+
 ### Troubleshooting
 
 To fix:
