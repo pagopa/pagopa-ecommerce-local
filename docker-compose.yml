@@ -87,7 +87,7 @@ services:
     build:
       context: .
       args:
-        ECOMMERCE_SCHEDULER_COMMIT_SHA: ${ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA}
+        ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA: ${ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-event-dispatcher-service/Dockerfile.event-dispatcher-service
     ports:
         - "${ECOMMERCE_EVENT_DISPATCHER_PORT}:8080"
