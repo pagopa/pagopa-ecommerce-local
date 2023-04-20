@@ -2,7 +2,7 @@
 FROM alpine/git:latest AS clone
 WORKDIR /workspace/pagopa-ecommerce-event-dispatcher-service
 
-ARG ECOMMERCE_event-dispatcher_COMMIT_SHA
+ARG ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA
 
 RUN rm -rf * && \
     git clone https://github.com/pagopa/pagopa-ecommerce-event-dispatcher-service.git /workspace/pagopa-ecommerce-event-dispatcher-service && \
