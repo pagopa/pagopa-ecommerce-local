@@ -4,7 +4,7 @@ WORKDIR /usr/queues/script
 
 COPY ./azurite-init/create-queues.sh ./create-queues.sh
 
-COPY ../**/*.env ./env-files/
+COPY ./**/*.env ./env-files/
 
 RUN ["chmod" ,"+x" ,"create-queues.sh"]
 

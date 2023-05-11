@@ -3,6 +3,7 @@
 files="./env-files/*.env"
 for f in $files
 do
+    echo "Analizing env file: [$f]"
     queues=$(cat $f | sed -nr "s/^.*=(pagopa-ecommerce-.*-queue)$/\1/p")
     for queue in $queues
         do
