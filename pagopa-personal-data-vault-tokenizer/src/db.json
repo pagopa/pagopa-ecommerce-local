@@ -1,5 +1,6 @@
 {
   "tokens": { "token": "3fa85f64-5717-4562-b3fc-2c963f66afa6" },
   "search": { "token": "3fa85f64-5717-4562-b3fc-2c963f66afa6" },
-  "pii": { "pii": "testmail@mail.com" }
+  "pii-transaction": { "pii": "testmail@mail.com" },
+  "pii-notification": { "pii": "{\"to\":\"test.test@pagopa.its\",\"subject\":\"test_email\",\"templateId\":\"poc-1\",\"parameters\":{\"amount\":100,\"email\":\"test.test@pagopa.it\",\"noticeCode\":\"302001751670642100\"},\"language\":\"it\"}" }
 }

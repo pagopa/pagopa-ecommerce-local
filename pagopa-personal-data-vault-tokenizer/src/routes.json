@@ -1,5 +1,6 @@
 {
   "*/tokens": "/tokens",
   "*/tokens/search": "/search",
-  "*/tokens/:token/pii": "/pii"
+  "*/transaction/tokens/:token/pii": "/pii-transaction",
+  "*/notification/tokens/:token/pii": "/pii-notification"
 }
