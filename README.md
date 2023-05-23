@@ -65,11 +65,7 @@ There is the `azurite-init` container that automatically creates all queue and, 
 
 To recreate the queues simply run again the above container.
 
-If env files have been changed build the azurite-init image without cache:
-
-```sh
-docker compose build --no-cache azurite-init
-```
+If env files have been changed run again azurite-init to make the container again to start new queues automatic creation processing
 
 ### Troubleshooting
 
