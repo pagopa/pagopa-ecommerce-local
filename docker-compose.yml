@@ -189,6 +189,8 @@ services:
       dockerfile: azurite-init/Dockerfile.azurite-init
     depends_on:
       - storage
+    volumes:
+      - $PWD:/env-files
     networks:
       - pagopa-ecommerce-net
 

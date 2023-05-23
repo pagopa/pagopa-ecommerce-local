@@ -1,6 +1,6 @@
 #!/bin/bash
 
-files="./env-files/*.env"
+files="/env-files/**/*.env"
 for f in $files
 do
     echo "Analizing env file: [$f]"
