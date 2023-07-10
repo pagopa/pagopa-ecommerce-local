@@ -28,7 +28,8 @@ ARG EXTRACTED=/workspace/pagopa-ecommerce-transactions-service/target/
 
 COPY --from=build --chown=user ${EXTRACTED} .
 
-ARG JAR_FILE=*.jar
+ARG JAR_FILE=pagopa*.jar
 ENV APP_NAME=$JAR_FILE
+ADD --chown=user https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.25.1/opentelemetry-javaagent.jar .
 
-CMD java --enable-preview -jar $APP_NAME
+CMD java --enable-preview -javaagent:opentelemetry-javaagent.jar -jar $APP_NAME
