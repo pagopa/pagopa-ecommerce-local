@@ -15,6 +15,7 @@ WORKDIR /workspace/pagopa-ecommerce-payment-methods-service/
 ARG REPO=/workspace/pagopa-ecommerce-payment-methods-service
 
 COPY --from=clone ${REPO}/ .
+RUN mvn -f ./pom.xml validate -DskipTests
 RUN mvn -f ./pom.xml clean package -DskipTests
 
 ### 3. Run stage
