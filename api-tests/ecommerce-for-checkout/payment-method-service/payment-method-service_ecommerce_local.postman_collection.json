@@ -1,0 +1,171 @@
+{
+	"info": {
+		"_postman_id": "51d0b9a7-2948-419f-b83d-f16a53f97d8f",
+		"name": "Payment methods for local eCommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24209240"
+	},
+	"item": [
+		{
+			"name": "Create new payment method",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Status code is 200 with valid response json\", () => {",
+							"",
+							"  pm.expect(pm.response.code).to.eql(200);  ",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.id).to.be.a('string');",
+							"  pm.expect(responseJson.id).to.have.length.greaterThan(0);",
+							"  pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"CARDS\",\n    \"description\": \"description\",\n    \"asset\": \"asset\",\n    \"status\": \"ENABLED\",\n    \"paymentTypeCode\": \"CP\",\n    \"ranges\": [\n        {\n            \"min\": 0,\n            \"max\": 10000\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get payment method by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Status code is 200\", () => {",
+							"  pm.expect(pm.response.code).to.eql(200);  ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Status code is 200 with valid response json\", () => {",
+							"",
+							"  pm.expect(pm.response.code).to.eql(200);  ",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.sessionId).to.be.a('string');",
+							"  pm.expect(responseJson.sessionId).to.have.length.greaterThan(0);",
+							"  pm.environment.set(\"SESSION_ID\", responseJson.sessionId);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}/sessions",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID}}",
+						"sessions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get card data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Status code is 200\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.bin).to.be.a('string');",
+							"  pm.expect(responseJson.bin).to.have.length.greaterThan(0);",
+							"  pm.expect(pm.response.code).to.eql(200);  ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}/sessions/{{SESSION_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID}}",
+						"sessions",
+						"{{SESSION_ID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
