@@ -99,6 +99,42 @@
 			"response": []
 		},
 		{
+			"name": "Get transaction by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id (status code 200)\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.transactionId).to.be.a('string');",
+							"  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
+							"  pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
+						"transactions",
+						"{{TRANSACTION_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Request authorization for payment",
 			"event": [
 				{
