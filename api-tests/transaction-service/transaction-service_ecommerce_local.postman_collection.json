@@ -58,7 +58,6 @@
 							"    console.log(error);",
 							"  } else {",
 							"      const responseBody = response.json();",
-							"      console.log(responseBody)",
 							"      pm.environment.set(\"PAYMENT_METHOD_ID\", responseBody.id);",
 							"  }",
 							"});"

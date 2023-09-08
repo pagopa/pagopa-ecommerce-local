@@ -342,7 +342,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-notification-service] Error while sending the email. Invalid input (status code is 400)\", function () {",
+							"pm.test(\"[pagopa-notification-service] Error while sending email. Invalid input (status code is 400)\", function () {",
 							"    pm.response.to.have.status(400);",
 							"});"
 						],
