@@ -1,0 +1,529 @@
+{
+	"info": {
+		"_postman_id": "6024a840-0a64-4b68-87b1-bd130aa4ce28",
+		"name": "Notification API",
+		"description": "API to support notifications",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24209240"
+	},
+	"item": [
+		{
+			"name": "Sending of the email successfully",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-notification-service] Email sent successfully (status code is 200)\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.outcome).to.eql(\"OK\")",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "CLIENT_ECOMMERCE_TEST",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"to\": \"{{EMAIL}}\",\n  \"subject\": \"{{EMAIL}}\",\n  \"templateId\": \"poc-1\",\n  \"parameters\": {\n    \"amount\": 100,\n    \"email\":\"{{EMAIL}}\",\n    \"noticeCode\" : \"302001751670642100\"\n  },\n  \"language\": \"it\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/emails",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"emails"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Email notification started",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"elit anim in id exercitation\",\n  \"to\": \"id ut pariatur laboris\",\n  \"templateId\": \"sed irure aliquip sit\",\n  \"pspName\": \"pariatur tempor \",\n  \"amount\": -69783558,\n  \"transactionId\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emails",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emails"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"importoSingoloVersamento\": 200\n}"
+				},
+				{
+					"name": "Invalid input",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"elit anim in id exercitation\",\n  \"to\": \"id ut pariatur laboris\",\n  \"templateId\": \"sed irure aliquip sit\",\n  \"pspName\": \"pariatur tempor \",\n  \"amount\": -69783558,\n  \"transactionId\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emails",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emails"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "*/*"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				},
+				{
+					"name": "Generic server error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"elit anim in id exercitation\",\n  \"to\": \"id ut pariatur laboris\",\n  \"templateId\": \"sed irure aliquip sit\",\n  \"pspName\": \"pariatur tempor \",\n  \"amount\": -69783558,\n  \"transactionId\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emails",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emails"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "*/*"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Sending email taken over",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-notification-service] Email sending taken over (status code is 202)\", function () {",
+							"    const responseJson = pm.response.text();",
+							"    pm.expect(responseJson).to.eql(\"Accepted\")",
+							"    pm.response.to.have.status(202);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "CLIENT_ECOMMERCE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"to\": \"{{EMAIL}}\",\n  \"subject\": \"{{EMAIL}}\",\n  \"templateId\": \"poc-1\",\n  \"parameters\": {\n    \"amount\": 100,\n    \"email\":\"{{EMAIL}}\",\n    \"noticeCode\" : \"302001751670642100\"\n  },\n  \"language\": \"it\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/emails",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"emails"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Email notification started",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"elit anim in id exercitation\",\n  \"to\": \"id ut pariatur laboris\",\n  \"templateId\": \"sed irure aliquip sit\",\n  \"pspName\": \"pariatur tempor \",\n  \"amount\": -69783558,\n  \"transactionId\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emails",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emails"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"importoSingoloVersamento\": 200\n}"
+				},
+				{
+					"name": "Invalid input",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"elit anim in id exercitation\",\n  \"to\": \"id ut pariatur laboris\",\n  \"templateId\": \"sed irure aliquip sit\",\n  \"pspName\": \"pariatur tempor \",\n  \"amount\": -69783558,\n  \"transactionId\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emails",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emails"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "*/*"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				},
+				{
+					"name": "Generic server error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"elit anim in id exercitation\",\n  \"to\": \"id ut pariatur laboris\",\n  \"templateId\": \"sed irure aliquip sit\",\n  \"pspName\": \"pariatur tempor \",\n  \"amount\": -69783558,\n  \"transactionId\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emails",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emails"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "*/*"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Sending email invalid input",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-notification-service] Error while sending the email. Invalid input (status code is 400)\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "CLIENT_ECOMMERCE_TEST",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"to\": \"{{INVALID_EMAIL}}\",\n  \"subject\": \"{{INVALID_EMAIL}}\",\n  \"templateId\": \"poc-1\",\n  \"parameters\": {\n    \"amount\": 100,\n    \"email\":\"{{INVALID_EMAIL}}\",\n    \"noticeCode\" : \"302001751670642100\"\n  },\n  \"language\": \"it\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/emails",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"emails"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Email notification started",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"elit anim in id exercitation\",\n  \"to\": \"id ut pariatur laboris\",\n  \"templateId\": \"sed irure aliquip sit\",\n  \"pspName\": \"pariatur tempor \",\n  \"amount\": -69783558,\n  \"transactionId\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emails",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emails"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"importoSingoloVersamento\": 200\n}"
+				},
+				{
+					"name": "Invalid input",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"elit anim in id exercitation\",\n  \"to\": \"id ut pariatur laboris\",\n  \"templateId\": \"sed irure aliquip sit\",\n  \"pspName\": \"pariatur tempor \",\n  \"amount\": -69783558,\n  \"transactionId\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emails",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emails"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "*/*"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				},
+				{
+					"name": "Generic server error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"elit anim in id exercitation\",\n  \"to\": \"id ut pariatur laboris\",\n  \"templateId\": \"sed irure aliquip sit\",\n  \"pspName\": \"pariatur tempor \",\n  \"amount\": -69783558,\n  \"transactionId\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emails",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"emails"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "*/*"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api.platform.pagopa.it/notifications",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}
