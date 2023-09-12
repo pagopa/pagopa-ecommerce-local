@@ -136,6 +136,9 @@ services:
       - "${NOTIFICATIONS_SERVICE_PORT}:3000"
     networks:
       - pagopa-ecommerce-net
+    depends_on:
+      azurite-init:
+        condition: service_completed_successfully
 
   pagopa-ecommerce-payment-requests-service:
     container_name: pagopa-ecommerce-payment-requests-service
