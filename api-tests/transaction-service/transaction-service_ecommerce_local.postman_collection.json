@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8551fcb3-32fc-4498-856c-bbc60335af00",
+		"_postman_id": "341bda0d-9301-4553-bf65-218e3cd38cef",
 		"name": "Transaction service for local eCommerce",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "24209240"
@@ -172,7 +172,7 @@
 							"    console.log(error);",
 							"  } else {",
 							"      const responseBody = response.json();",
-							"      pm.environment.set(\"SESSION_ID\", responseBody.sessionId);",
+							"      pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
 							"  }",
 							"});"
 						],
@@ -201,7 +201,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"{{PSP_ID}}\",\n    \"isAllCCP\": false,\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"cards\",\n        \"sessionId\": \"{{SESSION_ID}}\"\n    }\n}",
+					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"{{PSP_ID}}\",\n    \"isAllCCP\": false,\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"cards\",\n        \"orderId\": \"{{ORDER_ID}}\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
