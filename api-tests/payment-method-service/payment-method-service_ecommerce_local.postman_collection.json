@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "51d0b9a7-2948-419f-b83d-f16a53f97d8f",
+		"_postman_id": "3cbc616a-dc67-4cf0-84da-33437d23e263",
 		"name": "Payment methods for local eCommerce",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "24209240"
@@ -138,9 +138,9 @@
 							"",
 							"  pm.expect(pm.response.code).to.eql(200);  ",
 							"  const responseJson = pm.response.json();",
-							"  pm.expect(responseJson.sessionId).to.be.a('string');",
-							"  pm.expect(responseJson.sessionId).to.have.length.greaterThan(0);",
-							"  pm.environment.set(\"SESSION_ID\", responseJson.sessionId);",
+							"  pm.expect(responseJson.orderId).to.be.a('string');",
+							"  pm.expect(responseJson.orderId).to.have.length.greaterThan(0);",
+							"  pm.environment.set(\"ORDER_ID\", responseJson.orderId);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -175,7 +175,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve card data by session id (status code is 200)\", () => {",
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve card data by order id (status code is 200)\", () => {",
 							"  const responseJson = pm.response.json();",
 							"  pm.expect(responseJson.bin).to.be.a('string');",
 							"  pm.expect(responseJson.bin).to.have.length.greaterThan(0);",
@@ -190,7 +190,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}/sessions/{{SESSION_ID}}",
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
 					"host": [
 						"{{HOSTNAME}}"
 					],
@@ -198,20 +198,20 @@
 						"payment-methods",
 						"{{PAYMENT_METHOD_ID}}",
 						"sessions",
-						"{{SESSION_ID}}"
+						"{{ORDER_ID}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get card data with invalid sessionId",
+			"name": "Get card data with invalid orderId",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve card data with invalid session id (status code is 404)\", () => {",
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve card data with invalid order id (status code is 404)\", () => {",
 							"  const responseJson = pm.response.json();",
 							"  const expectedProblemJsonKeys = new Set([\"detail\",\"status\",\"title\"]);",
 							"  pm.expect(responseJson).to.satisfy(element => Object.keys(element).every(property => expectedProblemJsonKeys.has(property)));",
@@ -226,7 +226,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}/sessions/invalidSessionId",
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}/sessions/invalidOrderId",
 					"host": [
 						"{{HOSTNAME}}"
 					],
@@ -234,7 +234,7 @@
 						"payment-methods",
 						"{{PAYMENT_METHOD_ID}}",
 						"sessions",
-						"invalidSessionId"
+						"invalidOrderId"
 					]
 				}
 			},
