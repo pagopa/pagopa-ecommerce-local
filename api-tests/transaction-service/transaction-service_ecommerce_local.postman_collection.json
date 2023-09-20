@@ -173,6 +173,7 @@
 							"  } else {",
 							"      const responseBody = response.json();",
 							"      pm.environment.set(\"SESSION_ID\", responseBody.sessionId);",
+							"      pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
 							"  }",
 							"});"
 						],
@@ -201,7 +202,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"{{PSP_ID}}\",\n    \"isAllCCP\": false,\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"cards\",\n        \"sessionId\": \"{{SESSION_ID}}\"\n    }\n}",
+					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"{{PSP_ID}}\",\n    \"isAllCCP\": false,\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"cards\",\n        \"orderId\": \"{{ORDER_ID}}\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
