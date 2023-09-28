@@ -197,6 +197,11 @@
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
 						"type": "text"
+					},
+					{
+						"key": "x-pgs-id",
+						"value": "NPG",
+						"type": "text"
 					}
 				],
 				"body": {
