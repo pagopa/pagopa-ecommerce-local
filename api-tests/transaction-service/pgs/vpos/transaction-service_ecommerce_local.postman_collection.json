@@ -209,7 +209,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Authorization completed POST notify NPG (status code 200)\", function() {",
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Authorization completed POST notify PGS - VPOS (status code 200)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
 							"    pm.expect(response.status).to.be.eq(\"CLOSED\");",
