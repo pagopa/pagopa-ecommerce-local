@@ -134,7 +134,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Request authorization from NPG (status code 200)\", function() {",
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Request authorization from PGS - VPOS (status code 200)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
 							"    pm.expect(response.authorizationUrl).to.be.a(\"string\");",
