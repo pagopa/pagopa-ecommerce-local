@@ -27,7 +27,7 @@
           "idCiBundle": "idCiBundle2",
           "idPsp": "BNLIITRR",
           "onUs": false,
-          "paymentMethod": "paymentMethod2",
+          "paymentMethod": "CP",
           "primaryCiIncurredFee": 0,
           "taxPayerFee": 0,
           "touchpoint": "touchpoint2"

@@ -123,6 +123,21 @@ services:
       - "${NPG_PORT}:3000"
     networks:
       - pagopa-ecommerce-net
+  
+  pagopa-pgs-mock:
+    build:
+      context: .
+      dockerfile: pgs-mock/Dockerfile.pgs-mock
+    container_name: pagopa-PGS-mock
+    volumes:
+      - type: bind
+        source: ./pgs-mock
+        target: /config
+        read_only: true
+    ports:
+      - "${PGS_PORT}:3000"
+    networks:
+      - pagopa-ecommerce-net
 
   pagopa-notifications-service:
     container_name: pagopa-notifications-service
