@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ffd3664a-33f8-4d15-a648-9f214423c721",
+		"_postman_id": "ab47b5d4-8830-4b4c-9e56-61ea887e19e4",
 		"name": "Transaction service for local eCommerce PGS - XPAY",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -314,11 +314,6 @@
 					{
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"type": "text"
-					},
-					{
-						"key": "x-pgs-id",
-						"value": "NPG",
 						"type": "text"
 					}
 				],
