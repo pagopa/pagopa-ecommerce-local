@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Create new payment method",
+			"name": "Create new payment method for IO",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -40,13 +40,144 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"CARDS\",\n    \"description\": \"description\",\n    \"asset\": \"asset\",\n    \"status\": \"ENABLED\",\n    \"paymentTypeCode\": \"CP\",\n    \"ranges\": [\n        {\n            \"min\": 0,\n            \"max\": 10000\n        }\n    ]\n}",
+					"raw": "{\n    \"name\": \"CARDS\",\n    \"description\": \"description\",\n    \"asset\": \"asset\",\n    \"status\": \"ENABLED\",\n    \"paymentTypeCode\": \"CP\",\n    \"clientId\" : \"IO\",\n    \"ranges\": [\n        {\n            \"min\": 0,\n            \"max\": 10000\n        }\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new payment method for checkout",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Create a new payment methods\", () => {",
+							"",
+							"  pm.expect(pm.response.code).to.eql(200);  ",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.id).to.be.a('string');",
+							"  pm.expect(responseJson.id).to.have.length.greaterThan(0);",
+							"  pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"CARDS\",\n    \"description\": \"description\",\n    \"asset\": \"asset\",\n    \"status\": \"ENABLED\",\n    \"paymentTypeCode\": \"CP\",\n    \"clientId\" : \"CHECKOUT\",\n    \"ranges\": [\n        {\n            \"min\": 0,\n            \"max\": 10000\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get payment method for IO",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
+							"  pm.expect(responseJson).to.satisfy(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property)));",
+							"  pm.expect(pm.response.code).to.eql(200);  ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "IO",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get payment method for  checkout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
+							"  pm.expect(responseJson).to.satisfy(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property)));",
+							"  pm.expect(pm.response.code).to.eql(200);  ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{HOSTNAME}}/payment-methods",
 					"host": [
@@ -79,7 +210,13 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}",
 					"host": [
@@ -113,7 +250,13 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "IO",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{HOSTNAME}}/payment-methods/8de099bf-b453-49af-bc47-1c0f530f8e24",
 					"host": [
