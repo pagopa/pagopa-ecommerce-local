@@ -2,8 +2,7 @@
 	"info": {
 		"_postman_id": "203635ff-9eac-49ad-a278-f45b4f1a6b14",
 		"name": "Payment methods for local eCommerce",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "24209240"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -28,7 +27,7 @@
 							"  const responseJson = pm.response.json();",
 							"  pm.expect(responseJson.id).to.be.a('string');",
 							"  pm.expect(responseJson.id).to.have.length.greaterThan(0);",
-							"  pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.id);",
+							"  pm.environment.set(\"PAYMENT_METHOD_ID_IO\", responseJson.id);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -81,7 +80,7 @@
 							"  const responseJson = pm.response.json();",
 							"  pm.expect(responseJson.id).to.be.a('string');",
 							"  pm.expect(responseJson.id).to.have.length.greaterThan(0);",
-							"  pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.id);",
+							"  pm.environment.set(\"PAYMENT_METHOD_ID_CHECKOUT\", responseJson.id);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -191,7 +190,7 @@
 			"response": []
 		},
 		{
-			"name": "Get payment method by id",
+			"name": "Get payment method by id for Checkout",
 			"event": [
 				{
 					"listen": "test",
@@ -218,13 +217,53 @@
 					}
 				],
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}",
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID}}"
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get payment method by id for IO",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
+							"  pm.expect(responseJson).to.satisfy(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property)));",
+							"  pm.expect(pm.response.code).to.eql(200);  ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-client-id",
+						"type": "text",
+						"value": "CHECKOUT"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_IO}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_IO}}"
 					]
 				}
 			},
