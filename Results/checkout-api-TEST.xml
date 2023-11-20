@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Payment methods for local eCommerce" tests="10" time="1.505">
+  <testsuite name="Create new payment method for IO" id="5616831f-4f17-4ea9-a220-28fa6b21dad6" timestamp="2023-11-20T10:26:30.294Z" tests="1" failures="0" errors="0" time="0.116">
+    <testcase name="[pagopa-ecommerce-payment-method-service] Create a new payment methods" time="0.116" classname="PaymentMethodsForLocalECommerce"/>
+  </testsuite>
+  <testsuite name="Create new payment method for checkout" id="2770db35-8089-4d5f-afda-cc08f54f0c65" timestamp="2023-11-20T10:26:30.294Z" tests="1" failures="0" errors="0" time="0.019">
+    <testcase name="[pagopa-ecommerce-payment-method-service] Create a new payment methods" time="0.019" classname="PaymentMethodsForLocalECommerce"/>
+  </testsuite>
+  <testsuite name="Get payment method for IO" id="26fffaa4-26a7-4bd4-a148-149449892ed3" timestamp="2023-11-20T10:26:30.294Z" tests="1" failures="0" errors="0" time="0.017">
+    <testcase name="[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)" time="0.017" classname="PaymentMethodsForLocalECommerce"/>
+  </testsuite>
+  <testsuite name="Get payment method for  checkout" id="50473490-f85d-49d7-b71e-c2fccee3ea33" timestamp="2023-11-20T10:26:30.294Z" tests="1" failures="0" errors="0" time="0.022">
+    <testcase name="[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)" time="0.022" classname="PaymentMethodsForLocalECommerce"/>
+  </testsuite>
+  <testsuite name="Get payment method by id for Checkout" id="0dbce426-d4f5-4eea-89cd-5c71d5859045" timestamp="2023-11-20T10:26:30.294Z" tests="1" failures="0" errors="0" time="0.015">
+    <testcase name="[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)" time="0.015" classname="PaymentMethodsForLocalECommerce"/>
+  </testsuite>
+  <testsuite name="Get payment method by id for IO" id="aab68cf2-efd2-4307-b20b-ee9e9059e8cc" timestamp="2023-11-20T10:26:30.294Z" tests="1" failures="0" errors="0" time="0.012">
+    <testcase name="[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)" time="0.012" classname="PaymentMethodsForLocalECommerce"/>
+  </testsuite>
+  <testsuite name="Get payment method by id not found" id="9fcdd665-316d-4ef8-a0d7-9eec99bac811" timestamp="2023-11-20T10:26:30.294Z" tests="1" failures="0" errors="0" time="0.013">
+    <testcase name="[pagopa-ecommerce-payment-method-service] Get not existing payment method (status code is 404)" time="0.013" classname="PaymentMethodsForLocalECommerce"/>
+  </testsuite>
+  <testsuite name="Create session" id="f443c9f3-fae1-4e91-9a53-68a8b0967852" timestamp="2023-11-20T10:26:30.294Z" tests="1" failures="0" errors="0" time="1.199">
+    <testcase name="[pagopa-ecommerce-payment-method-service] Create new NPG session (status code is 200)" time="1.199" classname="PaymentMethodsForLocalECommerce"/>
+  </testsuite>
+  <testsuite name="Get card data" id="69faf7e0-8b76-4610-8238-d5e2106896cd" timestamp="2023-11-20T10:26:30.294Z" tests="1" failures="0" errors="0" time="0.078">
+    <testcase name="[pagopa-ecommerce-payment-method-service] Retrieve card data by order id (status code is 200)" time="0.078" classname="PaymentMethodsForLocalECommerce"/>
+  </testsuite>
+  <testsuite name="Get card data with invalid orderId" id="6b0202c9-de3b-43d8-a5b1-1f1db8530c64" timestamp="2023-11-20T10:26:30.294Z" tests="1" failures="0" errors="0" time="0.014">
+    <testcase name="[pagopa-ecommerce-payment-method-service] Retrieve card data with invalid order id (status code is 404)" time="0.014" classname="PaymentMethodsForLocalECommerce"/>
+  </testsuite>
+</testsuites>

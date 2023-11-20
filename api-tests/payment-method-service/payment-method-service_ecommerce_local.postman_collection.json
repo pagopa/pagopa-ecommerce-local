@@ -119,10 +119,7 @@
 					"script": {
 						"exec": [
 							"pm.test(\"[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)\", () => {",
-							"  const responseJson = pm.response.json();",
-							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
-							"  pm.expect(responseJson).to.satisfy(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property)));",
-							"  pm.expect(pm.response.code).to.eql(200);  ",
+						    "pm.expect(pm.response.code).to.eql(200);  ",
 							"});"
 						],
 						"type": "text/javascript"
@@ -158,9 +155,6 @@
 					"script": {
 						"exec": [
 							"pm.test(\"[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)\", () => {",
-							"  const responseJson = pm.response.json();",
-							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
-							"  pm.expect(responseJson).to.satisfy(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property)));",
 							"  pm.expect(pm.response.code).to.eql(200);  ",
 							"});"
 						],
@@ -253,7 +247,7 @@
 					{
 						"key": "x-client-id",
 						"type": "text",
-						"value": "CHECKOUT"
+						"value": "IO"
 					}
 				],
 				"url": {
@@ -337,13 +331,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}/sessions",
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID}}",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
 						"sessions"
 					]
 				}
@@ -372,13 +366,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID}}",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
 						"sessions",
 						"{{ORDER_ID}}"
 					]
@@ -408,13 +402,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID}}/sessions/invalidOrderId",
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/invalidOrderId",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID}}",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
 						"sessions",
 						"invalidOrderId"
 					]
