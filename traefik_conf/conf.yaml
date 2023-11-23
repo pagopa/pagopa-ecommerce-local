@@ -20,6 +20,13 @@ http:
       middlewares:
         - nodo-prefix
 
+    payment-methods-router:
+      service: "pagopa-ecommerce-payment-methods-service"
+      rule: "PathPrefix(`/payment-methods-service`)"
+      middlewares:
+        - payment-methods-headers
+        - payment-methods-prefix
+
   middlewares:
     gateway-headers:
       headers:
@@ -43,6 +50,15 @@ http:
       stripPrefix:
         prefixes:
           - "/nodo"
+    
+    payment-methods-prefix:
+      stripPrefix:
+        prefixes:
+          - "/payment-methods-service"
+    payment-methods-headers:
+      headers:
+        customRequestHeaders:
+          X-Client-ID: "CHECKOUT"
 
 
   services:
@@ -60,3 +76,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://pagopa-node-mock:3002"
+
+    pagopa-ecommerce-payment-methods-service:
+          loadBalancer:
+            servers:
+              - url: "http://pagopa-ecommerce-payment-methods-service:8093"
