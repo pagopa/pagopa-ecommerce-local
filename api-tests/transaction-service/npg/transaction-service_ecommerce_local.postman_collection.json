@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "dd4adea1-5d5b-49f0-82e1-7bd33ae44aaa",
+		"_postman_id": "9872b0e8-1c6a-44bf-8c73-0594a7653990",
 		"name": "Transaction service for local eCommerce NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -39,7 +39,8 @@
 							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
 							"    method: 'GET',",
 							"    header: {",
-							"        'Content-Type': 'application/json'",
+							"        'Content-Type': 'application/json',",
+							"        'x-client-id': 'CHECKOUT'",
 							"    }",
 							"};",
 							"",
@@ -71,7 +72,8 @@
 							"                \"min\": 0,",
 							"                \"max\": 10000",
 							"            }",
-							"        ]",
+							"        ],",
+							"        \"clientId\": \"CHECKOUT\"",
 							"    };",
 							"",
 							"    const createPaymentMethodRequest = {",

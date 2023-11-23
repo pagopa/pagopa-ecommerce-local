@@ -80,4 +80,4 @@ http:
     pagopa-ecommerce-payment-methods-service:
           loadBalancer:
             servers:
-              - url: "http://pagopa-ecommerce-payment-methods-service:8093"
+              - url: "http://pagopa-ecommerce-payment-methods-service:8080"
