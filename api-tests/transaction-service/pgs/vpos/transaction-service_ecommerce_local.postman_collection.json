@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3549dfb7-3123-45e0-8b07-ec11ef9e0be4",
+		"_postman_id": "7d247297-7888-4a45-8131-58e65176c5b4",
 		"name": "Transaction service for local eCommerce PGS - VPOS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -39,7 +39,8 @@
 							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
 							"    method: 'GET',",
 							"    header: {",
-							"        'Content-Type': 'application/json'",
+							"        'Content-Type': 'application/json',",
+							"        'x-client-id': 'CHECKOUT'",
 							"    }",
 							"};",
 							"",
@@ -65,7 +66,8 @@
 							"                \"min\": 0,",
 							"                \"max\": 10000",
 							"            }",
-							"        ]",
+							"        ],",
+							"        \"clientId\": \"CHECKOUT\"",
 							"    };",
 							"",
 							"    const createPaymentMethodRequest = {",
