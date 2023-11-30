@@ -1,7 +1,7 @@
 {
   "authData": {
-    "contractId": "sessionId",
-    "bin": "securityToken",
+    "contractId": "contractId",
+    "bin": "42424242",
     "brand": "VISA"  
   }
 }
