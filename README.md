@@ -29,6 +29,7 @@ In the _.env_ file there are a configurations related to conainers that can be c
 | ECOMMERCE_PAYMENT_REQUESTS_PORT          | The port the pagopa-ecommerce-payment-requests-service listens to.                                                                               |
 | PGS_PORT                                 | The port the pagopa-pgs-mock                                                                                                                     |
 | NPG_PORT                                 | The port the pagopa-npg-mock                                                                                                                     |
+| WALLET_PORT                              | The port the pagopa-wallet-mock                                                                                                                   |
 
 In addiction, the parameters of the individual microservices can also be customized by editing the env file contained in the folder of the specific service.
 
