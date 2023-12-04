@@ -123,6 +123,21 @@ services:
       - "${NPG_PORT}:3000"
     networks:
       - pagopa-ecommerce-net
+
+  pagopa-wallet-mock:
+    build:
+      context: .
+      dockerfile: wallet-mock/Dockerfile.wallet-mock
+    container_name: pagopa-wallet-mock
+    volumes:
+      - type: bind
+        source: ./wallet-mock
+        target: /config
+        read_only: true
+    ports:
+      - "${WALLET_PORT}:3000"
+    networks:
+      - pagopa-ecommerce-net
   
   pagopa-pgs-mock:
     build:
