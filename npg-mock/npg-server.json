@@ -1,5 +1,13 @@
 {
-  "build": {
+  "buildApm": {
+    "state": "REDIRECTED_TO_EXTERNAL_DOMAIN",
+    "url": "https://localhost.it",
+    "securityToken": "securityToken",
+    "sessionId": "sessionId",
+    "sriHash": "sriHash"
+  },
+  "buildCards": {
+    "state": "READY_FOR_PAYMENT",
     "sessionId": "sessionId",
     "securityToken": "securityToken",
     "fields": [
