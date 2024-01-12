@@ -1,8 +1,13 @@
 require("./set-polyfill");
 
 module.exports = function (req, res, next) {
-
-  if (req.path.toString() == "/redirectionUrl" && req.method === "POST") {
+  console.log(`${new Date().toISOString()} - Received request: ${req.method} ${req.path}
+  Headers: 
+  ${JSON.stringify(req.headers)}
+  Body:  
+  ${JSON.stringify(req.body)}
+  `);
+  if (req.path.toString() == "/redirections" && req.method === "POST") {
     const handlerResponse = redirectUrlHandler(req.body);
 
     if (Object.keys(handlerResponse).includes("status")) {
