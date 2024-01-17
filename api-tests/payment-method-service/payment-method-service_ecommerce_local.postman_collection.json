@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "203635ff-9eac-49ad-a278-f45b4f1a6b14",
+		"_postman_id": "3742432d-96c0-4c74-b18b-5d2267cc1e70",
 		"name": "Payment methods for local eCommerce",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29036441"
 	},
 	"item": [
 		{
@@ -39,7 +40,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"CARDS\",\n    \"description\": \"description\",\n    \"asset\": \"asset\",\n    \"status\": \"ENABLED\",\n    \"paymentTypeCode\": \"CP\",\n    \"clientId\" : \"IO\",\n    \"ranges\": [\n        {\n            \"min\": 0,\n            \"max\": 10000\n        }\n    ]\n}",
+					"raw": "{\n    \"name\": \"CARDS\",\n    \"description\": \"description\",\n    \"asset\": \"asset\",\n    \"status\": \"ENABLED\",\n    \"paymentTypeCode\": \"CP\",\n    \"clientId\" : \"IO\",\n    \"ranges\": [\n        {\n            \"min\": 0,\n            \"max\": 10000\n        }\n    ],\n    \"methodManagement\": \"ONBOARDABLE\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -92,7 +93,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"CARDS\",\n    \"description\": \"description\",\n    \"asset\": \"asset\",\n    \"status\": \"ENABLED\",\n    \"paymentTypeCode\": \"CP\",\n    \"clientId\" : \"CHECKOUT\",\n    \"ranges\": [\n        {\n            \"min\": 0,\n            \"max\": 10000\n        }\n    ]\n}",
+					"raw": "{\n    \"name\": \"CARDS\",\n    \"description\": \"description\",\n    \"asset\": \"asset\",\n    \"status\": \"ENABLED\",\n    \"paymentTypeCode\": \"CP\",\n    \"clientId\" : \"CHECKOUT\",\n    \"ranges\": [\n        {\n            \"min\": 0,\n            \"max\": 10000\n        }\n    ],\n    \"methodManagement\": \"ONBOARDABLE\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -119,7 +120,7 @@
 					"script": {
 						"exec": [
 							"pm.test(\"[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)\", () => {",
-						    "pm.expect(pm.response.code).to.eql(200);  ",
+							"pm.expect(pm.response.code).to.eql(200);  ",
 							"});"
 						],
 						"type": "text/javascript"
@@ -192,7 +193,7 @@
 						"exec": [
 							"pm.test(\"[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)\", () => {",
 							"  const responseJson = pm.response.json();",
-							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
+							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\", \"methodManagement\"]);",
 							"  pm.expect(responseJson).to.satisfy(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property)));",
 							"  pm.expect(pm.response.code).to.eql(200);  ",
 							"});"
@@ -232,7 +233,7 @@
 						"exec": [
 							"pm.test(\"[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)\", () => {",
 							"  const responseJson = pm.response.json();",
-							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
+							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\",\"methodManagement\"]);",
 							"  pm.expect(responseJson).to.satisfy(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property)));",
 							"  pm.expect(pm.response.code).to.eql(200);  ",
 							"});"
