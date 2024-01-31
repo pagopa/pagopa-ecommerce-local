@@ -195,8 +195,8 @@
 							"key": "token",
 							"value": "{{AUTH_TOKEN}}",
 							"type": "string"
-					}
-]
+						}
+					]
 				},
 				"method": "POST",
 				"header": [
@@ -270,8 +270,8 @@
 							"key": "token",
 							"value": "{{AUTH_TOKEN}}",
 							"type": "string"
-					}
-]
+						}
+					]
 				},
 				"method": "PATCH",
 				"header": [
@@ -320,20 +320,29 @@
 							"    }",
 							"};",
 							"",
-							"const maxAttempts = 15;",
-							"var counter = 0;",
-							"var transactionStatus = null;",
-							"while (counter < maxAttempts && transactionStatus != \"CLOSED\") {",
-							"\tpm.sendRequest(getTransaction, (error, response) => {",
-							"    if (error) {",
-							"        console.log(`Error retrieving transaction by id: ${error.code}`);",
-							"    } else {",
-							"        const responseBody = response.json();",
-							"        transactionStatus = responseBody.status;",
-							"        console.log(`The transaction status: ${transactionStatus}`)",
+							"executeGetTransactionRequest()",
+							"",
+							"",
+							"async function executeGetTransactionRequest (){",
+							"        const maxAttempts = 10;",
+							"        var counter = 0;",
+							"        var transactionStatus = null;",
+							"        while (counter < maxAttempts && transactionStatus != \"CLOSED\") {",
+							"            await new Promise(r => setTimeout(r, 1000));",
+							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {",
+							"                if (error) {",
+							"                    console.log(`Error retrieving transaction by id: ${error.code}`);",
+							"                    reject(error)",
+							"                } else {",
+							"                    const responseBody = response.json();",
+							"                    transactionStatus = responseBody.status;",
+							"                    console.log(`The transaction status: ${transactionStatus}`)",
+							"                    resolve(transactionStatus);",
+							"                }",
+							"            }));",
+							"        counter++;",
 							"    }",
-							"   });",
-							"   counter++;",
+							"",
 							"}",
 							""
 						],
@@ -371,8 +380,8 @@
 							"key": "token",
 							"value": "{{AUTH_TOKEN}}",
 							"type": "string"
-					}
-]
+						}
+					]
 				},
 				"method": "POST",
 				"header": [
