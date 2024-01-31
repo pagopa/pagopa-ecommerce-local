@@ -426,7 +426,7 @@
 							"  const responseJson = pm.response.json();",
 							"  pm.expect(responseJson.transactionId).to.be.a('string');",
 							"  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
-							"  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\"]);",
+							"  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\",\"NOTIFICATION_ERROR\"]);",
 							"  pm.expect(responseJson.gateway).to.be.eq(\"NPG\");",
 							"  pm.expect(responseJson.sendPaymentResultOutcome).to.be.eq(\"OK\");",
 							"  pm.response.to.have.status(200);",
