@@ -119,6 +119,7 @@
 							"        } else {",
 							"            const responseBody = response.json();",
 							"            pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
+							"            pm.environment.set(\"CORRELATION_ID\", responseBody.correlationId);",
 							"        }",
 							"    });",
 							"}",
@@ -139,7 +140,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
+					"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\",\n    \"correlationId\": \"{{CORRELATION_ID}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
