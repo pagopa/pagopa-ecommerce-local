@@ -118,7 +118,7 @@
 							"            console.log(`Create session error: ${error.code}`);",
 							"        } else {",
 							"            const responseBody = response.json();",
-							"            pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
+														"            pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
 							"            pm.environment.set(\"CORRELATION_ID\", responseBody.correlationId);",
 							"        }",
 							"    });",
@@ -138,7 +138,7 @@
 						"type": "text"
 					},
 					{
-						"key": "correlationId",
+						"key": "x-correlation-id",
 						"value": "{{CORRELATION_ID}}",
 						"type": "text"
 					}
