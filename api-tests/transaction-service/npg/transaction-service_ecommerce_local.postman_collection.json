@@ -136,11 +136,16 @@
 						"key": "x-client-id",
 						"value": "CHECKOUT",
 						"type": "text"
+					},
+					{
+						"key": "correlationId",
+						"value": "{{CORRELATION_ID}}",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\",\n    \"correlationId\": \"{{CORRELATION_ID}}\"\n}",
+					"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
