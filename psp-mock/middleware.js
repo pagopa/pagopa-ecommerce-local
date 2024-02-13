@@ -8,7 +8,7 @@ module.exports = function (req, res, next) {
   ${JSON.stringify(req.body)}
   `);
   const requestPath = req.path.toString();
-  if ((requestPath == "/forward" || requestPath == "/redirections") && req.method === "POST") {
+  if (requestPath == "/forward" && req.method === "POST") {
     const handlerResponse = redirectUrlHandler(req.body);
 
     if (Object.keys(handlerResponse).includes("status")) {
