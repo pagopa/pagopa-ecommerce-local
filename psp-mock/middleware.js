@@ -3,9 +3,9 @@ require("./set-polyfill");
 module.exports = function (req, res, next) {
   console.log(`${new Date().toISOString()} - Received request: ${req.method} ${req.path}
   Headers: 
-  ${JSON.stringify(req.headers)}
+  ${JSON.stringify(req.headers, null, 4)}
   Body:  
-  ${JSON.stringify(req.body)}
+  ${JSON.stringify(req.body, null, 4)}
   `);
   const requestPath = req.path.toString();
   if (requestPath == "/forward" && req.method === "POST") {
