@@ -12,7 +12,7 @@ module.exports = function (req, res, next) {
   }
   const requestPath = req.path.toString();
   const requestBody = req.body;
-  if (requestPath.includes("build")) {
+  if (requestPath.includes("build") && !requestPath.includes("state")) {
     //handle build data request changing response based on input paymentService
     const paymentService = requestBody.paymentSession.paymentService;
     console.log(`Received build request for payment session: ${paymentService}`);

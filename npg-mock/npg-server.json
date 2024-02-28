@@ -50,5 +50,54 @@
   "refunds": {
     "operationId": "operationId",
     "operationTime": "2022-09-01T01:20:00.001Z"
+  },
+  "stateOK": {
+    "state": "PAYMENT_COMPLETE",
+    "operation": {
+        "orderId": "E1707399315679dQNX",
+        "operationId": "800638924408940399",
+        "channel": null,
+        "channelDetail": "SERVER_TO_SERVER",
+        "operationType": "AUTHORIZATION",
+        "operationResult": "EXECUTED",
+        "operationTime": "2024-02-08 14:36:35.926",
+        "paymentMethod": "CARD",
+        "paymentCircuit": "MC",
+        "paymentInstrumentInfo": "***1597",
+        "paymentEndToEndId": "800638924408940399",
+        "cancelledOperationId": null,
+        "operationAmount": "12100",
+        "operationCurrency": "EUR",
+        "customerInfo": {
+            "cardHolderName": "Gianluca Ciuffa ",
+            "cardHolderEmail": null,
+            "billingAddress": null,
+            "shippingAddress": null,
+            "mobilePhoneCountryCode": null,
+            "mobilePhone": null,
+            "homePhone": null,
+            "workPhone": null,
+            "cardHolderAcctInfo": null,
+            "merchantRiskIndicator": null
+        },
+        "warnings": [],
+        "paymentLinkId": null,
+        "omnichannelId": null,
+        "additionalData": {
+            "paymentAccountReference": null,
+            "maskedPan": "512739******1597",
+            "authorizationCode": "725256",
+            "cardCountry": "380",
+            "cardId": "d42ee7278bce2d7d03dbde70a5e0d58db0b1887bdabb7d65abd55d42d954a13a",
+            "cardType": "MASTERCARD",
+            "cardId4": "m9Z5C3AgqOubsXve6P9XdACbYOKV5Kduyp/pykrtzvQ=",
+            "cardExpiryDate": "203012",
+            "rrn": "403900808791",
+            "schemaTID": null
+        }
+    }
+  },
+  "stateKO": {
+    "state": "GDI_VERIFICATION"
   }
 }
