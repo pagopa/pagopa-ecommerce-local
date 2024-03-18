@@ -5,7 +5,7 @@
         {
           "abi": "abi1",
           "bundleDescription": "bundleDescription1",
-          "bundleName": "bundleName1",
+          "bundleName": "bundleName1Old",
           "idBrokerPsp": "idBrokerPsp1",
           "idBundle": "idBundle1",
           "idChannel": "idChannel1",
@@ -15,12 +15,13 @@
           "paymentMethod": "CP",
           "primaryCiIncurredFee": 0,
           "taxPayerFee": 0,
-          "touchpoint": "touchpoint1"
+          "touchpoint": "touchpoint1",
+          "pspBusinessName": "bundleName1"
         },
         {
           "abi": "abi2",
           "bundleDescription": "bundleDescription2",
-          "bundleName": "bundleName2",
+          "bundleName": "bundleName2Old",
           "idBrokerPsp": "idBrokerPsp2",
           "idBundle": "idBundle2",
           "idChannel": "idChannel2",
@@ -30,12 +31,13 @@
           "paymentMethod": "CP",
           "primaryCiIncurredFee": 0,
           "taxPayerFee": 0,
-          "touchpoint": "touchpoint2"
+          "touchpoint": "touchpoint2",
+          "pspBusinessName": "bundleName2"
         },
         {
           "abi": "abi3",
           "bundleDescription": "bundleDescription3",
-          "bundleName": "bundleName3",
+          "bundleName": "bundleName3Old",
           "idBrokerPsp": "idBrokerPsp3",
           "idBundle": "idBundle3",
           "idChannel": "idChannel3",
@@ -45,7 +47,8 @@
           "paymentMethod": "RBPR",
           "primaryCiIncurredFee": 0,
           "taxPayerFee": 0,
-          "touchpoint": "touchpoint2"
+          "touchpoint": "touchpoint2",
+          "pspBusinessName": "bundleName3"
         }
       ]
   }
