@@ -9,7 +9,23 @@ module.exports = function (req, res, next) {
   `);
   const requestPath = req.path.toString();
   if (requestPath == "/forward" && req.method === "POST") {
-    const handlerResponse = redirectUrlHandler(req.body);
+    const xHostPathHeader = req.headers["x-host-path"].split("/");
+    const requestLastPath = xHostPathHeader[xHostPathHeader.length - 1];
+    let handlerResponse;
+    switch (requestLastPath) {
+      case "redirections":
+        handlerResponse = redirectUrlHandler(req.body);
+        break;
+      case "refunds":
+        handlerResponse = redirectRefund(req.body);
+        break;
+      default:
+        handlerResponse = {
+          detail: `Cannot discriminate request x-host-path header last path ${requestLastPath}`,
+          status: 400
+        };
+        break;
+    }
 
     if (Object.keys(handlerResponse).includes("status")) {
       res.status(handlerResponse.status);
@@ -66,7 +82,7 @@ function redirectUrlHandler(requestBody) {
       counter += 1;
     }
     return result;
-}
+  }
 
   const idPSPTransaction = makeid(10);
 
@@ -79,5 +95,46 @@ function redirectUrlHandler(requestBody) {
     idPSPTransaction,
     amount: requestBody.amount,
     timeout: hasTimeout ? timeout : undefined
+  };
+}
+
+
+
+function redirectRefund(requestBody) {
+  const requiredKeys = new Set(["idTransaction", "idPSPTransaction", "action"]);
+  const optionalKeys = new Set([]);
+
+  const inputKeys = new Set(Object.keys(requestBody));
+
+  const hasAllRequiredKeys = requiredKeys.isSubsetOf(inputKeys);
+  const hasOnlyKnownKeys = inputKeys.isSubsetOf(requiredKeys.union(optionalKeys));
+
+  const idTransaction = requestBody.idTransaction;
+
+  if (!hasAllRequiredKeys) {
+    const missingKeys = requiredKeys.difference(inputKeys);
+    console.error(`Missing required keys in input body: ${Array.from(missingKeys)}`);
+
+    return {
+      detail: `Missing required keys in input body: ${Array.from(missingKeys)}`,
+      status: 400,
+      idTransaction: idTransaction
+    };
+  }
+
+  if (!hasOnlyKnownKeys) {
+    const unknownKeys = inputKeys.difference(requiredKeys.union(optionalKeys));
+    console.error(`Unknown keys in input body: ${Array.from(unknownKeys)}`);
+
+    return {
+      detail: `Unknown keys in input body: ${Array.from(unknownKeys)}`,
+      status: 400,
+      idTransaction
+    };
+  }
+
+  return {
+    idTransaction: idTransaction,
+    outcome: "OK"
   };
 }
