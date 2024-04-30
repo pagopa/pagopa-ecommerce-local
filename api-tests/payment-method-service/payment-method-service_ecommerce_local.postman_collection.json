@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "3742432d-96c0-4c74-b18b-5d2267cc1e70",
+		"_postman_id": "d03f5f81-5529-469f-84a4-fbb889eac52f",
 		"name": "Payment methods for local eCommerce",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "29036441"
+		"_exporter_id": "32950386"
 	},
 	"item": [
 		{
@@ -412,6 +412,115 @@
 						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
 						"sessions",
 						"invalidOrderId"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calculate Fees v1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[Payment Methods] Fees retrieved with POST fees\", function(){",
+							"   ",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"    const expectedWithoutBundles = {",
+							"        \"paymentMethodStatus\": \"ENABLED\",",
+							"        \"belowThreshold\": true",
+							"    };",
+							"    pm.expect(response.paymentMethodName).eql(\"CARDS\");",
+							"    pm.expect(response.paymentMethodDescription).eql(\"description\");",
+							"    pm.expect(response.paymentMethodStatus).eql(expectedWithoutBundles.paymentMethodStatus);",
+							"    pm.expect(response.belowThreshold).eql(expectedWithoutBundles.belowThreshold);",
+							"    pm.expect(response.bundles).to.be.not.empty;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"bin\": \"12345678\",\n  \"idPspList\": [\n    \"123\"\n  ],\n  \"paymentAmount\": 100,\n  \"primaryCreditorInstitution\": \"77777777777\",\n  \"transferList\": [\n    {\n      \"creditorInstitution\": \"77777777777\",\n      \"digitalStamp\": true\n    }\n  ],\n  \"isAllCCP\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"fees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calculate Fees v2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[Payment Methods] Fees retrieved with POST fees\", function(){",
+							"   ",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"    const expectedWithoutBundles = {",
+							"        \"paymentMethodStatus\": \"ENABLED\",",
+							"        \"belowThreshold\": true",
+							"    };",
+							"    pm.expect(response.paymentMethodName).eql(\"CARDS\");",
+							"    pm.expect(response.paymentMethodDescription).eql(\"description\");",
+							"    pm.expect(response.paymentMethodStatus).eql(expectedWithoutBundles.paymentMethodStatus);",
+							"    pm.expect(response.belowThreshold).eql(expectedWithoutBundles.belowThreshold);",
+							"    pm.expect(response.bundles).to.be.not.empty;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"bin\": \"12345678\",\n  \"idPspList\": [\n    \"123\"\n  ],\n  \"paymentNotices\": [\n    {\n        \"paymentAmount\": 5,\n        \"primaryCreditorInstitution\": \"77777777777\",\n        \"transferList\": [\n            {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": true,\n            \"transferCategory\": \"string\"\n            }\n        ]\n    },\n    {\n        \"paymentAmount\": 10,\n        \"primaryCreditorInstitution\": \"77777777777\",\n        \"transferList\": [\n            {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": true,\n            \"transferCategory\": \"string\"\n            }\n        ]\n    }\n  ],\n  \"isAllCCP\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"v2",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"fees"
 					]
 				}
 			},
