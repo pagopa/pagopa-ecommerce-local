@@ -110,13 +110,11 @@
 				"header": [
 					{
 						"key": "x-client-id",
-						"value": "CHECKOUT",
-						"uuid": "110b58bc-5bc3-40ce-a6a7-4f86d013fc3b"
+						"value": "CHECKOUT"
 					},
 					{
 						"key": "x-correlation-id",
-						"value": "{{CORRELATION_ID}}",
-						"uuid": "bc120163-5aa8-4b9f-8d25-633e4275c118"
+						"value": "{{CORRELATION_ID}}"
 					}
 				],
 				"body": {
@@ -184,13 +182,11 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"uuid": "68fa80a1-fdd0-4bf9-8598-fb4f49ca8be0"
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
 					},
 					{
 						"key": "x-pgs-id",
-						"value": "REDIRECT",
-						"uuid": "ab5b19bc-bc31-49b3-a22f-60d463840efc"
+						"value": "REDIRECT"
 					}
 				],
 				"body": {
@@ -259,8 +255,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"uuid": "341d04f0-c442-4870-8759-989ea30a6c53"
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
 					}
 				],
 				"body": {
@@ -282,6 +277,130 @@
 						"transactions",
 						"{{BASE64_ENCODED_TRANSACTION_ID}}",
 						"auth-requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add user receipt - KO mismatched payment tokens",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 422) for mismatch in payment token\", function() {",
+							"    pm.response.to.have.status(422);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.detail.toString().split(\"\\n\")[0]).to.be.eq(\"eCommerce and Nodo payment tokens mismatch detected!\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getTransaction = {",
+							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
+							"    method: 'GET',",
+							"    header: {",
+							"        'Content-Type': 'application/json'",
+							"    }",
+							"};",
+							"",
+							"const maxIteration = 10;",
+							"const timeoutBetweenAttemptsMillis = 1000;",
+							"",
+							"let lastTransactionStatus;",
+							"",
+							"pm.sendRequest(getTransaction, (error, response) => {",
+							"    if (error) {",
+							"        console.log(`Error while retrieving transaction status: ${error.code}`);",
+							"        endPolling = true;",
+							"    } else {",
+							"        const responseBody = response.json();",
+							"        lastTransactionStatus = responseBody.status;",
+							"        console.log(`Transaction status: ${lastTransactionStatus}`);",
+							"        if (lastTransactionStatus != \"CLOSED\") {",
+							"            pollTransactionStatus();",
+							"        }",
+							"    }",
+							"});",
+							"async function pollTransactionStatus() {",
+							"    let endPolling = false;",
+							"    let currentIteration = 0;",
+							"    console.log(\"Start polling transaction service to wait for transaction status to become CLOSED\");",
+							"    while (!endPolling) {",
+							"        getTransactionStatus();",
+							"        currentIteration++;",
+							"        endPolling = lastTransactionStatus == \"CLOSED\" || currentIteration == maxIteration;",
+							"        console.log(`Transaction status: ${lastTransactionStatus}, current iteration: ${currentIteration}, max iteration: ${maxIteration}, end polling: ${endPolling}`);",
+							"        if (!endPolling) {",
+							"            await new Promise(r => setTimeout(r, timeoutBetweenAttemptsMillis));",
+							"        }",
+							"",
+							"    }",
+							"",
+							"    function getTransactionStatus() {",
+							"        pm.sendRequest(getTransaction, (error, response) => {",
+							"            if (error) {",
+							"                console.log(`Error while retrieving transaction status: ${error.code}`);",
+							"                throw error;",
+							"            } else {",
+							"                const responseBody = response.json();",
+							"                lastTransactionStatus = responseBody.status",
+							"            }",
+							"        }",
+							"        );",
+							"    }",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"outcome\": \"OK\",\n    \"paymentDate\": \"2023-01-01T00:00:00.000Z\",\n    \"payments\": [\n        {\n            \"paymentToken\": \"mismatchedPaymentToken\",\n            \"description\": \"description\",\n            \"creditorReferenceId\": \"creditorReferenceId\",\n            \"fiscalCode\": \"fiscalCode\",\n            \"companyName\": \"companyName\",\n            \"officeName\": \"officeName\",\n            \"debtor\": \"debtor\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/user-receipts",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
+						"transactions",
+						"{{TRANSACTION_ID}}",
+						"user-receipts"
 					]
 				}
 			},
@@ -402,8 +521,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"uuid": "5a602308-f620-47f9-beaf-36c32d0f561d"
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
 					}
 				],
 				"body": {

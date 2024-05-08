@@ -137,13 +137,11 @@
 				"header": [
 					{
 						"key": "x-client-id",
-						"value": "CHECKOUT",
-						"uuid": "32f38387-a565-4784-b717-15fdbe46aa2e"
+						"value": "CHECKOUT"
 					},
 					{
 						"key": "x-correlation-id",
-						"value": "{{CORRELATION_ID}}",
-						"uuid": "8ff9452e-b8f0-43de-a271-e7141b086956"
+						"value": "{{CORRELATION_ID}}"
 					}
 				],
 				"body": {
@@ -211,13 +209,11 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"uuid": "4826fa46-73b5-4d62-9e62-0d8ee75b7fb8"
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
 					},
 					{
 						"key": "x-pgs-id",
-						"value": "NPG",
-						"uuid": "b6b23e5d-43f5-441e-8127-6b93731228c0"
+						"value": "NPG"
 					}
 				],
 				"body": {
@@ -286,8 +282,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"uuid": "1992b416-2bd0-4e5b-95d1-100df87ead59"
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
 					}
 				],
 				"body": {
@@ -309,6 +304,118 @@
 						"transactions",
 						"{{BASE64_ENCODED_TRANSACTION_ID}}",
 						"auth-requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add user receipt - KO mismatched payment tokens",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getTransaction = {",
+							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
+							"    method: 'GET',",
+							"    header: {",
+							"        'Content-Type': 'application/json'",
+							"    }",
+							"};",
+							"",
+							"executeGetTransactionRequest()",
+							"",
+							"",
+							"async function executeGetTransactionRequest (){",
+							"        const maxAttempts = 10;",
+							"        var counter = 0;",
+							"        var transactionStatus = null;",
+							"        while (counter < maxAttempts && transactionStatus != \"CLOSED\") {",
+							"            await new Promise(r => setTimeout(r, 1000));",
+							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {",
+							"                if (error) {",
+							"                    console.log(`Error retrieving transaction by id: ${error.code}`);",
+							"                    reject(error)",
+							"                } else {",
+							"                    const responseBody = response.json();",
+							"                    transactionStatus = responseBody.status;",
+							"                    console.log(`The transaction status: ${transactionStatus}`)",
+							"                    resolve(transactionStatus);",
+							"                }",
+							"            }));",
+							"        counter++;",
+							"    }",
+							"",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 422) for mismatch in payment token\", function() {",
+							"    pm.response.to.have.status(422);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.detail.toString().split(\"\\n\")[0]).to.be.eq(\"eCommerce and Nodo payment tokens mismatch detected!\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"outcome\": \"OK\",\n    \"paymentDate\": \"2023-01-01T00:00:00.000Z\",\n    \"payments\": [\n        {\n            \"paymentToken\": \"mismatchedPaymentToken\",\n            \"description\": \"description\",\n            \"creditorReferenceId\": \"creditorReferenceId\",\n            \"fiscalCode\": \"fiscalCode\",\n            \"companyName\": \"companyName\",\n            \"officeName\": \"officeName\",\n            \"debtor\": \"debtor\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/user-receipts",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
+						"transactions",
+						"{{TRANSACTION_ID}}",
+						"user-receipts"
 					]
 				}
 			},
@@ -338,7 +445,6 @@
 							"}",
 							"",
 							"pm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));",
-							"",
 							"const getTransaction = {",
 							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
 							"    method: 'GET',",
@@ -417,8 +523,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"uuid": "7cb5f2d9-418d-4d68-80ff-86f7af76a140"
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
 					}
 				],
 				"body": {
