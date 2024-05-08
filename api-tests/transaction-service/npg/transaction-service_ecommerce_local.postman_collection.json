@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "dc26de39-ab7a-4d59-9bf1-01a52c19a472",
+		"_postman_id": "a41d9f1c-750d-4f71-b6b0-e565e540c783",
 		"name": "Transaction service for local eCommerce NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "29036441"
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -19,6 +19,7 @@
 							"    pm.environment.set(\"TRANSACTION_ID\", transactionId);",
 							"    pm.response.to.have.status(200);",
 							"    encodeTransactionIdToB64(transactionId);",
+							"    pm.environment.set(\"ACTIVATION_PAYMENT_NOTICES\", JSON.stringify(responseJson.payments));",
 							"});",
 							"",
 							"function encodeTransactionIdToB64(transactionId) {",
@@ -28,7 +29,8 @@
 							"}",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -118,14 +120,15 @@
 							"            console.log(`Create session error: ${error.code}`);",
 							"        } else {",
 							"            const responseBody = response.json();",
-														"            pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
+							"            pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
 							"            pm.environment.set(\"CORRELATION_ID\", responseBody.correlationId);",
 							"        }",
 							"    });",
 							"}",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -135,12 +138,12 @@
 					{
 						"key": "x-client-id",
 						"value": "CHECKOUT",
-						"type": "text"
+						"uuid": "32f38387-a565-4784-b717-15fdbe46aa2e"
 					},
 					{
 						"key": "x-correlation-id",
 						"value": "{{CORRELATION_ID}}",
-						"type": "text"
+						"uuid": "8ff9452e-b8f0-43de-a271-e7141b086956"
 					}
 				],
 				"body": {
@@ -209,12 +212,12 @@
 					{
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"type": "text"
+						"uuid": "4826fa46-73b5-4d62-9e62-0d8ee75b7fb8"
 					},
 					{
 						"key": "x-pgs-id",
 						"value": "NPG",
-						"type": "text"
+						"uuid": "b6b23e5d-43f5-441e-8127-6b93731228c0"
 					}
 				],
 				"body": {
@@ -284,7 +287,7 @@
 					{
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"type": "text"
+						"uuid": "1992b416-2bd0-4e5b-95d1-100df87ead59"
 					}
 				],
 				"body": {
@@ -318,6 +321,24 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
+							"const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));",
+							"",
+							"const addUserReceiptRequest = {",
+							"    outcome: \"OK\",",
+							"    paymentDate: \"2023-01-01T00:00:00.000Z\",",
+							"    payments: Array.from(activationPaymentNotices).map(p =>({",
+							"      paymentToken: p.paymentToken,",
+							"      description: p.reason,",
+							"      creditorReferenceId: \"creditorReferenceId\",",
+							"      fiscalCode: \"fiscalCode\",",
+							"      companyName: \"companyName\",",
+							"      officeName: \"officeName\",",
+							"      debtor: \"debtor\"",
+							"    }))",
+							"}",
+							"",
+							"pm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));",
+							"",
 							"const getTransaction = {",
 							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
 							"    method: 'GET',",
@@ -350,9 +371,11 @@
 							"    }",
 							"",
 							"}",
+							"",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -365,7 +388,8 @@
 							"    pm.expect(response.outcome).to.be.eq(\"OK\");",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -394,12 +418,12 @@
 					{
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"type": "text"
+						"uuid": "7cb5f2d9-418d-4d68-80ff-86f7af76a140"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"outcome\": \"OK\",\n    \"paymentDate\": \"2023-01-01T00:00:00.000Z\",\n    \"payments\": [\n        {\n            \"paymentToken\": \"paymentToken\",\n            \"description\": \"description\",\n            \"creditorReferenceId\": \"creditorReferenceId\",\n            \"fiscalCode\": \"fiscalCode\",\n            \"companyName\": \"companyName\",\n            \"officeName\": \"officeName\",\n            \"debtor\": \"debtor\"\n        }\n    ]\n}",
+					"raw": "{{ADD_USER_RECEIPT_REQUEST}}",
 					"options": {
 						"raw": {
 							"language": "json"
