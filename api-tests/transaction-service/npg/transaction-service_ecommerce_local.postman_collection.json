@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "dc26de39-ab7a-4d59-9bf1-01a52c19a472",
+		"_postman_id": "a41d9f1c-750d-4f71-b6b0-e565e540c783",
 		"name": "Transaction service for local eCommerce NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "29036441"
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -19,6 +19,7 @@
 							"    pm.environment.set(\"TRANSACTION_ID\", transactionId);",
 							"    pm.response.to.have.status(200);",
 							"    encodeTransactionIdToB64(transactionId);",
+							"    pm.environment.set(\"ACTIVATION_PAYMENT_NOTICES\", JSON.stringify(responseJson.payments));",
 							"});",
 							"",
 							"function encodeTransactionIdToB64(transactionId) {",
@@ -28,7 +29,8 @@
 							"}",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -118,14 +120,15 @@
 							"            console.log(`Create session error: ${error.code}`);",
 							"        } else {",
 							"            const responseBody = response.json();",
-														"            pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
+							"            pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
 							"            pm.environment.set(\"CORRELATION_ID\", responseBody.correlationId);",
 							"        }",
 							"    });",
 							"}",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -134,13 +137,11 @@
 				"header": [
 					{
 						"key": "x-client-id",
-						"value": "CHECKOUT",
-						"type": "text"
+						"value": "CHECKOUT"
 					},
 					{
 						"key": "x-correlation-id",
-						"value": "{{CORRELATION_ID}}",
-						"type": "text"
+						"value": "{{CORRELATION_ID}}"
 					}
 				],
 				"body": {
@@ -208,13 +209,11 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"type": "text"
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
 					},
 					{
 						"key": "x-pgs-id",
-						"value": "NPG",
-						"type": "text"
+						"value": "NPG"
 					}
 				],
 				"body": {
@@ -283,8 +282,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"type": "text"
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
 					}
 				],
 				"body": {
@@ -312,7 +310,7 @@
 			"response": []
 		},
 		{
-			"name": "Add user receipt",
+			"name": "Add user receipt - KO mismatched payment tokens",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -350,22 +348,25 @@
 							"    }",
 							"",
 							"}",
+							"",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 200)\", function() {",
-							"    pm.response.to.have.status(200);",
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 422) for mismatch in payment token\", function() {",
+							"    pm.response.to.have.status(422);",
 							"    const response = pm.response.json();",
-							"    pm.expect(response.outcome).to.be.eq(\"OK\");",
+							"    pm.expect(response.detail.toString().split(\"\\n\")[0]).to.be.eq(\"eCommerce and Nodo payment tokens mismatch detected!\");",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -393,13 +394,141 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"type": "text"
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"outcome\": \"OK\",\n    \"paymentDate\": \"2023-01-01T00:00:00.000Z\",\n    \"payments\": [\n        {\n            \"paymentToken\": \"paymentToken\",\n            \"description\": \"description\",\n            \"creditorReferenceId\": \"creditorReferenceId\",\n            \"fiscalCode\": \"fiscalCode\",\n            \"companyName\": \"companyName\",\n            \"officeName\": \"officeName\",\n            \"debtor\": \"debtor\"\n        }\n    ]\n}",
+					"raw": "{\n    \"outcome\": \"OK\",\n    \"paymentDate\": \"2023-01-01T00:00:00.000Z\",\n    \"payments\": [\n        {\n            \"paymentToken\": \"mismatchedPaymentToken\",\n            \"description\": \"description\",\n            \"creditorReferenceId\": \"creditorReferenceId\",\n            \"fiscalCode\": \"fiscalCode\",\n            \"companyName\": \"companyName\",\n            \"officeName\": \"officeName\",\n            \"debtor\": \"debtor\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/user-receipts",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
+						"transactions",
+						"{{TRANSACTION_ID}}",
+						"user-receipts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add user receipt",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));",
+							"",
+							"const addUserReceiptRequest = {",
+							"    outcome: \"OK\",",
+							"    paymentDate: \"2023-01-01T00:00:00.000Z\",",
+							"    payments: Array.from(activationPaymentNotices).map(p =>({",
+							"      paymentToken: p.paymentToken,",
+							"      description: p.reason,",
+							"      creditorReferenceId: \"creditorReferenceId\",",
+							"      fiscalCode: \"fiscalCode\",",
+							"      companyName: \"companyName\",",
+							"      officeName: \"officeName\",",
+							"      debtor: \"debtor\"",
+							"    }))",
+							"}",
+							"",
+							"pm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));",
+							"const getTransaction = {",
+							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
+							"    method: 'GET',",
+							"    header: {",
+							"        'Content-Type': 'application/json'",
+							"    }",
+							"};",
+							"",
+							"executeGetTransactionRequest()",
+							"",
+							"",
+							"async function executeGetTransactionRequest (){",
+							"        const maxAttempts = 10;",
+							"        var counter = 0;",
+							"        var transactionStatus = null;",
+							"        while (counter < maxAttempts && transactionStatus != \"CLOSED\") {",
+							"            await new Promise(r => setTimeout(r, 1000));",
+							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {",
+							"                if (error) {",
+							"                    console.log(`Error retrieving transaction by id: ${error.code}`);",
+							"                    reject(error)",
+							"                } else {",
+							"                    const responseBody = response.json();",
+							"                    transactionStatus = responseBody.status;",
+							"                    console.log(`The transaction status: ${transactionStatus}`)",
+							"                    resolve(transactionStatus);",
+							"                }",
+							"            }));",
+							"        counter++;",
+							"    }",
+							"",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 200)\", function() {",
+							"    pm.response.to.have.status(200);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.outcome).to.be.eq(\"OK\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{ADD_USER_RECEIPT_REQUEST}}",
 					"options": {
 						"raw": {
 							"language": "json"
