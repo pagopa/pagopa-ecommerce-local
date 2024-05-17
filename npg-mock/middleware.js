@@ -12,6 +12,7 @@ module.exports = function (req, res, next) {
   }
   const requestPath = req.path.toString();
   const requestBody = req.body;
+  
   if (requestPath.includes("build") && !requestPath.includes("state")) {
     //handle build data request changing response based on input paymentService
     const paymentService = requestBody.paymentSession.paymentService;
@@ -22,6 +23,16 @@ module.exports = function (req, res, next) {
     else {
       res.json(db.get("buildApm"))
     }
+  } else if (requestPath.includes("orders")) { // simulate GET /orders/{orderId}
+    res.json(db.get("orderAuthorized"));
+    // res.json(db.get("stateOkWithoutOperationId"));
+    // res.json(db.get("orderWithRefund"));
+    // res.sendStatus(404);
+    // res.sendStatus(500);
+    
+    // setTimeout(() => {
+    //   res.json(db.get("orderAuthorized"));
+    // }, 5000);
   } else {
     // Continue to default JSON Server router
     next();
