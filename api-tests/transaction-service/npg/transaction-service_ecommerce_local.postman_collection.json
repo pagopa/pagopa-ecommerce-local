@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "a41d9f1c-750d-4f71-b6b0-e565e540c783",
+		"_postman_id": "2ebcb98f-1e5e-4410-9b3d-51cdaa593386",
 		"name": "Transaction service for local eCommerce NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23963988"
+		"_exporter_id": "29036441",
+		"_collection_link": "https://pagopa-touchpoints.postman.co/workspace/Team-Workspace~82f38784-2dd7-469d-8f54-0d8526ecd60e/collection/29036441-2ebcb98f-1e5e-4410-9b3d-51cdaa593386?action=share&source=collection_link&creator=29036441"
 	},
 	"item": [
 		{
@@ -146,7 +147,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
+					"raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -154,13 +155,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions",
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2.1/transactions",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"port": "{{TRANSACTION_SERVICE_PORT}}",
 					"path": [
-						"v2",
+						"v2.1",
 						"transactions"
 					]
 				}
