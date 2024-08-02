@@ -34,7 +34,7 @@
 					},
 					{
 						"key": "x-client-id",
-						"value": "CHECKOUT",
+						"value": "CHECKOUT_CART",
 						"type": "text"
 					}
 				],
