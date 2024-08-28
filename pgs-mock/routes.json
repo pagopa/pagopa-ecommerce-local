@@ -1,4 +1,0 @@
-{
-    "*/vpos/authorizations": "/vposAuth",
-    "*/xpay/authorizations*": "/xpayAuth"
-}
