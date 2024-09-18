@@ -38,7 +38,7 @@ services:
     container_name: pagopa-ecommerce-redis-insight
     image: redislabs/redisinsight
     ports:
-      - "${REDIS_INSIGHT_PORT}:8001"
+      - "${REDIS_INSIGHT_PORT}:5540"
     networks:
       - pagopa-ecommerce-net
 
