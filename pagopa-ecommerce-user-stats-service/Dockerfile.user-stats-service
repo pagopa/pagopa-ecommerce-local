@@ -1,0 +1,34 @@
+### 1. Cloning stage
+FROM alpine/git:latest AS clone
+WORKDIR /workspace/pagopa-ecommerce-user-stats-service
+
+ARG ECOMMERCE_USER_STATS_COMMIT_SHA
+
+RUN rm -rf * && \
+    git clone https://github.com/pagopa/pagopa-ecommerce-user-stats-service.git /workspace/pagopa-ecommerce-user-stats-service && \
+    git checkout ${ECOMMERCE_USER_STATS_COMMIT_SHA} 
+
+### 2. Build stage
+FROM amazoncorretto:21@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16 AS build
+WORKDIR /workspace/pagopa-ecommerce-user-stats-service/
+
+ARG REPO=/workspace/pagopa-ecommerce-user-stats-service
+
+COPY --from=clone ${REPO}/ .
+
+RUN ./gradlew build -x test
+
+### 3. Run stage
+FROM amazoncorretto:21@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16
+
+RUN addgroup --system user && adduser --ingroup user --system user
+USER user:user
+
+ARG EXTRACTED=/workspace/pagopa-ecommerce-user-stats-service/build/extracted
+
+COPY --from=build --chown=user ${EXTRACTED} .
+
+ARG JAR_FILE=pagopa*.jar
+ENV APP_NAME=$JAR_FILE
+
+ENTRYPOINT ["java","org.springframework.boot.loader.launch.JarLauncher"]
