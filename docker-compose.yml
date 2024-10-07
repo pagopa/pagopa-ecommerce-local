@@ -100,10 +100,10 @@ services:
     build:
       context: .
       args:
-        ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA: ${ECOMMERCE_USER_STATS_COMMIT_SHA}
+        ECOMMERCE_USER_STATS_COMMIT_SHA: ${ECOMMERCE_USER_STATS_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-user-stats-service/Dockerfile.user-stats-service
     ports:
-        - "${ECOMMERCE_USER_STATS_PORT}:9000"
+        - "${ECOMMERCE_USER_STATS_PORT}:9001"
     networks:
       - pagopa-ecommerce-net
 
