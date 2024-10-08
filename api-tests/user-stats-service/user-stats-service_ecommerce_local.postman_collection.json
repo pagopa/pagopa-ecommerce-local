@@ -7,14 +7,13 @@
 	},
 	"item": [
 		{
-			"name": "Save last payment usage (payment method)",
+			"name": "Save last payment usage (guest)",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-ecommerce-user-stats-service] Save new payment method\", () => {",
-							"    const responseJson = pm.response.json();",
+							"pm.test(\"[pagopa-ecommerce-user-stats-service] Save new lastPaymentMethodUsed (guest)\", () => {",
 							"    pm.response.to.have.status(201);",
 							"});",
 							""
@@ -27,94 +26,6 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"const getPaymentMethodRequest = {",
-							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
-							"    method: 'GET',",
-							"    header: {",
-							"        'Content-Type': 'application/json',",
-							"        'x-client-id': 'CHECKOUT'",
-							"    }",
-							"};",
-							"",
-							"pm.sendRequest(getPaymentMethodRequest, (error, response) => {",
-							"    if (error) {",
-							"        console.log(`Error retrieving payment methods: ${error.code}`);",
-							"    } else {",
-							"        const responseBody = response.json();",
-							"        const paymentMethods = responseBody.paymentMethods;",
-							"        if (paymentMethods.length == 0) {",
-							"            createSessionWithNewPaymentMethod();",
-							"        } else {",
-							"            const paymentMethodId = responseBody.paymentMethods[0].id;",
-							"            pm.environment.set(\"PAYMENT_METHOD_ID\", paymentMethodId);",
-							"            createSession(paymentMethodId);",
-							"        }",
-							"    }",
-							"});",
-							"",
-							"function createSessionWithNewPaymentMethod() {",
-							"    const createPaymentMethodRequestBody = {",
-							"        \"name\": \"CARDS\",",
-							"        \"description\": \"description\",",
-							"        \"asset\": \"asset\",",
-							"        \"status\": \"ENABLED\",",
-							"        \"paymentTypeCode\": \"CP\",",
-							"        \"ranges\": [",
-							"            {",
-							"                \"min\": 0,",
-							"                \"max\": 10000",
-							"            }",
-							"        ],",
-							"        \"clientId\": \"CHECKOUT\",",
-							"        \"methodManagement\": \"ONBOARDABLE\"",
-							"    };",
-							"",
-							"    const createPaymentMethodRequest = {",
-							"        url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
-							"        method: 'POST',",
-							"        header: {",
-							"            'Content-Type': 'application/json'",
-							"        },",
-							"        body: {",
-							"            mode: 'raw',",
-							"            raw: JSON.stringify(createPaymentMethodRequestBody)",
-							"        }",
-							"    };",
-							"    pm.sendRequest(createPaymentMethodRequest, (error, response) => {",
-							"        if (error) {",
-							"            console.log(`Create payment method error: ${error.code}`);",
-							"        } else {",
-							"            const responseBody = response.json();",
-							"            const paymentMethodId = responseBody.id;",
-							"            pm.environment.set(\"PAYMENT_METHOD_ID\", paymentMethodId);",
-							"            createSession(paymentMethodId);",
-							"        }",
-							"    });",
-							"}",
-							"",
-							"function createSession(paymentMethodId) {",
-							"    const createSession = {",
-							"        url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods/${paymentMethodId}/sessions`,",
-							"        method: 'POST',",
-							"        header: {",
-							"            'Content-Type': 'application/json'",
-							"        },",
-							"        body: {",
-							"            mode: 'raw',",
-							"            raw: ''",
-							"        }",
-							"    };",
-							"",
-							"    pm.sendRequest(createSession, (error, response) => {",
-							"        if (error) {",
-							"            console.log(`Create session error: ${error.code}`);",
-							"        } else {",
-							"            const responseBody = response.json();",
-							"            pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
-							"            pm.environment.set(\"CORRELATION_ID\", responseBody.correlationId);",
-							"        }",
-							"    });",
-							"}",
 							""
 						],
 						"type": "text/javascript",
@@ -126,14 +37,14 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "x-User-Id",
-						"value": "{{USER_ID}}",
+						"key": "x-user-id",
+						"value": "{{USER_ID_GUEST}}",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\n}",
+					"raw": "{\n    \"paymentMethodId\":\"{{PAYMENT_METHOD_ID}}\",\n    \"date\":\"2024-10-07T14:16:49.453009161Z\",\n    \"type\":\"guest\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -155,14 +66,77 @@
 			"response": []
 		},
 		{
-			"name": "Get last payment usage saved",
+			"name": "Save last payment usage (wallet)",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id (status code 200) for NPG transaction\", () => {",
+							"pm.test(\"[pagopa-ecommerce-user-stats-service] Save new lastPaymentMethodUsed (wallet)\", () => {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "{{USER_ID_WALLET}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"walletId\":\"{{WALLET_ID}}\",\n    \"date\":\"2024-10-07T14:16:49.453009161Z\",\n    \"type\":\"wallet\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}:{{USER_STATS_SERVICE_PORT}}/user/lastPaymentMethodUsed",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{USER_STATS_SERVICE_PORT}}",
+					"path": [
+						"user",
+						"lastPaymentMethodUsed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get last payment usage saved (guest)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-user-stats-service] Get user last payment method used for guest\", () => {",
 							"  const responseJson = pm.response.json();",
+							"  const type = responseJson.type;",
+							"  pm.expect(type).to.equals(\"guest\");",
+							"  pm.expect(responseJson.walletId).to.be.undefined;",
+							"  pm.expect(responseJson.paymentMethodId).to.equals(pm.environment.get(\"PAYMENT_METHOD_ID\"));",
 							"  pm.response.to.have.status(200);",
 							"});",
 							""
@@ -177,7 +151,62 @@
 				"header": [
 					{
 						"key": "x-user-id",
-						"value": "{{USER_ID}}",
+						"value": "{{USER_ID_GUEST}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}:{{USER_STATS_SERVICE_PORT}}/user/lastPaymentMethodUsed",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{USER_STATS_SERVICE_PORT}}",
+					"path": [
+						"user",
+						"lastPaymentMethodUsed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get last payment usage saved (wallet)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-user-stats-service] Get user last payment method used for wallet\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  const type = responseJson.type;",
+							"  pm.expect(type).to.equals(\"wallet\");",
+							"  pm.expect(responseJson.paymentMethodId).to.be.undefined;",
+							"  pm.expect(responseJson.walletId).to.equals(pm.environment.get(\"WALLET_ID\"));",
+							"  pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "{{USER_ID_WALLET}}",
 						"type": "text"
 					}
 				],
