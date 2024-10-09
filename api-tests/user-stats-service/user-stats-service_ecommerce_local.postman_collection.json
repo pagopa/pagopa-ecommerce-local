@@ -1,0 +1,337 @@
+{
+	"info": {
+		"_postman_id": "352082f8-6378-44fb-a3f5-7ac683e8310b",
+		"name": "eCommerce user stats service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23963988"
+	},
+	"item": [
+		{
+			"name": "Update user last usage [GUEST]",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce user stats] Update user last usage for GUEST method\", function() {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"details\": {\n        \"type\": \"guest\",\n        \"paymentMethodId\": \"{{PAYMENT_METHOD_ID}}\",\n        \"date\": \"{{GUEST_METHOD_LAST_USAGE_DATE}}\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/user/lastPaymentMethodUsed",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"user",
+						"lastPaymentMethodUsed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve user last used method [GUEST]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce user stats] Retrieve last usage method for guest method\", function() {",
+							"    pm.response.to.have.status(200);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.type).to.eq(\"guest\")",
+							"    pm.expect(response.paymentMethodId).to.eq(pm.environment.get(\"PAYMENT_METHOD_ID\"))",
+							"    pm.expect(response.walletId).to.be.undefined",
+							"    pm.expect(response.date).to.eq(pm.environment.get(\"GUEST_METHOD_LAST_USAGE_DATE\"))",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "{{USER_ID}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/user/lastPaymentMethodUsed",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"user",
+						"lastPaymentMethodUsed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user last usage [WALLET]",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce user stats] Update user last usage for WALLET method\", function() {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"details\": {\n        \"type\": \"wallet\",\n        \"walletId\": \"{{WALLET_ID}}\",\n        \"date\": \"{{WALLET_LAST_USAGE_DATE}}\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/user/lastPaymentMethodUsed",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"user",
+						"lastPaymentMethodUsed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve user last used method [WALLET]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce user stats] Retrieve last usage method for WALLET\", function() {",
+							"    pm.response.to.have.status(200);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.type).to.eq(\"wallet\")",
+							"    pm.expect(response.walletId).to.eq(pm.environment.get(\"WALLET_ID\"))",
+							"    pm.expect(response.paymentMethodId).to.be.undefined",
+							"    pm.expect(response.date).to.eq(pm.environment.get(\"WALLET_LAST_USAGE_DATE\"))",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "{{USER_ID}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/user/lastPaymentMethodUsed",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"user",
+						"lastPaymentMethodUsed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get last user method for unknown user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce user stats] Retrieve last usage information for unknown user should return 404\", function() {",
+							"    pm.response.to.have.status(404);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.title).to.eq(\"User not found\")",
+							"    pm.expect(response.status).to.eq(404)",
+							"    pm.expect(response.detail).to.eq(\"The input user cannot be found\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "{{$guid}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/user/lastPaymentMethodUsed",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"user",
+						"lastPaymentMethodUsed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get last user method for invalid user id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce user stats] Retrieve last usage information for invalid user id should return 400\", function() {",
+							"    pm.response.to.have.status(400);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.title).to.eq(\"Bad request\")",
+							"    pm.expect(response.status).to.eq(400)",
+							"    pm.expect(response.detail).to.eq(\"Input request is invalid.\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "invalid",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/user/lastPaymentMethodUsed",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"user",
+						"lastPaymentMethodUsed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user with invalid request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce user stats] Update user with invalid request should return 400 bad request\", function() {",
+							"        pm.response.to.have.status(400);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.title).to.eq(\"Bad request\")",
+							"    pm.expect(response.status).to.eq(400)",
+							"    pm.expect(response.detail).to.eq(\"Input request is invalid.\")",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"{{USER_ID}}\",\n    \"details\": {\n        \"paymentMethodId\": \"{{PAYMENT_METHOD_ID}}\",\n        \"date\": \"{{GUEST_METHOD_LAST_USAGE_DATE}}\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/user/lastPaymentMethodUsed",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"user",
+						"lastPaymentMethodUsed"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
