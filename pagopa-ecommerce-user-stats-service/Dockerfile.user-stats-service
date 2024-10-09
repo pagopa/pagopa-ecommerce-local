@@ -37,7 +37,5 @@ RUN true
 COPY --from=build --chown=user ${EXTRACTED}/application/ ./
 RUN true
 
-ARG JAR_FILE=pagopa*.jar
-ENV APP_NAME=$JAR_FILE
 
 ENTRYPOINT ["java","org.springframework.boot.loader.launch.JarLauncher"]
