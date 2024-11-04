@@ -1,12 +1,172 @@
 {
 	"info": {
-		"_postman_id": "2ebcb98f-1e5e-4410-9b3d-51cdaa593386",
+		"_postman_id": "375d253a-788b-4ff4-bb78-c74e538d4750",
 		"name": "Transaction service for local eCommerce NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "29036441",
-		"_collection_link": "https://pagopa-touchpoints.postman.co/workspace/Team-Workspace~82f38784-2dd7-469d-8f54-0d8526ecd60e/collection/29036441-2ebcb98f-1e5e-4410-9b3d-51cdaa593386?action=share&source=collection_link&creator=29036441"
+		"_exporter_id": "12957952"
 	},
 	"item": [
+		{
+			"name": "New transaction with convention.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Activate new transaction V2 (status code 200)\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    const transactionId = responseJson.transactionId;",
+							"    pm.environment.set(\"TRANSACTION_ID\", transactionId);",
+							"    pm.response.to.have.status(200);",
+							"    encodeTransactionIdToB64(transactionId);",
+							"    pm.environment.set(\"ACTIVATION_PAYMENT_NOTICES\", JSON.stringify(responseJson.payments));",
+							"});",
+							"",
+							"function encodeTransactionIdToB64(transactionId) {",
+							"    const encodedTransactionId = Buffer.from(transactionId, 'hex').toString('base64').replace(/\\+/g, \"-\").replace(/\\//g, \"_\");",
+							"    console.log(`Transaction id: [${transactionId}] encoded to [${encodedTransactionId}]`);",
+							"    pm.environment.set(\"BASE64_ENCODED_TRANSACTION_ID\", encodedTransactionId);",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getPaymentMethodRequest = {",
+							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
+							"    method: 'GET',",
+							"    header: {",
+							"        'Content-Type': 'application/json',",
+							"        'x-client-id': 'CHECKOUT'",
+							"    }",
+							"};",
+							"",
+							"pm.sendRequest(getPaymentMethodRequest, (error, response) => {",
+							"    if (error) {",
+							"        console.log(`Error retrieving payment methods: ${error.code}`);",
+							"    } else {",
+							"        const responseBody = response.json();",
+							"        const paymentMethods = responseBody.paymentMethods;",
+							"        if (paymentMethods.length == 0) {",
+							"            createSessionWithNewPaymentMethod();",
+							"        } else {",
+							"            const paymentMethodId = responseBody.paymentMethods[0].id;",
+							"            pm.environment.set(\"PAYMENT_METHOD_ID\", paymentMethodId);",
+							"            createSession(paymentMethodId);",
+							"        }",
+							"    }",
+							"});",
+							"",
+							"function createSessionWithNewPaymentMethod() {",
+							"    const createPaymentMethodRequestBody = {",
+							"        \"name\": \"CARDS\",",
+							"        \"description\": \"description\",",
+							"        \"asset\": \"asset\",",
+							"        \"status\": \"ENABLED\",",
+							"        \"paymentTypeCode\": \"CP\",",
+							"        \"ranges\": [",
+							"            {",
+							"                \"min\": 0,",
+							"                \"max\": 10000",
+							"            }",
+							"        ],",
+							"        \"clientId\": \"CHECKOUT\",",
+							"        \"methodManagement\": \"ONBOARDABLE\"",
+							"    };",
+							"",
+							"    const createPaymentMethodRequest = {",
+							"        url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify(createPaymentMethodRequestBody)",
+							"        }",
+							"    };",
+							"    pm.sendRequest(createPaymentMethodRequest, (error, response) => {",
+							"        if (error) {",
+							"            console.log(`Create payment method error: ${error.code}`);",
+							"        } else {",
+							"            const responseBody = response.json();",
+							"            const paymentMethodId = responseBody.id;",
+							"            pm.environment.set(\"PAYMENT_METHOD_ID\", paymentMethodId);",
+							"            createSession(paymentMethodId);",
+							"        }",
+							"    });",
+							"}",
+							"",
+							"function createSession(paymentMethodId) {",
+							"    const createSession = {",
+							"        url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods/${paymentMethodId}/sessions`,",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: ''",
+							"        }",
+							"    };",
+							"",
+							"    pm.sendRequest(createSession, (error, response) => {",
+							"        if (error) {",
+							"            console.log(`Create session error: ${error.code}`);",
+							"        } else {",
+							"            const responseBody = response.json();",
+							"            pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
+							"            pm.environment.set(\"CORRELATION_ID\", responseBody.correlationId);",
+							"        }",
+							"    });",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT"
+					},
+					{
+						"key": "x-correlation-id",
+						"value": "{{CORRELATION_ID}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID_WITH_CONVENTION}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2.1/transactions",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
+						"v2.1",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "Nuova transaction NM3",
 			"event": [
