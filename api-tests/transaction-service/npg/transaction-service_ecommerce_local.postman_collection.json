@@ -757,7 +757,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id (status code 200) for NPG transaction\", () => {",
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id V2 (status code 200) for NPG transaction\", () => {",
 							"  const responseJson = pm.response.json();",
 							"  pm.expect(responseJson.transactionId).to.be.a('string');",
 							"  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
