@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "375d253a-788b-4ff4-bb78-c74e538d4750",
+		"_postman_id": "6328ddb2-6d0f-4ae5-a8f9-5069f8dec22c",
 		"name": "Transaction service for local eCommerce NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12957952"
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -743,6 +743,47 @@
 					],
 					"port": "{{TRANSACTION_SERVICE_PORT}}",
 					"path": [
+						"transactions",
+						"{{TRANSACTION_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get transaction by id V2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id V2 (status code 200) for NPG transaction\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.transactionId).to.be.a('string');",
+							"  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
+							"  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\",\"NOTIFICATION_ERROR\"]);",
+							"  pm.expect(responseJson.gatewayInfo.gateway).to.be.eq(\"NPG\");",
+							"  pm.expect(responseJson.nodeInfo.sendPaymentResultOutcome).to.be.eq(\"OK\");",
+							"  pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
+						"v2",
 						"transactions",
 						"{{TRANSACTION_ID}}"
 					]
