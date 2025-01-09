@@ -46,7 +46,7 @@ If you use the default configurations, we will have the following services expos
 | `nodo-mock`                                    | http://localhost:3002/webservices/pof/PagamentiTelematiciPspNodoservice |
 | `pagopa-ecommerce-transactions-service`        | http://localhost:8080/transactions                                      |
 | `pagopa-ecommerce-payment-methods-service`     | http://localhost:8083/payment-methods                                   |
-| `pagopa-ecommerce-payment-requests-service`    | http://localhost:8088/payment-requests and http://localhost:8088/carts  |
+| `pagopa-ecommerce-payment-requests-service`    | http://localhost:8089/payment-requests and http://localhost:8089/carts  |
 
 
 You can check data persisted to either Mongo or Redis with their respective web interfaces (Mongo express/Redis Insight). To do so, go to:
@@ -78,5 +78,5 @@ To fix:
 
 run docker compose with:
 ```sh
-DOCKER_BUILDKIT=1DOCKER
+DOCKER_BUILDKIT=1
 ```
