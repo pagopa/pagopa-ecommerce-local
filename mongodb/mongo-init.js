@@ -3,14 +3,17 @@ const transactions = [
     {
         transactionId: "00000000000000000000000000000001",
         status: 'AUTHORIZATION_REQUESTED',
+        creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
                 eventId: '00000001-0000-0000-0000-000000000001',
-                eventCode: 'TRANSACTION_ACTIVATED_EVENT'
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
+                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000002-0000-0000-0000-000000000001',
-                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT'
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
             }
         ]
     },
@@ -19,14 +22,17 @@ const transactions = [
     {
         transactionId: "00000000000000000000000000000002",
         status: 'AUTHORIZATION_REQUESTED',
+        creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
                 eventId: '00000001-0000-0000-0000-000000000002',
-                eventCode: 'TRANSACTION_ACTIVATED_EVENT'
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
+                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000002-0000-0000-0000-000000000002',
-                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT'
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
             }
         ]
     },
@@ -35,14 +41,17 @@ const transactions = [
     {
         transactionId: "00000000000000000000000000000003",
         status: 'CANCELLATION_REQUESTED',
+        creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
                 eventId: '00000001-0000-0000-0000-000000000003',
-                eventCode: 'TRANSACTION_ACTIVATED_EVENT'
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
+                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000002-0000-0000-0000-000000000003',
-                eventCode: 'TRANSACTION_USER_CANCELED_EVENT'
+                eventCode: 'TRANSACTION_USER_CANCELED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
             }
         ]
     }
@@ -56,9 +65,9 @@ const transactionsView = [];
 const eventsStore = [];
 
 transactions.forEach(transaction => {
-    transactionsView.push(getTrasactionView(transaction.transactionId, transaction.status));
+    transactionsView.push(getTrasactionView(transaction.transactionId, transaction.status, transaction.creationDate));
     transaction.events.forEach(event => {
-        eventsStore.push(getEventStore(transaction.transactionId, event.eventId, event.eventCode))
+        eventsStore.push(getEventStore(transaction.transactionId, event.eventId, event.eventCode, event.creationDate))
     })
 });
 
@@ -71,7 +80,7 @@ db.getCollection('eventstore').insertMany(eventsStore);
 
 
 
-function getTrasactionView(transactionId, transactionStatus) {
+function getTrasactionView(transactionId, transactionStatus, creationDate) {
     return {
         "_id": transactionId,
         "clientId": "CHECKOUT",
@@ -79,7 +88,7 @@ function getTrasactionView(transactionId, transactionStatus) {
             "data": "a4bc4c87-c111-45ca-8b6b-a40a800b4840"
         },
         "status": transactionStatus,
-        "creationDate": "2025-01-13T09:18:16.240829798Z[Etc/UTC]",
+        "creationDate": creationDate,
         "paymentNotices": [
             {
                 "paymentToken": "b72411c6597140b3946b879ad4c3da2d",
@@ -115,11 +124,8 @@ function getTrasactionView(transactionId, transactionStatus) {
     }
 }
 
-function getEventStore(transactionId, eventId, eventCode) {
+function getEventStore(transactionId, eventId, eventCode, creationDate) {
     const allEvents = [{
-        "_id": "2080f909-6c9a-4445-a026-794a25b864f0",
-        "transactionId": "673ac71279114e5787a9c715938f8dbc",
-        "creationDate": "2025-01-13T09:18:15.998058766Z[Etc/UTC]",
         "data": {
             "email": {
                 "data": "a4bc4c87-c111-45ca-8b6b-a40a800b4840"
@@ -161,9 +167,6 @@ function getEventStore(transactionId, eventId, eventCode) {
         "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionActivatedEvent"
     },
     {
-        "_id": "c39e1f21-57a4-45b1-8902-afd03fbc81fb",
-        "transactionId": "673ac71279114e5787a9c715938f8dbc",
-        "creationDate": "2025-01-13T09:18:22.470019350Z[Etc/UTC]",
         "data": {
             "amount": 12000,
             "fee": 95,
@@ -191,9 +194,6 @@ function getEventStore(transactionId, eventId, eventCode) {
         "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionAuthorizationRequestedEvent"
     },
     {
-        "_id": "e08fb1c7-61cb-4748-93a0-89e949eb4688",
-        "transactionId": "673ac71279114e5787a9c715938f8dbc",
-        "creationDate": "2025-01-13T09:18:53.478704692Z[Etc/UTC]",
         "data": {
             "authorizationCode": "105197",
             "rrn": "250139026637",
@@ -210,16 +210,10 @@ function getEventStore(transactionId, eventId, eventCode) {
         "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionAuthorizationCompletedEvent"
     },
     {
-        "_id": "eb824427-db37-4d2f-9323-8134f686f757",
-        "transactionId": "673ac71279114e5787a9c715938f8dbc",
-        "creationDate": "2025-01-13T09:18:54.147456227Z[Etc/UTC]",
         "eventCode": "TRANSACTION_CLOSURE_REQUESTED_EVENT",
         "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosureRequestedEvent"
     },
     {
-        "_id": "17fd6df1-be2c-4bd3-86ed-31bfa290a75e",
-        "transactionId": "673ac71279114e5787a9c715938f8dbc",
-        "creationDate": "2025-01-13T09:18:55.709533557Z[Etc/UTC]",
         "data": {
             "responseOutcome": "OK"
         },
@@ -227,9 +221,6 @@ function getEventStore(transactionId, eventId, eventCode) {
         "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosedEvent"
     },
     {
-        "_id": "adf674f8-1fff-451d-8171-d5fcea4a7802",
-        "transactionId": "673ac71279114e5787a9c715938f8dbc",
-        "creationDate": "2025-01-13T09:18:57.947625195Z[Etc/UTC]",
         "data": {
             "responseOutcome": "OK",
             "language": "it-IT",
@@ -239,9 +230,6 @@ function getEventStore(transactionId, eventId, eventCode) {
         "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionUserReceiptRequestedEvent"
     },
     {
-        "_id": "4b77443a-b232-4622-aee4-5298dc74b2aa",
-        "transactionId": "673ac71279114e5787a9c715938f8dbc",
-        "creationDate": "2025-01-13T09:19:00.716680197Z[Etc/UTC]",
         "data": {
             "responseOutcome": "OK",
             "language": "it-IT",
@@ -251,16 +239,14 @@ function getEventStore(transactionId, eventId, eventCode) {
         "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionUserReceiptAddedEvent"
     },
     {
-        "_id": "94453aaa-2fa1-4bf8-be69-f435925e4d17",
-        "transactionId": "0284a919f46d45c8b0e58f0f0eee025e",
-        "creationDate": "2025-01-13T09:21:21.726148919Z[Etc/UTC]",
         "eventCode": "TRANSACTION_USER_CANCELED_EVENT",
         "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionUserCanceledEvent"
     }];
     const event = allEvents.find(e => e.eventCode === eventCode);
     return {
         ...event,
+        _id: eventId,
         transactionId,
-        _id: eventId
+        creationDate
     }
 }
