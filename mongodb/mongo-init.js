@@ -1,5 +1,5 @@
 const transactions = [
-    // 1 - TransactionAuthorizationOutcomeWaitingQueueConsumerV2
+    // 1 - TransactionAuthorizationOutcomeWaitingQueueConsumerV2 - AUTHORIZATION_REQUESTED
     {
         transactionId: "00000000000000000000000000000001",
         status: 'AUTHORIZATION_REQUESTED',
@@ -101,26 +101,16 @@ const transactions = [
             },
         ]
     },
-    // 6 - TransactionExpirationQueueConsumerV2 - ACTIVATED ----- NON TROVATO
+    // 6 - TransactionExpirationQueueConsumerV2 - ACTIVATED
     {
         transactionId: "00000000000000000000000000000006",
         status: 'ACTIVATED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
-                eventId: '00000001-0000-0000-0000-000000000005',
+                eventId: '00000001-0000-0000-0000-000000000006',
                 eventCode: 'TRANSACTION_ACTIVATED_EVENT',
                 creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000002-0000-0000-0000-000000000005',
-                eventCode: 'TRANSACTION_USER_CANCELED_EVENT',
-                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000003-0000-0000-0000-000000000005',
-                eventCode: 'TRANSACTION_CLOSURE_ERROR_EVENT',
-                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
             },
         ]
     },
@@ -311,23 +301,21 @@ const transactions = [
                 eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
             },
-            // authorizedEvent?
-            /*{
-                eventId: '00000003-0000-0000-0000-000000000012',
+            {
+                eventId: '00000003-0000-0000-0000-000000000014',
                 eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
-            },*/
+            },
             {
                 eventId: '00000004-0000-0000-0000-000000000014',
                 eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
             },
-            // closureSentEvent?
-            /*{
+            {
                 eventId: '00000005-0000-0000-0000-000000000014',
                 eventCode: 'TRANSACTION_CLOSED_EVENT',
                 creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
-            },*/
+            },
             {
                 eventId: '00000005-0000-0000-0000-000000000014',
                 eventCode: 'TRANSACTION_USER_RECEIPT_REQUESTED_EVENT',
@@ -356,34 +344,31 @@ const transactions = [
                 eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
             },
-            // authorizedEvent?
-            /*{
+            {
                 eventId: '00000003-0000-0000-0000-000000000015',
                 eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
-            },*/
+            },
             {
                 eventId: '00000004-0000-0000-0000-000000000015',
                 eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
             },
-            // closureSentEvent?
-            /*{
+            {
                 eventId: '00000005-0000-0000-0000-000000000015',
                 eventCode: 'TRANSACTION_CLOSED_EVENT',
                 creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
-            },*/
+            },
             {
-                eventId: '00000005-0000-0000-0000-000000000015',
+                eventId: '00000006-0000-0000-0000-000000000015',
                 eventCode: 'TRANSACTION_USER_RECEIPT_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
             },
-            // userReceiptAddErrorEvent?
-            /*{
-                eventId: '00000005-0000-0000-0000-000000000014',
-                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
+            {
+                eventId: '00000007-0000-0000-0000-000000000015',
+                eventCode: 'TRANSACTION_ADD_USER_RECEIPT_ERROR_EVENT',
                 creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
-            },*/
+            },
         ]
     },
     // 16 - TransactionExpirationQueueConsumerV2 - NOTIFICATION_REQUESTED
@@ -402,31 +387,28 @@ const transactions = [
                 eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
             },
-            // authorizedEvent?
-            /*{
+            {
                 eventId: '00000003-0000-0000-0000-000000000016',
                 eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
-            },*/
+            },
             {
                 eventId: '00000004-0000-0000-0000-000000000016',
                 eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
             },
-            // closureSentEvent?
-            /*{
+            {
                 eventId: '00000005-0000-0000-0000-000000000016',
                 eventCode: 'TRANSACTION_CLOSED_EVENT',
                 creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
-            },*/
-            // addUserReceiptEvent
-            /*{
-                eventId: '00000005-0000-0000-0000-000000000016',
-                eventCode: 'TRANSACTION_USER_RECEIPT_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
-            },*/
+            },
             {
-                eventId: '00000005-0000-0000-0000-000000000016',
+                eventId: '00000006-0000-0000-0000-000000000016',
+                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
+                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000007-0000-0000-0000-000000000016',
                 eventCode: 'TRANSACTION_EXPIRED_EVENT',
                 creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
             },
@@ -498,148 +480,160 @@ function getTrasactionView(transactionId, transactionStatus, creationDate) {
 }
 
 function getEventStore(transactionId, eventId, eventCode, creationDate) {
-    const allEvents = [{
-        "data": {
-            "email": {
-                "data": "a4bc4c87-c111-45ca-8b6b-a40a800b4840"
-            },
-            "paymentNotices": [
-                {
-                    "paymentToken": "b72411c6597140b3946b879ad4c3da2d",
-                    "rptId": "77777777777302010000655612322",
-                    "description": "TARI/TEFA 2021",
-                    "amount": 12000,
-                    "transferList": [
-                        {
-                            "paFiscalCode": "77777777777",
-                            "digitalStamp": false,
-                            "transferAmount": 10000,
-                            "transferCategory": "0101101IM"
-                        },
-                        {
-                            "paFiscalCode": "01199250158",
-                            "digitalStamp": false,
-                            "transferAmount": 2000,
-                            "transferCategory": "0201102IM"
-                        }
-                    ],
-                    "isAllCCP": false,
-                    "companyName": "company PA",
-                    "creditorReferenceId": "02010000655612322"
+    const allEvents = [
+        {
+            "data": {
+                "email": {
+                    "data": "a4bc4c87-c111-45ca-8b6b-a40a800b4840"
+                },
+                "paymentNotices": [
+                    {
+                        "paymentToken": "b72411c6597140b3946b879ad4c3da2d",
+                        "rptId": "77777777777302010000655612322",
+                        "description": "TARI/TEFA 2021",
+                        "amount": 12000,
+                        "transferList": [
+                            {
+                                "paFiscalCode": "77777777777",
+                                "digitalStamp": false,
+                                "transferAmount": 10000,
+                                "transferCategory": "0101101IM"
+                            },
+                            {
+                                "paFiscalCode": "01199250158",
+                                "digitalStamp": false,
+                                "transferAmount": 2000,
+                                "transferCategory": "0201102IM"
+                            }
+                        ],
+                        "isAllCCP": false,
+                        "companyName": "company PA",
+                        "creditorReferenceId": "02010000655612322"
+                    }
+                ],
+                "clientId": "CHECKOUT",
+                "paymentTokenValiditySeconds": 900,
+                "transactionGatewayActivationData": {
+                    "orderId": "E1736759869766ybQ4",
+                    "correlationId": "f878f527-0d9d-4ffe-b641-0fa8cb998b3a",
+                    "_class": "it.pagopa.ecommerce.commons.documents.v2.activation.NpgTransactionGatewayActivationData"
                 }
-            ],
-            "clientId": "CHECKOUT",
-            "paymentTokenValiditySeconds": 900,
-            "transactionGatewayActivationData": {
-                "orderId": "E1736759869766ybQ4",
-                "correlationId": "f878f527-0d9d-4ffe-b641-0fa8cb998b3a",
-                "_class": "it.pagopa.ecommerce.commons.documents.v2.activation.NpgTransactionGatewayActivationData"
-            }
-        },
-        "eventCode": "TRANSACTION_ACTIVATED_EVENT",
-        "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionActivatedEvent"
-    },
-    {
-        "data": {
-            "amount": 12000,
-            "fee": 95,
-            "paymentInstrumentId": "e7058cac-5e1a-4002-8994-5bab31e9f385",
-            "pspId": "BNLIITRR",
-            "paymentTypeCode": "CP",
-            "brokerName": "05963231005",
-            "pspChannelCode": "05963231005_01",
-            "paymentMethodName": "CARDS",
-            "pspBusinessName": "Worldline Merchant Services Italia S.p.A.",
-            "isPspOnUs": false,
-            "authorizationRequestId": "E1736759869766ybQ4",
-            "paymentGateway": "NPG",
-            "paymentMethodDescription": "Carte di Credito e Debito",
-            "transactionGatewayAuthorizationRequestedData": {
-                "logo": "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
-                "brand": "MC",
-                "sessionId": "6323a063-b23a-40f9-a542-19e8d7ca1b48",
-                "confirmPaymentSessionId": "025b4886-d9a1-4023-875d-85a282d7a60c",
-                "_class": "it.pagopa.ecommerce.commons.documents.v2.authorization.NpgTransactionGatewayAuthorizationRequestedData"
             },
-            "idBundle": "98d24e9a-ab8b-48e3-ae84-f0c16c64db3b"
+            "eventCode": "TRANSACTION_ACTIVATED_EVENT",
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionActivatedEvent"
         },
-        "eventCode": "TRANSACTION_AUTHORIZATION_REQUESTED_EVENT",
-        "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionAuthorizationRequestedEvent"
-    },
-    {
-        "data": {
-            "authorizationCode": "105197",
-            "rrn": "250139026637",
-            "timestampOperation": "2025-01-13T09:18:39.930Z",
-            "transactionGatewayAuthorizationData": {
-                "operationResult": "EXECUTED",
-                "operationId": "750099794759650139",
-                "paymentEndToEndId": "750099794759650139",
-                "errorCode": "000",
-                "_class": "it.pagopa.ecommerce.commons.documents.v2.authorization.NpgTransactionGatewayAuthorizationData"
-            }
+        {
+            "data": {
+                "amount": 12000,
+                "fee": 95,
+                "paymentInstrumentId": "e7058cac-5e1a-4002-8994-5bab31e9f385",
+                "pspId": "BNLIITRR",
+                "paymentTypeCode": "CP",
+                "brokerName": "05963231005",
+                "pspChannelCode": "05963231005_01",
+                "paymentMethodName": "CARDS",
+                "pspBusinessName": "Worldline Merchant Services Italia S.p.A.",
+                "isPspOnUs": false,
+                "authorizationRequestId": "E1736759869766ybQ4",
+                "paymentGateway": "NPG",
+                "paymentMethodDescription": "Carte di Credito e Debito",
+                "transactionGatewayAuthorizationRequestedData": {
+                    "logo": "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
+                    "brand": "MC",
+                    "sessionId": "6323a063-b23a-40f9-a542-19e8d7ca1b48",
+                    "confirmPaymentSessionId": "025b4886-d9a1-4023-875d-85a282d7a60c",
+                    "_class": "it.pagopa.ecommerce.commons.documents.v2.authorization.NpgTransactionGatewayAuthorizationRequestedData"
+                },
+                "idBundle": "98d24e9a-ab8b-48e3-ae84-f0c16c64db3b"
+            },
+            "eventCode": "TRANSACTION_AUTHORIZATION_REQUESTED_EVENT",
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionAuthorizationRequestedEvent"
         },
-        "eventCode": "TRANSACTION_AUTHORIZATION_COMPLETED_EVENT",
-        "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionAuthorizationCompletedEvent"
-    },
-    {
-        "eventCode": "TRANSACTION_CLOSURE_REQUESTED_EVENT",
-        "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosureRequestedEvent"
-    },
-    {
-        "data": {
-            "responseOutcome": "OK"
+        {
+            "data": {
+                "authorizationCode": "105197",
+                "rrn": "250139026637",
+                "timestampOperation": "2025-01-13T09:18:39.930Z",
+                "transactionGatewayAuthorizationData": {
+                    "operationResult": "EXECUTED",
+                    "operationId": "750099794759650139",
+                    "paymentEndToEndId": "750099794759650139",
+                    "errorCode": "000",
+                    "_class": "it.pagopa.ecommerce.commons.documents.v2.authorization.NpgTransactionGatewayAuthorizationData"
+                }
+            },
+            "eventCode": "TRANSACTION_AUTHORIZATION_COMPLETED_EVENT",
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionAuthorizationCompletedEvent"
         },
-        "eventCode": "TRANSACTION_CLOSED_EVENT",
-        "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosedEvent"
-    },
-    {
-        "data": {
-            "responseOutcome": "OK",
-            "language": "it-IT",
-            "paymentDate": "2025-01-13T10:18:15.948Z"
+        {
+            "eventCode": "TRANSACTION_CLOSURE_REQUESTED_EVENT",
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosureRequestedEvent"
         },
-        "eventCode": "TRANSACTION_USER_RECEIPT_REQUESTED_EVENT",
-        "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionUserReceiptRequestedEvent"
-    },
-    {
-        "data": {
-            "responseOutcome": "OK",
-            "language": "it-IT",
-            "paymentDate": "2025-01-13T10:18:15.948Z"
+        {
+            "data": {
+                "responseOutcome": "OK"
+            },
+            "eventCode": "TRANSACTION_CLOSED_EVENT",
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosedEvent"
         },
-        "eventCode": "TRANSACTION_USER_RECEIPT_ADDED_EVENT",
-        "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionUserReceiptAddedEvent"
-    },
-    {
-        "eventCode": "TRANSACTION_USER_CANCELED_EVENT",
-        "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionUserCanceledEvent"
-    },
-    {
-        "eventCode": "TRANSACTION_CLOSURE_FAILED_EVENT",
-        "data": {
-            "responseOutcome": "OK"
+        {
+            "data": {
+                "responseOutcome": "OK",
+                "language": "it-IT",
+                "paymentDate": "2025-01-13T10:18:15.948Z"
+            },
+            "eventCode": "TRANSACTION_USER_RECEIPT_REQUESTED_EVENT",
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionUserReceiptRequestedEvent"
         },
-        "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionClosureFailedEvent"
-    },
-    {
-        "eventCode": "TRANSACTION_CLOSURE_ERROR_EVENT",
-        "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionClosureErrorEvent"
-    },
-    {
-        "eventCode": "TRANSACTION_REFUND_REQUESTED_EVENT",
-        "data": {
-            "statusBeforeRefunded": "AUTHORIZATION_REQUESTED"
+        {
+            "data": {
+                "responseOutcome": "OK",
+                "language": "it-IT",
+                "paymentDate": "2025-01-13T10:18:15.948Z"
+            },
+            "eventCode": "TRANSACTION_USER_RECEIPT_ADDED_EVENT",
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionUserReceiptAddedEvent"
         },
-        "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionRefundRequestedEvent"
-    },
-    {
-        "eventCode": "TRANSACTION_EXPIRED_EVENT",
-        "data": {
-            "statusBeforeExpiration": "ACTIVATED"
+        {
+            "eventCode": "TRANSACTION_USER_CANCELED_EVENT",
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionUserCanceledEvent"
         },
-        "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionExpiredEvent"
-    }
+        {
+            "eventCode": "TRANSACTION_CLOSURE_FAILED_EVENT",
+            "data": {
+                "responseOutcome": "OK"
+            },
+            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionClosureFailedEvent"
+        },
+        {
+            "eventCode": "TRANSACTION_CLOSURE_ERROR_EVENT",
+            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionClosureErrorEvent"
+        },
+        {
+            "eventCode": "TRANSACTION_REFUND_REQUESTED_EVENT",
+            "data": {
+                "statusBeforeRefunded": "AUTHORIZATION_REQUESTED"
+            },
+            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionRefundRequestedEvent"
+        },
+        {
+            "eventCode": "TRANSACTION_EXPIRED_EVENT",
+            "data": {
+                "statusBeforeExpiration": "ACTIVATED"
+            },
+            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionExpiredEvent"
+        },
+        {
+            "data": {
+                "responseOutcome": "OK",
+                "language": "it-IT",
+                "paymentDate": "1991-05-22T06:00Z",
+                "receivingOfficeName": "officeName",
+                "paymentDescription": "description"
+            },
+            "eventCode": "TRANSACTION_ADD_USER_RECEIPT_ERROR_EVENT",
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionUserReceiptAddErrorEvent"
+        }
     ];
 
 
