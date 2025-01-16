@@ -1,0 +1,94 @@
+{
+	"info": {
+		"_postman_id": "b836a473-a698-46de-92af-798a68453a35",
+		"name": "Ecommerce event dispatcher tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36814090"
+	},
+	"item": [
+		{
+			"name": "Send TransactionAuthorizationOutcomeWaitingEvent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const transactionId = \"00000000000000000000000000000001\";\r",
+							"const initialStatus = \"AUTHORIZATION_REQUESTED\";\r",
+							"const expectedTransactionStatus = \"CLOSED\";\r",
+							"\r",
+							"const getTransaction = {\r",
+							"    url: `${pm.environment.get(\"TRANSACTION_SERVICE_HOST\")}/v2/transactions/${transactionId}`,\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"async function executeGetTransactionRequest() {\r",
+							"        const maxAttempts = 10;\r",
+							"        var counter = 0;\r",
+							"        var transactionStatus = null;\r",
+							"        while (counter < maxAttempts && transactionStatus != expectedTransactionStatus) {\r",
+							"            await new Promise(r => setTimeout(r, 1000));\r",
+							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {\r",
+							"                if (error) {\r",
+							"                    console.log(`Error retrieving transaction by id: ${error.code}`);\r",
+							"                    reject(error)\r",
+							"                } else {\r",
+							"                    const responseBody = response.json();\r",
+							"                    transactionStatus = responseBody.status;\r",
+							"                    console.log(`The transaction status: ${transactionStatus}`)\r",
+							"                    resolve(transactionStatus);\r",
+							"                }\r",
+							"            }));\r",
+							"        counter++;\r",
+							"    }\r",
+							"    return transactionStatus;\r",
+							"}\r",
+							"\r",
+							"pm.test(`[pagopa-ecommerce-event-dispatcher-service] Check transaction status from ${initialStatus} to ${expectedTransactionStatus}`, async () => {\r",
+							"    const transactionStatus = await executeGetTransactionRequest();\r",
+							"    pm.expect(transactionStatus).to.be.eq(expectedTransactionStatus);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<QueueMessage>\r\n    <MessageText>{\"event\":{\"id\":\"00000003-0000-0000-0000-000000000001\",\"transactionId\":\"00000000000000000000000000000001\",\"creationDate\":\"2025-01-13T09:18:18.000000000Z[Etc/UTC]\",\"data\":{\"retryCount\":1},\"eventCode\":\"TRANSACTION_AUTHORIZATION_OUTCOME_WAITING_EVENT\",\"_class\":\"it.pagopa.ecommerce.commons.documents.v2.TransactionAuthorizationOutcomeWaitingEvent\"},\"tracingInfo\":{\"traceparent\":\"00-455e513136980f1f212d24f4faed95aa-fd059706a3c29759-00\",\"tracestate\":null,\"baggage\":null}}</MessageText>\r\n</QueueMessage>"
+				},
+				"url": {
+					"raw": "{{AZURITE_HOST}}/devstoreaccount1/pagopa-ecommerce-transactions-outcome-waiting-queue/messages?{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+					"host": [
+						"{{AZURITE_HOST}}"
+					],
+					"path": [
+						"devstoreaccount1",
+						"pagopa-ecommerce-transactions-outcome-waiting-queue",
+						"messages"
+					],
+					"query": [
+						{
+							"key": "{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+							"value": null
+						}
+					]
+				},
+				"description": "The Put Message operation adds a new message to the back of the message queue. \n\n[Documentation](https://docs.microsoft.com/en-us/rest/api/storageservices/put-message)"
+			},
+			"response": []
+		}
+	]
+}
