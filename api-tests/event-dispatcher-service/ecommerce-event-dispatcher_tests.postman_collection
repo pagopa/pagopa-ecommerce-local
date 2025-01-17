@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Send TransactionAuthorizationOutcomeWaitingEvent",
+			"name": "Send TransactionAuthorizationOutcomeWaitingEvent - AUTHORIZATION_REQUESTED",
 			"event": [
 				{
 					"listen": "test",
@@ -91,7 +91,7 @@
 			"response": []
 		},
 		{
-			"name": "Send TransactionAuthorizationRequestedEventV2",
+			"name": "Send TransactionAuthorizationRequestedEventV2 - AUTHORIZATION_REQUESTED",
 			"event": [
 				{
 					"listen": "test",
@@ -161,6 +161,426 @@
 					"path": [
 						"devstoreaccount1",
 						"pagopa-ecommerce-transactions-authrequested-queue",
+						"messages"
+					],
+					"query": [
+						{
+							"key": "{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+							"value": null
+						}
+					]
+				},
+				"description": "The Put Message operation adds a new message to the back of the message queue. \n\n[Documentation](https://docs.microsoft.com/en-us/rest/api/storageservices/put-message)"
+			},
+			"response": []
+		},
+		{
+			"name": "Send TransactionClosureErrorEventV2 - CANCELLATION_REQUESTED",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const transactionId = \"00000000000000000000000000000003\";\r",
+							"const initialStatus = \"CANCELLATION_REQUESTED\";\r",
+							"const expectedTransactionStatus = \"CANCELED\";\r",
+							"\r",
+							"const getTransaction = {\r",
+							"    url: `${pm.environment.get(\"TRANSACTION_SERVICE_HOST\")}/v2/transactions/${transactionId}`,\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"async function executeGetTransactionRequest() {\r",
+							"        const maxAttempts = 10;\r",
+							"        var counter = 0;\r",
+							"        var transactionStatus = null;\r",
+							"        while (counter < maxAttempts && transactionStatus != expectedTransactionStatus) {\r",
+							"            await new Promise(r => setTimeout(r, 1000));\r",
+							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {\r",
+							"                if (error) {\r",
+							"                    console.log(`Error retrieving transaction by id: ${error.code}`);\r",
+							"                    reject(error)\r",
+							"                } else {\r",
+							"                    const responseBody = response.json();\r",
+							"                    transactionStatus = responseBody.status;\r",
+							"                    console.log(`The transaction status: ${transactionStatus}`)\r",
+							"                    resolve(transactionStatus);\r",
+							"                }\r",
+							"            }));\r",
+							"        counter++;\r",
+							"    }\r",
+							"    return transactionStatus;\r",
+							"}\r",
+							"\r",
+							"pm.test(`[pagopa-ecommerce-event-dispatcher-service] Check transaction status from ${initialStatus} to ${expectedTransactionStatus}`, async () => {\r",
+							"    const transactionStatus = await executeGetTransactionRequest();\r",
+							"    pm.expect(expectedTransactionStatus).to.be.eq(transactionStatus);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<QueueMessage>\r\n    <MessageText>{\"event\":{\"id\":\"00000003-0000-0000-0000-000000000003\",\"transactionId\":\"00000000000000000000000000000003\",\"creationDate\":\"2025-01-13T09:18:18.000000000Z[Etc/UTC]\",\"eventCode\":\"TRANSACTION_CLOSURE_ERROR_EVENT\",\"_class\":\"it.pagopa.ecommerce.commons.documents.v2.TransactionClosureErrorEvent\"},\"tracingInfo\":{\"traceparent\":\"00-f306525d82a8743cd91198bf38502c0a-f1a1ab24ad60de24-00\",\"tracestate\":null,\"baggage\":null}}</MessageText>\r\n</QueueMessage>"
+				},
+				"url": {
+					"raw": "{{AZURITE_HOST}}/devstoreaccount1/pagopa-ecommerce-transactions-close-payment-retry-queue/messages?{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+					"host": [
+						"{{AZURITE_HOST}}"
+					],
+					"path": [
+						"devstoreaccount1",
+						"pagopa-ecommerce-transactions-close-payment-retry-queue",
+						"messages"
+					],
+					"query": [
+						{
+							"key": "{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+							"value": null
+						}
+					]
+				},
+				"description": "The Put Message operation adds a new message to the back of the message queue. \n\n[Documentation](https://docs.microsoft.com/en-us/rest/api/storageservices/put-message)"
+			},
+			"response": []
+		},
+		{
+			"name": "Send TransactionClosureRetriedEventV2 - CANCELLATION_REQUESTED",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const transactionId = \"00000000000000000000000000000004\";\r",
+							"const initialStatus = \"CANCELLATION_REQUESTED\";\r",
+							"const expectedTransactionStatus = \"CANCELED\";\r",
+							"\r",
+							"const getTransaction = {\r",
+							"    url: `${pm.environment.get(\"TRANSACTION_SERVICE_HOST\")}/v2/transactions/${transactionId}`,\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"async function executeGetTransactionRequest() {\r",
+							"        const maxAttempts = 10;\r",
+							"        var counter = 0;\r",
+							"        var transactionStatus = null;\r",
+							"        while (counter < maxAttempts && transactionStatus != expectedTransactionStatus) {\r",
+							"            await new Promise(r => setTimeout(r, 1000));\r",
+							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {\r",
+							"                if (error) {\r",
+							"                    console.log(`Error retrieving transaction by id: ${error.code}`);\r",
+							"                    reject(error)\r",
+							"                } else {\r",
+							"                    const responseBody = response.json();\r",
+							"                    transactionStatus = responseBody.status;\r",
+							"                    console.log(`The transaction status: ${transactionStatus}`)\r",
+							"                    resolve(transactionStatus);\r",
+							"                }\r",
+							"            }));\r",
+							"        counter++;\r",
+							"    }\r",
+							"    return transactionStatus;\r",
+							"}\r",
+							"\r",
+							"pm.test(`[pagopa-ecommerce-event-dispatcher-service] Check transaction status from ${initialStatus} to ${expectedTransactionStatus}`, async () => {\r",
+							"    const transactionStatus = await executeGetTransactionRequest();\r",
+							"    pm.expect(expectedTransactionStatus).to.be.eq(transactionStatus);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<QueueMessage>\r\n    <MessageText>{\"event\":{\"id\":\"00000003-0000-0000-0000-000000000004\",\"transactionId\":\"00000000000000000000000000000004\",\"creationDate\":\"2025-01-13T09:18:18.000000000Z[Etc/UTC]\",\"data\":{\"retryCount\":1},\"eventCode\":\"TRANSACTION_CLOSURE_RETRIED_EVENT\",\"_class\":\"it.pagopa.ecommerce.commons.documents.v2.TransactionClosureRetriedEvent\"},\"tracingInfo\":{\"traceparent\":\"00-f306525d82a8743cd91198bf38502c0a-f1a1ab24ad60de24-00\",\"tracestate\":null,\"baggage\":null}}</MessageText>\r\n</QueueMessage>"
+				},
+				"url": {
+					"raw": "{{AZURITE_HOST}}/devstoreaccount1/pagopa-ecommerce-transactions-close-payment-retry-queue/messages?{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+					"host": [
+						"{{AZURITE_HOST}}"
+					],
+					"path": [
+						"devstoreaccount1",
+						"pagopa-ecommerce-transactions-close-payment-retry-queue",
+						"messages"
+					],
+					"query": [
+						{
+							"key": "{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+							"value": null
+						}
+					]
+				},
+				"description": "The Put Message operation adds a new message to the back of the message queue. \n\n[Documentation](https://docs.microsoft.com/en-us/rest/api/storageservices/put-message)"
+			},
+			"response": []
+		},
+		{
+			"name": "Send TransactionClosureErrorEventV2 - CLOSURE_REQUESTED",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const transactionId = \"00000000000000000000000000000005\";\r",
+							"const initialStatus = \"CLOSURE_REQUESTED\";\r",
+							"const expectedTransactionStatus = \"CLOSED\";\r",
+							"\r",
+							"const getTransaction = {\r",
+							"    url: `${pm.environment.get(\"TRANSACTION_SERVICE_HOST\")}/v2/transactions/${transactionId}`,\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"async function executeGetTransactionRequest() {\r",
+							"        const maxAttempts = 10;\r",
+							"        var counter = 0;\r",
+							"        var transactionStatus = null;\r",
+							"        while (counter < maxAttempts && transactionStatus != expectedTransactionStatus) {\r",
+							"            await new Promise(r => setTimeout(r, 1000));\r",
+							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {\r",
+							"                if (error) {\r",
+							"                    console.log(`Error retrieving transaction by id: ${error.code}`);\r",
+							"                    reject(error)\r",
+							"                } else {\r",
+							"                    const responseBody = response.json();\r",
+							"                    transactionStatus = responseBody.status;\r",
+							"                    console.log(`The transaction status: ${transactionStatus}`)\r",
+							"                    resolve(transactionStatus);\r",
+							"                }\r",
+							"            }));\r",
+							"        counter++;\r",
+							"    }\r",
+							"    return transactionStatus;\r",
+							"}\r",
+							"\r",
+							"pm.test(`[pagopa-ecommerce-event-dispatcher-service] Check transaction status from ${initialStatus} to ${expectedTransactionStatus}`, async () => {\r",
+							"    const transactionStatus = await executeGetTransactionRequest();\r",
+							"    pm.expect(expectedTransactionStatus).to.be.eq(transactionStatus);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<QueueMessage>\r\n    <MessageText>{\"event\":{\"id\":\"00000006-0000-0000-0000-000000000005\",\"transactionId\":\"00000000000000000000000000000005\",\"creationDate\":\"2025-01-13T09:18:21.000000000Z[Etc/UTC]\",\"eventCode\":\"TRANSACTION_CLOSURE_ERROR_EVENT\",\"_class\":\"it.pagopa.ecommerce.commons.documents.v2.TransactionClosureErrorEvent\"},\"tracingInfo\":{\"traceparent\":\"00-f306525d82a8743cd91198bf38502c0a-f1a1ab24ad60de24-00\",\"tracestate\":null,\"baggage\":null}}</MessageText>\r\n</QueueMessage>"
+				},
+				"url": {
+					"raw": "{{AZURITE_HOST}}/devstoreaccount1/pagopa-ecommerce-transactions-close-payment-retry-queue/messages?{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+					"host": [
+						"{{AZURITE_HOST}}"
+					],
+					"path": [
+						"devstoreaccount1",
+						"pagopa-ecommerce-transactions-close-payment-retry-queue",
+						"messages"
+					],
+					"query": [
+						{
+							"key": "{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+							"value": null
+						}
+					]
+				},
+				"description": "The Put Message operation adds a new message to the back of the message queue. \n\n[Documentation](https://docs.microsoft.com/en-us/rest/api/storageservices/put-message)"
+			},
+			"response": []
+		},
+		{
+			"name": "Send TransactionClosureErrorEventV2 - CLOSURE_ERROR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const transactionId = \"00000000000000000000000000000006\";\r",
+							"const initialStatus = \"CLOSURE_ERROR\";\r",
+							"const expectedTransactionStatus = \"CANCELED\";\r",
+							"\r",
+							"const getTransaction = {\r",
+							"    url: `${pm.environment.get(\"TRANSACTION_SERVICE_HOST\")}/v2/transactions/${transactionId}`,\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"async function executeGetTransactionRequest() {\r",
+							"        const maxAttempts = 10;\r",
+							"        var counter = 0;\r",
+							"        var transactionStatus = null;\r",
+							"        while (counter < maxAttempts && transactionStatus != expectedTransactionStatus) {\r",
+							"            await new Promise(r => setTimeout(r, 1000));\r",
+							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {\r",
+							"                if (error) {\r",
+							"                    console.log(`Error retrieving transaction by id: ${error.code}`);\r",
+							"                    reject(error)\r",
+							"                } else {\r",
+							"                    const responseBody = response.json();\r",
+							"                    transactionStatus = responseBody.status;\r",
+							"                    console.log(`The transaction status: ${transactionStatus}`)\r",
+							"                    resolve(transactionStatus);\r",
+							"                }\r",
+							"            }));\r",
+							"        counter++;\r",
+							"    }\r",
+							"    return transactionStatus;\r",
+							"}\r",
+							"\r",
+							"pm.test(`[pagopa-ecommerce-event-dispatcher-service] Check transaction status from ${initialStatus} to ${expectedTransactionStatus}`, async () => {\r",
+							"    const transactionStatus = await executeGetTransactionRequest();\r",
+							"    pm.expect(expectedTransactionStatus).to.be.eq(transactionStatus);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<QueueMessage>\r\n    <MessageText>{\"event\":{\"id\":\"00000004-0000-0000-0000-000000000006\",\"transactionId\":\"00000000000000000000000000000006\",\"creationDate\":\"2025-01-13T09:18:19.000000000Z[Etc/UTC]\",\"eventCode\":\"TRANSACTION_CLOSURE_ERROR_EVENT\",\"_class\":\"it.pagopa.ecommerce.commons.documents.v2.TransactionClosureErrorEvent\"},\"tracingInfo\":{\"traceparent\":\"00-f306525d82a8743cd91198bf38502c0a-f1a1ab24ad60de24-00\",\"tracestate\":null,\"baggage\":null}}</MessageText>\r\n</QueueMessage>"
+				},
+				"url": {
+					"raw": "{{AZURITE_HOST}}/devstoreaccount1/pagopa-ecommerce-transactions-close-payment-retry-queue/messages?{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+					"host": [
+						"{{AZURITE_HOST}}"
+					],
+					"path": [
+						"devstoreaccount1",
+						"pagopa-ecommerce-transactions-close-payment-retry-queue",
+						"messages"
+					],
+					"query": [
+						{
+							"key": "{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+							"value": null
+						}
+					]
+				},
+				"description": "The Put Message operation adds a new message to the back of the message queue. \n\n[Documentation](https://docs.microsoft.com/en-us/rest/api/storageservices/put-message)"
+			},
+			"response": []
+		},
+		{
+			"name": "Send TransactionActivatedEventV2 - ACTIVATED",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const transactionId = \"00000000000000000000000000000007\";\r",
+							"const initialStatus = \"ACTIVATED\";\r",
+							"const expectedTransactionStatus = \"EXPIRED_NOT_AUTHORIZED\";\r",
+							"\r",
+							"const getTransaction = {\r",
+							"    url: `${pm.environment.get(\"TRANSACTION_SERVICE_HOST\")}/v2/transactions/${transactionId}`,\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"async function executeGetTransactionRequest() {\r",
+							"        const maxAttempts = 10;\r",
+							"        var counter = 0;\r",
+							"        var transactionStatus = null;\r",
+							"        while (counter < maxAttempts && transactionStatus != expectedTransactionStatus) {\r",
+							"            await new Promise(r => setTimeout(r, 1000));\r",
+							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {\r",
+							"                if (error) {\r",
+							"                    console.log(`Error retrieving transaction by id: ${error.code}`);\r",
+							"                    reject(error)\r",
+							"                } else {\r",
+							"                    const responseBody = response.json();\r",
+							"                    transactionStatus = responseBody.status;\r",
+							"                    console.log(`The transaction status: ${transactionStatus}`)\r",
+							"                    resolve(transactionStatus);\r",
+							"                }\r",
+							"            }));\r",
+							"        counter++;\r",
+							"    }\r",
+							"    return transactionStatus;\r",
+							"}\r",
+							"\r",
+							"pm.test(`[pagopa-ecommerce-event-dispatcher-service] Check transaction status from ${initialStatus} to ${expectedTransactionStatus}`, async () => {\r",
+							"    const transactionStatus = await executeGetTransactionRequest();\r",
+							"    pm.expect(expectedTransactionStatus).to.be.eq(transactionStatus);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<QueueMessage>\r\n    <MessageText>{\"event\":{\"id\":\"00000002-0000-0000-0000-000000000007\",\"transactionId\":\"00000000000000000000000000000007\",\"creationDate\":\"2025-01-13T09:18:17.000000000Z[Etc/UTC]\",\"data\":{\"email\":{\"data\":\"a4bc4c87-c111-45ca-8b6b-a40a800b4840\"},\"paymentNotices\":[{\"paymentToken\":\"b72411c6597140b3946b879ad4c3da2d\",\"rptId\":\"77777777777302010000655612322\",\"description\":\"TARI/TEFA 2021\",\"amount\":12000,\"transferList\":[{\"paFiscalCode\":\"77777777777\",\"digitalStamp\":false,\"transferAmount\":10000,\"transferCategory\":\"0101101IM\"},{\"paFiscalCode\":\"01199250158\",\"digitalStamp\":false,\"transferAmount\":2000,\"transferCategory\":\"0201102IM\"}],\"companyName\":\"company PA\",\"creditorReferenceId\":\"02010000655612322\"}],\"clientId\":\"CHECKOUT\",\"paymentTokenValiditySeconds\":900,\"transactionGatewayActivationData\":{\"type\":\"NPG\",\"orderId\":\"E1736759869766ybQ4\",\"correlationId\":\"f878f527-0d9d-4ffe-b641-0fa8cb998b3a\"}},\"eventCode\":\"TRANSACTION_ACTIVATED_EVENT\",\"_class\":\"it.pagopa.ecommerce.commons.documents.v2.TransactionActivatedEvent\"},\"tracingInfo\":{\"traceparent\":\"00-f306525d82a8743cd91198bf38502c0a-f1a1ab24ad60de24-00\",\"tracestate\":null,\"baggage\":null}}</MessageText>\r\n</QueueMessage>"
+				},
+				"url": {
+					"raw": "{{AZURITE_HOST}}/devstoreaccount1/pagopa-ecommerce-transactions-expiration-queue/messages?{{AZURITE_QUEUE_QUERY_PARAMS_AUTH}}",
+					"host": [
+						"{{AZURITE_HOST}}"
+					],
+					"path": [
+						"devstoreaccount1",
+						"pagopa-ecommerce-transactions-expiration-queue",
 						"messages"
 					],
 					"query": [
