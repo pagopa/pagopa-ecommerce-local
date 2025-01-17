@@ -414,10 +414,10 @@ const transactions = [
             },
         ]
     },
-    // 17 - TransactionNotificationsRetryQueueConsumerV2 - NOTIFICATION_ERROR
+    // 17 - TransactionExpirationQueueConsumerV2 - ACTIVATED - v2
     {
         transactionId: "00000000000000000000000000000017",
-        status: 'NOTIFICATION_ERROR',
+        status: 'ACTIVATED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -425,42 +425,12 @@ const transactions = [
                 eventCode: 'TRANSACTION_ACTIVATED_EVENT',
                 creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
             },
-            {
-                eventId: '00000002-0000-0000-0000-000000000017',
-                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000003-0000-0000-0000-000000000017',
-                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
-                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000004-0000-0000-0000-000000000017',
-                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000005-0000-0000-0000-000000000017',
-                eventCode: 'TRANSACTION_CLOSED_EVENT',
-                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000006-0000-0000-0000-000000000017',
-                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
-                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000007-0000-0000-0000-000000000017',
-                eventCode: 'TRANSACTION_ADD_USER_RECEIPT_ERROR_EVENT',
-                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
-            },
         ]
     },
-    // 18 - TransactionRefundRetryQueueConsumerV2 - REFUND_ERROR
+    // 18 - TransactionNotificationsRetryQueueConsumerV2 - NOTIFICATION_ERROR
     {
         transactionId: "00000000000000000000000000000018",
-        status: 'REFUND_ERROR',
+        status: 'NOTIFICATION_ERROR',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -475,27 +445,32 @@ const transactions = [
             },
             {
                 eventId: '00000003-0000-0000-0000-000000000018',
-                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000004-0000-0000-0000-000000000018',
-                eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
+                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000005-0000-0000-0000-000000000018',
-                eventCode: 'TRANSACTION_REFUND_ERROR_EVENT',
+                eventCode: 'TRANSACTION_CLOSED_EVENT',
                 creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000006-0000-0000-0000-000000000018',
-                eventCode: 'TRANSACTION_REFUND_RETRIED_EVENT',
+                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
                 creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
-            }
+            },
+            {
+                eventId: '00000007-0000-0000-0000-000000000018',
+                eventCode: 'TRANSACTION_ADD_USER_RECEIPT_ERROR_EVENT',
+                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
+            },
         ]
     },
-    // 19 - TransactionsRefundQueueConsumerV2 - REFUND_REQUESTED
+    // 19 - TransactionRefundRetryQueueConsumerV2 - REFUND_ERROR
     {
         transactionId: "00000000000000000000000000000019",
         status: 'REFUND_ERROR',
@@ -513,21 +488,60 @@ const transactions = [
             },
             {
                 eventId: '00000003-0000-0000-0000-000000000019',
-                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                eventCode: 'TRANSACTION_EXPIRED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000004-0000-0000-0000-000000000019',
-                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000005-0000-0000-0000-000000000019',
+                eventCode: 'TRANSACTION_REFUND_ERROR_EVENT',
+                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000006-0000-0000-0000-000000000019',
+                eventCode: 'TRANSACTION_REFUND_RETRIED_EVENT',
+                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
+            }
+        ]
+    },
+    // 20 - TransactionsRefundQueueConsumerV2 - REFUND_REQUESTED
+    {
+        transactionId: "00000000000000000000000000000020",
+        status: 'REFUND_ERROR',
+        creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+        events: [
+            {
+                eventId: '00000001-0000-0000-0000-000000000020',
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
+                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000002-0000-0000-0000-000000000020',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000003-0000-0000-0000-000000000020',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000004-0000-0000-0000-000000000020',
+                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000005-0000-0000-0000-000000000020',
                 eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
             }
         ]
     },
+
 ];
 
 const transactionsView = [];
@@ -717,25 +731,25 @@ function getEventStore(transactionId, eventId, eventCode, creationDate) {
             "data": {
                 "responseOutcome": "OK"
             },
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionClosureFailedEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosureFailedEvent"
         },
         {
             "eventCode": "TRANSACTION_CLOSURE_ERROR_EVENT",
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionClosureErrorEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosureErrorEvent"
         },
         {
             "eventCode": "TRANSACTION_REFUND_REQUESTED_EVENT",
             "data": {
                 "statusBeforeRefunded": "AUTHORIZATION_REQUESTED"
             },
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionRefundRequestedEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionRefundRequestedEvent"
         },
         {
             "eventCode": "TRANSACTION_EXPIRED_EVENT",
             "data": {
                 "statusBeforeExpiration": "ACTIVATED"
             },
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionExpiredEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionExpiredEvent"
         },
         {
             "data": {
@@ -753,14 +767,14 @@ function getEventStore(transactionId, eventId, eventCode, creationDate) {
             "data": {
                 "statusBeforeRefunded": "AUTHORIZATION_REQUESTED"
             },
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionRefundErrorEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionRefundErrorEvent"
         },
         {
             "eventCode": "TRANSACTION_REFUND_RETRIED_EVENT",
             "data": {
                 "retryCount": 1
             },
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionRefundRetriedEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionRefundRetriedEvent"
         }
     ];
 
