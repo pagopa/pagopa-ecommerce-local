@@ -731,25 +731,25 @@ function getEventStore(transactionId, eventId, eventCode, creationDate) {
             "data": {
                 "responseOutcome": "OK"
             },
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionClosureFailedEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosureFailedEvent"
         },
         {
             "eventCode": "TRANSACTION_CLOSURE_ERROR_EVENT",
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionClosureErrorEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosureErrorEvent"
         },
         {
             "eventCode": "TRANSACTION_REFUND_REQUESTED_EVENT",
             "data": {
                 "statusBeforeRefunded": "AUTHORIZATION_REQUESTED"
             },
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionRefundRequestedEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionRefundRequestedEvent"
         },
         {
             "eventCode": "TRANSACTION_EXPIRED_EVENT",
             "data": {
                 "statusBeforeExpiration": "ACTIVATED"
             },
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionExpiredEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionExpiredEvent"
         },
         {
             "data": {
@@ -767,14 +767,14 @@ function getEventStore(transactionId, eventId, eventCode, creationDate) {
             "data": {
                 "statusBeforeRefunded": "AUTHORIZATION_REQUESTED"
             },
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionRefundErrorEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionRefundErrorEvent"
         },
         {
             "eventCode": "TRANSACTION_REFUND_RETRIED_EVENT",
             "data": {
                 "retryCount": 1
             },
-            "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionRefundRetriedEvent"
+            "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionRefundRetriedEvent"
         }
     ];
 
