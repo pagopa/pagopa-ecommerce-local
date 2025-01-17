@@ -45,10 +45,10 @@ const transactions = [
             }
         ]
     },
-    // 4 - TransactionClosePaymentRetryQueueConsumerV2 - CLOSURE_REQUESTED
+    // 4 - TransactionClosePaymentRetryQueueConsumerV2 - CANCELLATION_REQUESTED - v2
     {
         transactionId: "00000000000000000000000000000004",
-        status: 'CLOSURE_REQUESTED',
+        status: 'CANCELLATION_REQUESTED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -58,30 +58,15 @@ const transactions = [
             },
             {
                 eventId: '00000002-0000-0000-0000-000000000004',
-                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                eventCode: 'TRANSACTION_USER_CANCELED_EVENT',
                 creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000003-0000-0000-0000-000000000004',
-                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
-                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000004-0000-0000-0000-000000000004',
-                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000005-0000-0000-0000-000000000004',
-                eventCode: 'TRANSACTION_CLOSURE_FAILED_EVENT',
-                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
             }
         ]
     },
-    // 5 - TransactionClosePaymentRetryQueueConsumerV2 - CLOSURE_ERROR
+    // 5 - TransactionClosePaymentRetryQueueConsumerV2 - CLOSURE_REQUESTED
     {
         transactionId: "00000000000000000000000000000005",
-        status: 'CLOSURE_ERROR',
+        status: 'CLOSURE_REQUESTED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -91,20 +76,30 @@ const transactions = [
             },
             {
                 eventId: '00000002-0000-0000-0000-000000000005',
-                eventCode: 'TRANSACTION_USER_CANCELED_EVENT',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000003-0000-0000-0000-000000000005',
-                eventCode: 'TRANSACTION_CLOSURE_ERROR_EVENT',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
             },
+            {
+                eventId: '00000004-0000-0000-0000-000000000005',
+                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000005-0000-0000-0000-000000000005',
+                eventCode: 'TRANSACTION_CLOSURE_FAILED_EVENT',
+                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
+            }
         ]
     },
-    // 6 - TransactionExpirationQueueConsumerV2 - ACTIVATED
+    // 6 - TransactionClosePaymentRetryQueueConsumerV2 - CLOSURE_ERROR
     {
         transactionId: "00000000000000000000000000000006",
-        status: 'ACTIVATED',
+        status: 'CLOSURE_ERROR',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -112,53 +107,48 @@ const transactions = [
                 eventCode: 'TRANSACTION_ACTIVATED_EVENT',
                 creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
             },
+            {
+                eventId: '00000002-0000-0000-0000-000000000006',
+                eventCode: 'TRANSACTION_USER_CANCELED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000003-0000-0000-0000-000000000006',
+                eventCode: 'TRANSACTION_CLOSURE_ERROR_EVENT',
+                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
+            },
         ]
     },
-    // 7 - TransactionExpirationQueueConsumerV2 - AUTHORIZATION_REQUESTED
+    // 7 - TransactionExpirationQueueConsumerV2 - ACTIVATED
     {
         transactionId: "00000000000000000000000000000007",
-        status: 'AUTHORIZATION_REQUESTED',
+        status: 'ACTIVATED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
                 eventId: '00000001-0000-0000-0000-000000000007',
-                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
                 creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
             },
         ]
     },
-    // 8 - TransactionExpirationQueueConsumerV2 - AUTHORIZATION_COMPLETED
+    // 8 - TransactionExpirationQueueConsumerV2 - AUTHORIZATION_REQUESTED
     {
         transactionId: "00000000000000000000000000000008",
-        status: 'AUTHORIZATION_COMPLETED',
+        status: 'AUTHORIZATION_REQUESTED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
                 eventId: '00000001-0000-0000-0000-000000000008',
-                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
-                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000002-0000-0000-0000-000000000008',
                 eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000003-0000-0000-0000-000000000008',
-                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
-                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000004-0000-0000-0000-000000000008',
-                eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
+                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
             },
         ]
     },
-    // 9 - TransactionExpirationQueueConsumerV2 - CANCELLATION_REQUESTED
+    // 9 - TransactionExpirationQueueConsumerV2 - AUTHORIZATION_COMPLETED
     {
         transactionId: "00000000000000000000000000000009",
-        status: 'CANCELLATION_REQUESTED',
+        status: 'AUTHORIZATION_COMPLETED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -168,15 +158,25 @@ const transactions = [
             },
             {
                 eventId: '00000002-0000-0000-0000-000000000009',
-                eventCode: 'TRANSACTION_USER_CANCELED_EVENT',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000003-0000-0000-0000-000000000009',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000004-0000-0000-0000-000000000009',
+                eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
             },
         ]
     },
-    // 10 - TransactionExpirationQueueConsumerV2 - CLOSURE_REQUESTED
+    // 10 - TransactionExpirationQueueConsumerV2 - CANCELLATION_REQUESTED
     {
         transactionId: "00000000000000000000000000000010",
-        status: 'CLOSURE_REQUESTED',
+        status: 'CANCELLATION_REQUESTED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -186,30 +186,15 @@ const transactions = [
             },
             {
                 eventId: '00000002-0000-0000-0000-000000000010',
-                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                eventCode: 'TRANSACTION_USER_CANCELED_EVENT',
                 creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
             },
-            {
-                eventId: '00000003-0000-0000-0000-000000000010',
-                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
-                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000004-0000-0000-0000-000000000010',
-                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000005-0000-0000-0000-000000000010',
-                eventCode: 'TRANSACTION_CLOSED_EVENT',
-                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
-            }
         ]
     },
-    // 11 - TransactionExpirationQueueConsumerV2 - CLOSURE_ERROR
+    // 11 - TransactionExpirationQueueConsumerV2 - CLOSURE_REQUESTED
     {
         transactionId: "00000000000000000000000000000011",
-        status: 'CLOSURE_ERROR',
+        status: 'CLOSURE_REQUESTED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -219,20 +204,30 @@ const transactions = [
             },
             {
                 eventId: '00000002-0000-0000-0000-000000000011',
-                eventCode: 'TRANSACTION_USER_CANCELED_EVENT',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000003-0000-0000-0000-000000000011',
-                eventCode: 'TRANSACTION_CLOSURE_ERROR_EVENT',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
             },
+            {
+                eventId: '00000004-0000-0000-0000-000000000011',
+                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000005-0000-0000-0000-000000000011',
+                eventCode: 'TRANSACTION_CLOSED_EVENT',
+                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
+            }
         ]
     },
-    // 12 - TransactionExpirationQueueConsumerV2 - CLOSED
+    // 12 - TransactionExpirationQueueConsumerV2 - CLOSURE_ERROR
     {
         transactionId: "00000000000000000000000000000012",
-        status: 'CLOSED',
+        status: 'CLOSURE_ERROR',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -242,30 +237,20 @@ const transactions = [
             },
             {
                 eventId: '00000002-0000-0000-0000-000000000012',
-                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                eventCode: 'TRANSACTION_USER_CANCELED_EVENT',
                 creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000003-0000-0000-0000-000000000012',
-                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                eventCode: 'TRANSACTION_CLOSURE_ERROR_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
             },
-            {
-                eventId: '00000004-0000-0000-0000-000000000012',
-                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000005-0000-0000-0000-000000000012',
-                eventCode: 'TRANSACTION_CLOSED_EVENT',
-                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
-            }
         ]
     },
-    // 13 - TransactionExpirationQueueConsumerV2 - EXPIRED
+    // 13 - TransactionExpirationQueueConsumerV2 - CLOSED
     {
         transactionId: "00000000000000000000000000000013",
-        status: 'EXPIRED',
+        status: 'CLOSED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -280,15 +265,25 @@ const transactions = [
             },
             {
                 eventId: '00000003-0000-0000-0000-000000000013',
-                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
             },
+            {
+                eventId: '00000004-0000-0000-0000-000000000013',
+                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000005-0000-0000-0000-000000000013',
+                eventCode: 'TRANSACTION_CLOSED_EVENT',
+                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
+            }
         ]
     },
-    // 14 - TransactionExpirationQueueConsumerV2 - NOTIFIED_KO
+    // 14 - TransactionExpirationQueueConsumerV2 - EXPIRED
     {
         transactionId: "00000000000000000000000000000014",
-        status: 'NOTIFIED_KO',
+        status: 'EXPIRED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -303,35 +298,15 @@ const transactions = [
             },
             {
                 eventId: '00000003-0000-0000-0000-000000000014',
-                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                eventCode: 'TRANSACTION_EXPIRED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000004-0000-0000-0000-000000000014',
-                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000005-0000-0000-0000-000000000014',
-                eventCode: 'TRANSACTION_CLOSED_EVENT',
-                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000006-0000-0000-0000-000000000014',
-                eventCode: 'TRANSACTION_USER_RECEIPT_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000007-0000-0000-0000-000000000014',
-                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
-                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
             },
         ]
     },
-    // 15 - TransactionExpirationQueueConsumerV2 - NOTIFICATION_ERROR
+    // 15 - TransactionExpirationQueueConsumerV2 - NOTIFIED_KO
     {
         transactionId: "00000000000000000000000000000015",
-        status: 'NOTIFICATION_ERROR',
+        status: 'NOTIFIED_KO',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -366,15 +341,15 @@ const transactions = [
             },
             {
                 eventId: '00000007-0000-0000-0000-000000000015',
-                eventCode: 'TRANSACTION_ADD_USER_RECEIPT_ERROR_EVENT',
+                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
                 creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
             },
         ]
     },
-    // 16 - TransactionExpirationQueueConsumerV2 - NOTIFICATION_REQUESTED
+    // 16 - TransactionExpirationQueueConsumerV2 - NOTIFICATION_ERROR
     {
         transactionId: "00000000000000000000000000000016",
-        status: 'NOTIFICATION_REQUESTED',
+        status: 'NOTIFICATION_ERROR',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -404,20 +379,20 @@ const transactions = [
             },
             {
                 eventId: '00000006-0000-0000-0000-000000000016',
-                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
+                eventCode: 'TRANSACTION_USER_RECEIPT_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000007-0000-0000-0000-000000000016',
-                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                eventCode: 'TRANSACTION_ADD_USER_RECEIPT_ERROR_EVENT',
                 creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
             },
         ]
     },
-    // 17 - TransactionExpirationQueueConsumerV2 - ACTIVATED - v2
+    // 17 - TransactionExpirationQueueConsumerV2 - NOTIFICATION_REQUESTED
     {
         transactionId: "00000000000000000000000000000017",
-        status: 'ACTIVATED',
+        status: 'NOTIFICATION_REQUESTED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -425,12 +400,42 @@ const transactions = [
                 eventCode: 'TRANSACTION_ACTIVATED_EVENT',
                 creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
             },
+            {
+                eventId: '00000002-0000-0000-0000-000000000017',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000003-0000-0000-0000-000000000017',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000004-0000-0000-0000-000000000017',
+                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000005-0000-0000-0000-000000000017',
+                eventCode: 'TRANSACTION_CLOSED_EVENT',
+                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000006-0000-0000-0000-000000000017',
+                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
+                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000007-0000-0000-0000-000000000017',
+                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
+            },
         ]
     },
-    // 18 - TransactionNotificationsRetryQueueConsumerV2 - NOTIFICATION_ERROR
+    // 18 - TransactionExpirationQueueConsumerV2 - ACTIVATED - v2
     {
         transactionId: "00000000000000000000000000000018",
-        status: 'NOTIFICATION_ERROR',
+        status: 'ACTIVATED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -438,42 +443,12 @@ const transactions = [
                 eventCode: 'TRANSACTION_ACTIVATED_EVENT',
                 creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
             },
-            {
-                eventId: '00000002-0000-0000-0000-000000000018',
-                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000003-0000-0000-0000-000000000018',
-                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
-                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000004-0000-0000-0000-000000000018',
-                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000005-0000-0000-0000-000000000018',
-                eventCode: 'TRANSACTION_CLOSED_EVENT',
-                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000006-0000-0000-0000-000000000018',
-                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
-                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000007-0000-0000-0000-000000000018',
-                eventCode: 'TRANSACTION_ADD_USER_RECEIPT_ERROR_EVENT',
-                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
-            },
         ]
     },
-    // 19 - TransactionRefundRetryQueueConsumerV2 - REFUND_ERROR
+    // 19 - TransactionNotificationsRetryQueueConsumerV2 - NOTIFICATION_ERROR
     {
         transactionId: "00000000000000000000000000000019",
-        status: 'REFUND_ERROR',
+        status: 'NOTIFICATION_ERROR',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -488,27 +463,32 @@ const transactions = [
             },
             {
                 eventId: '00000003-0000-0000-0000-000000000019',
-                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000004-0000-0000-0000-000000000019',
-                eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
+                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000005-0000-0000-0000-000000000019',
-                eventCode: 'TRANSACTION_REFUND_ERROR_EVENT',
+                eventCode: 'TRANSACTION_CLOSED_EVENT',
                 creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000006-0000-0000-0000-000000000019',
-                eventCode: 'TRANSACTION_REFUND_RETRIED_EVENT',
+                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
                 creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
-            }
+            },
+            {
+                eventId: '00000007-0000-0000-0000-000000000019',
+                eventCode: 'TRANSACTION_ADD_USER_RECEIPT_ERROR_EVENT',
+                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
+            },
         ]
     },
-    // 20 - TransactionsRefundQueueConsumerV2 - REFUND_REQUESTED
+    // 20 - TransactionRefundRetryQueueConsumerV2 - REFUND_ERROR
     {
         transactionId: "00000000000000000000000000000020",
         status: 'REFUND_ERROR',
@@ -526,16 +506,54 @@ const transactions = [
             },
             {
                 eventId: '00000003-0000-0000-0000-000000000020',
-                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                eventCode: 'TRANSACTION_EXPIRED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000004-0000-0000-0000-000000000020',
-                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000005-0000-0000-0000-000000000020',
+                eventCode: 'TRANSACTION_REFUND_ERROR_EVENT',
+                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000006-0000-0000-0000-000000000020',
+                eventCode: 'TRANSACTION_REFUND_RETRIED_EVENT',
+                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
+            }
+        ]
+    },
+    // 21 - TransactionsRefundQueueConsumerV2 - REFUND_REQUESTED
+    {
+        transactionId: "00000000000000000000000000000021",
+        status: 'REFUND_ERROR',
+        creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+        events: [
+            {
+                eventId: '00000001-0000-0000-0000-000000000021',
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
+                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000002-0000-0000-0000-000000000021',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000003-0000-0000-0000-000000000021',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000004-0000-0000-0000-000000000021',
+                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000005-0000-0000-0000-000000000021',
                 eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
             }
