@@ -140,8 +140,13 @@ const transactions = [
         events: [
             {
                 eventId: '00000001-0000-0000-0000-000000000008',
-                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
                 creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000002-0000-0000-0000-000000000008',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
             },
         ]
     },
