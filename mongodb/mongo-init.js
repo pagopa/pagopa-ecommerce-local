@@ -493,10 +493,10 @@ const transactions = [
             },
         ]
     },
-    // 20 - TransactionRefundRetryQueueConsumerV2 - REFUND_ERROR
+    // 20 - TransactionNotificationsRetryQueueConsumerV2 - NOTIFICATION_ERROR
     {
         transactionId: "00000000000000000000000000000020",
-        status: 'REFUND_ERROR',
+        status: 'NOTIFICATION_ERROR',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -511,27 +511,32 @@ const transactions = [
             },
             {
                 eventId: '00000003-0000-0000-0000-000000000020',
-                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000004-0000-0000-0000-000000000020',
-                eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
+                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000005-0000-0000-0000-000000000020',
-                eventCode: 'TRANSACTION_REFUND_ERROR_EVENT',
+                eventCode: 'TRANSACTION_CLOSED_EVENT',
                 creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000006-0000-0000-0000-000000000020',
-                eventCode: 'TRANSACTION_REFUND_RETRIED_EVENT',
+                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
                 creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
-            }
+            },
+            {
+                eventId: '00000007-0000-0000-0000-000000000020',
+                eventCode: 'TRANSACTION_ADD_USER_RECEIPT_ERROR_EVENT',
+                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
+            },
         ]
     },
-    // 21 - TransactionsRefundQueueConsumerV2 - REFUND_REQUESTED
+    // 21 - TransactionRefundRetryQueueConsumerV2 - REFUND_ERROR
     {
         transactionId: "00000000000000000000000000000021",
         status: 'REFUND_ERROR',
@@ -549,16 +554,54 @@ const transactions = [
             },
             {
                 eventId: '00000003-0000-0000-0000-000000000021',
-                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                eventCode: 'TRANSACTION_EXPIRED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000004-0000-0000-0000-000000000021',
-                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
             },
             {
                 eventId: '00000005-0000-0000-0000-000000000021',
+                eventCode: 'TRANSACTION_REFUND_ERROR_EVENT',
+                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000006-0000-0000-0000-000000000021',
+                eventCode: 'TRANSACTION_REFUND_RETRIED_EVENT',
+                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
+            }
+        ]
+    },
+    // 22 - TransactionsRefundQueueConsumerV2 - REFUND_REQUESTED
+    {
+        transactionId: "00000000000000000000000000000022",
+        status: 'REFUND_ERROR',
+        creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+        events: [
+            {
+                eventId: '00000001-0000-0000-0000-000000000022',
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
+                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000002-0000-0000-0000-000000000022',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000003-0000-0000-0000-000000000022',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000004-0000-0000-0000-000000000022',
+                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000005-0000-0000-0000-000000000022',
                 eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
             }
