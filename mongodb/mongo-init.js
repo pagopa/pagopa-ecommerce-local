@@ -490,13 +490,8 @@ const transactions = [
             },
             {
                 eventId: '00000007-0000-0000-0000-000000000019',
-                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
-                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000008-0000-0000-0000-000000000019',
                 eventCode: 'TRANSACTION_ADD_USER_RECEIPT_ERROR_EVENT',
-                creationDate: "2025-01-13T09:18:23.000000000Z[Etc/UTC]"
+                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
             },
         ]
     },
@@ -538,13 +533,8 @@ const transactions = [
             },
             {
                 eventId: '00000007-0000-0000-0000-000000000020',
-                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
-                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000008-0000-0000-0000-000000000020',
                 eventCode: 'TRANSACTION_ADD_USER_RECEIPT_ERROR_EVENT',
-                creationDate: "2025-01-13T09:18:23.000000000Z[Etc/UTC]"
+                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
             },
         ]
     },
