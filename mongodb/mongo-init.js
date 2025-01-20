@@ -5,8 +5,16 @@ const transactions = [
         status: 'AUTHORIZATION_REQUESTED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
-            { eventId: '00000001-0000-0000-0000-000000000001', eventCode: 'TRANSACTION_ACTIVATED_EVENT', creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]" },
-            { eventId: '00000002-0000-0000-0000-000000000001', eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT', creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]" }
+            {
+                eventId: '00000001-0000-0000-0000-000000000001',
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
+                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000002-0000-0000-0000-000000000001',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
+            }
         ]
     },
     // 2 - TransactionAuthorizationRequestedQueueConsumerV2 - AUTHORIZATION_REQUESTED
@@ -648,9 +656,20 @@ const transactionsView = [];
 const eventsStore = [];
 
 transactions.forEach(transaction => {
-    transactionsView.push(getTrasactionView(transaction.transactionId, transaction.status, transaction.creationDate, transaction.sendPaymentResultOutcome));
+    transactionsView.push(getTrasactionView(
+        transaction.transactionId,
+        transaction.status,
+        transaction.creationDate,
+        transaction.sendPaymentResultOutcome
+    ));
     transaction.events.forEach(event => {
-        eventsStore.push(getEventStore(transaction.transactionId, event.eventId, event.eventCode, event.creationDate, transaction.sendPaymentResultOutcome))
+        eventsStore.push(getEventStore(
+            transaction.transactionId,
+            event.eventId,
+            event.eventCode,
+            event.creationDate,
+            transaction.sendPaymentResultOutcome
+        ))
     })
 });
 
