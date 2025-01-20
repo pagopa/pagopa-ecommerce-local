@@ -577,7 +577,7 @@ const transactions = [
     // 22 - TransactionsRefundQueueConsumerV2 - REFUND_REQUESTED
     {
         transactionId: "00000000000000000000000000000022",
-        status: 'REFUND_ERROR',
+        status: 'REFUND_REQUESTED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         events: [
             {
@@ -602,6 +602,39 @@ const transactions = [
             },
             {
                 eventId: '00000005-0000-0000-0000-000000000022',
+                eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
+            }
+        ]
+    },
+    // 23 - TransactionsRefundQueueConsumerV2 - REFUND_REQUESTED
+    {
+        transactionId: "00000000000000000000000000000023",
+        status: 'REFUND_REQUESTED',
+        creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+        events: [
+            {
+                eventId: '00000001-0000-0000-0000-000000000023',
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
+                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000002-0000-0000-0000-000000000023',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000003-0000-0000-0000-000000000023',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000004-0000-0000-0000-000000000023',
+                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000005-0000-0000-0000-000000000023',
                 eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
             }
