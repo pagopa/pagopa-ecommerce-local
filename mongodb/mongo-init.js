@@ -400,6 +400,7 @@ const transactions = [
         transactionId: "00000000000000000000000000000017",
         status: 'NOTIFICATION_REQUESTED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+        sendPaymentResultOutcome: "KO",
         events: [
             {
                 eventId: '00000001-0000-0000-0000-000000000017',
@@ -435,12 +436,7 @@ const transactions = [
                 eventId: '00000007-0000-0000-0000-000000000017',
                 eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
                 creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000008-0000-0000-0000-000000000017',
-                eventCode: 'TRANSACTION_EXPIRED_EVENT',
-                creationDate: "2025-01-13T09:18:23.000000000Z[Etc/UTC]"
-            },
+            }
         ]
     },
     // 18 - TransactionExpirationQueueConsumerV2 - ACTIVATED - v2
