@@ -96,11 +96,6 @@ const transactions = [
                 eventId: '00000004-0000-0000-0000-000000000005',
                 eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000005-0000-0000-0000-000000000005',
-                eventCode: 'TRANSACTION_CLOSURE_FAILED_EVENT',
-                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
             }
         ]
     },
@@ -178,12 +173,7 @@ const transactions = [
                 eventId: '00000003-0000-0000-0000-000000000009',
                 eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
                 creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000004-0000-0000-0000-000000000009',
-                eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
-            },
+            }
         ]
     },
     // 10 - TransactionExpirationQueueConsumerV2 - CANCELLATION_REQUESTED
@@ -229,11 +219,6 @@ const transactions = [
                 eventId: '00000004-0000-0000-0000-000000000011',
                 eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
-            },
-            {
-                eventId: '00000005-0000-0000-0000-000000000011',
-                eventCode: 'TRANSACTION_CLOSED_EVENT',
-                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
             }
         ]
     },
@@ -346,7 +331,8 @@ const transactions = [
             {
                 eventId: '00000005-0000-0000-0000-000000000015',
                 eventCode: 'TRANSACTION_CLOSED_EVENT',
-                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
+                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]",
+                responseOutcome: "KO"
             },
             {
                 eventId: '00000006-0000-0000-0000-000000000015',
@@ -438,12 +424,14 @@ const transactions = [
             {
                 eventId: '00000006-0000-0000-0000-000000000017',
                 eventCode: 'TRANSACTION_USER_RECEIPT_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
+                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]",
+                responseOutcome: "KO"
             },
             {
                 eventId: '00000007-0000-0000-0000-000000000017',
                 eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
-                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
+                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]",
+                responseOutcome: "KO"
             }
         ]
     },
@@ -668,7 +656,7 @@ transactions.forEach(transaction => {
             event.eventId,
             event.eventCode,
             event.creationDate,
-            transaction.sendPaymentResultOutcome
+            event.responseOutcome || "OK"
         ))
     })
 });
@@ -818,14 +806,14 @@ function getEventStore(transactionId, eventId, eventCode, creationDate, response
         },
         {
             "data": {
-                "responseOutcome": responseOutcome || "OK"
+                "responseOutcome": responseOutcome
             },
             "eventCode": "TRANSACTION_CLOSED_EVENT",
             "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosedEvent"
         },
         {
             "data": {
-                "responseOutcome": responseOutcome || "OK",
+                "responseOutcome": responseOutcome,
                 "language": "it-IT",
                 "paymentDate": "2025-01-13T10:18:15.948Z"
             },
@@ -834,7 +822,7 @@ function getEventStore(transactionId, eventId, eventCode, creationDate, response
         },
         {
             "data": {
-                "responseOutcome": responseOutcome || "OK",
+                "responseOutcome": responseOutcome,
                 "language": "it-IT",
                 "paymentDate": "2025-01-13T10:18:15.948Z"
             },
@@ -848,7 +836,7 @@ function getEventStore(transactionId, eventId, eventCode, creationDate, response
         {
             "eventCode": "TRANSACTION_CLOSURE_FAILED_EVENT",
             "data": {
-                "responseOutcome": responseOutcome || "OK"
+                "responseOutcome": responseOutcome
             },
             "_class": "it.pagopa.ecommerce.commons.documents.v2.TransactionClosureFailedEvent"
         },
@@ -872,7 +860,7 @@ function getEventStore(transactionId, eventId, eventCode, creationDate, response
         },
         {
             "data": {
-                "responseOutcome": responseOutcome || "OK",
+                "responseOutcome": responseOutcome,
                 "language": "it-IT",
                 "paymentDate": "1991-05-22T06:00Z",
                 "receivingOfficeName": "officeName",
