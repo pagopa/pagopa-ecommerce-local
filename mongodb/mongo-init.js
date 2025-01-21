@@ -332,17 +332,18 @@ const transactions = [
                 eventId: '00000005-0000-0000-0000-000000000015',
                 eventCode: 'TRANSACTION_CLOSED_EVENT',
                 creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]",
-                responseOutcome: "KO"
             },
             {
                 eventId: '00000006-0000-0000-0000-000000000015',
                 eventCode: 'TRANSACTION_USER_RECEIPT_REQUESTED_EVENT',
-                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
+                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]",
+                responseOutcome: "KO"
             },
             {
                 eventId: '00000007-0000-0000-0000-000000000015',
                 eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
-                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]"
+                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]",
+                responseOutcome: "KO"
             },
         ]
     },
