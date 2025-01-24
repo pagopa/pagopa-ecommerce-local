@@ -206,7 +206,7 @@ services:
         ECOMMERCE_TRANSACTIONS_SCHEDULER_COMMIT_SHA: ${ECOMMERCE_TRANSACTIONS_SCHEDULER_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-transactions-scheduler-service/Dockerfile.transactions-scheduler-service
     ports:
-      - "${ECOMMERCE_TRANSACTIONS_SCHEDULER_PORT}:80"
+      - "${ECOMMERCE_TRANSACTIONS_SCHEDULER_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
   traefik:
