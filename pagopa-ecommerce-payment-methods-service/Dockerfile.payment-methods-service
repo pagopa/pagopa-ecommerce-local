@@ -1,5 +1,5 @@
 ### 1. Cloning stage
-FROM alpine/git:latest AS clone
+FROM alpine/git:latest@sha256:5130cb29d3cfb0850d3d1213dde3c715d9dfb5ed0e5042146f86ce1c1522ee11 AS clone
 WORKDIR /workspace/pagopa-ecommerce-payment-methods-service
 
 ARG ECOMMERCE_PAYMENT_METHODS_COMMIT_SHA
@@ -9,7 +9,7 @@ RUN rm -rf * && \
     git checkout ${ECOMMERCE_PAYMENT_METHODS_COMMIT_SHA} 
 
 ### 2. Build stage
-FROM maven:3.8.3-openjdk-17 AS build
+FROM maven:3.8.3-openjdk-17@sha256:8a66581a077762c8752a9f64f73cdd8c59e9c4446eb810417119e0436b075931 AS build
 WORKDIR /workspace/pagopa-ecommerce-payment-methods-service/
 
 ARG REPO=/workspace/pagopa-ecommerce-payment-methods-service
@@ -19,7 +19,7 @@ RUN mvn -f ./pom.xml validate -DskipTests
 RUN mvn -f ./pom.xml clean package -DskipTests
 
 ### 3. Run stage
-FROM openjdk:17-slim
+FROM openjdk:17-slim@sha256:aaa3b3cb27e3e520b8f116863d0580c438ed55ecfa0bc126b41f68c3f62f9774
 
 RUN addgroup --system user && adduser --ingroup user --system user
 USER user:user
