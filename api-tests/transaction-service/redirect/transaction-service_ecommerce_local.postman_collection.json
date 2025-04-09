@@ -285,77 +285,6 @@
 			"response": []
 		},
 		{
-			"name": "Authorization completed V2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V2 -  Authorization completed POST notify REDIRECT (status code 200)\", function() {",
-							"    pm.response.to.have.status(200);",
-							"    const response = pm.response.json();",
-							"    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\"]);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"timestampOperation\": \"2023-10-10T18:16:01.6880000+00:00\",\n  \"outcomeGateway\": {\n    \"paymentGatewayType\": \"REDIRECT\",\n    \"pspTransactionId\": \"{{PSP_TRANSACTION_ID}}\",\n    \"pspId\": \"REDIRECT\",\n    \"outcome\": \"OK\",\n    \"authorizationCode\": \"000\"\n  }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}/auth-requests",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"port": "{{TRANSACTION_SERVICE_PORT}}",
-					"path": [
-						"v2",
-						"transactions",
-						"{{TRANSACTION_ID}}",
-						"auth-requests"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Add user receipt - KO mismatched payment tokens",
 			"event": [
 				{
@@ -696,6 +625,77 @@
 						"v2",
 						"transactions",
 						"{{TRANSACTION_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authorization completed V2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V2 -  Authorization completed POST notify REDIRECT (status code 200)\", function() {",
+							"    pm.response.to.have.status(200);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\"]);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"timestampOperation\": \"2023-10-10T18:16:01.6880000+00:00\",\n  \"outcomeGateway\": {\n    \"paymentGatewayType\": \"REDIRECT\",\n    \"pspTransactionId\": \"{{PSP_TRANSACTION_ID}}\",\n    \"pspId\": \"REDIRECT\",\n    \"outcome\": \"OK\",\n    \"authorizationCode\": \"000\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}/auth-requests",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
+						"v2",
+						"transactions",
+						"{{TRANSACTION_ID}}",
+						"auth-requests"
 					]
 				}
 			},
