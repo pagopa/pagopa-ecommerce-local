@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6328ddb2-6d0f-4ae5-a8f9-5069f8dec22c",
+		"_postman_id": "f7ca9871-e99d-4ed7-83d7-669dcd697044",
 		"name": "Transaction service for local eCommerce NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -408,14 +408,15 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Authorization completed POST notify NPG (status code 200)\", function() {",
+							"pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V1 -  Authorization completed POST notify NPG (status code 200)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
 							"    pm.expect(response.status).to.be.eq(\"CLOSURE_REQUESTED\");",
 							"    pm.expect(response.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -424,7 +425,8 @@
 						"exec": [
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -464,6 +466,77 @@
 					"path": [
 						"transactions",
 						"{{BASE64_ENCODED_TRANSACTION_ID}}",
+						"auth-requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authorization completed V2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V2 - Authorization completed POST notify NPG (status code 200)\", function() {",
+							"    pm.response.to.have.status(200);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\"]);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"timestampOperation\": \"2023-09-14T14:57:22.605Z\",\n  \"outcomeGateway\": {\n    \"paymentGatewayType\": \"NPG\",\n    \"operationResult\": \"EXECUTED\",\n    \"orderId\": \"btid2384983\",\n    \"operationId\": \"3470744\",\n    \"authorizationCode\": \"647189\",\n    \"paymentEndToEndId\": \"e723hedsdew\",\n    \"rrn\": \"rrn\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}/auth-requests",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
+						"v2",
+						"transactions",
+						"{{TRANSACTION_ID}}",
 						"auth-requests"
 					]
 				}
