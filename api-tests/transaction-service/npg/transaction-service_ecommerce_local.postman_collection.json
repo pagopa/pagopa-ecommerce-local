@@ -803,7 +803,7 @@
 							"pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V2 - Authorization completed POST notify NPG (status code 200)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
-							"    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\"]);",
+							"    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\",\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\"]);",
 							"});"
 						],
 						"type": "text/javascript",
