@@ -533,7 +533,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-ecommerce-payment-method-service] PATCH NPG session with transaction id is OK (status code is 200)\", () => {",
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] PATCH NPG session with transaction id is OK (status code is 204)\", () => {",
 							"  pm.expect(pm.response.code).to.eql(204);  ",
 							"});"
 						],
