@@ -1,5 +1,5 @@
 ### 1. Cloning stage
-FROM alpine/git:latest AS clone
+FROM alpine/git:latest@sha256:311302560444cbd89b0259bbdc8157c02ec207dd41327e1702987f393e13ae78 AS clone
 WORKDIR /workspace/pagopa-ecommerce-event-dispatcher-service
 
 ARG ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA
@@ -9,7 +9,7 @@ RUN rm -rf * && \
     git checkout ${ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA} 
 
 ### 2. Build stage
-FROM maven:3.8.3-openjdk-17 AS build
+FROM maven:3.8.3-openjdk-17@sha256:8a66581a077762c8752a9f64f73cdd8c59e9c4446eb810417119e0436b075931 AS build
 WORKDIR /workspace/pagopa-ecommerce-event-dispatcher-service/
 
 ARG REPO=/workspace/pagopa-ecommerce-event-dispatcher-service
@@ -19,7 +19,7 @@ RUN mvn -f ./pom.xml validate -DskipTests
 RUN mvn -f ./pom.xml package -DskipTests
 
 ### 3. Run stage
-FROM openjdk:17-slim
+FROM openjdk:17-slim@sha256:aaa3b3cb27e3e520b8f116863d0580c438ed55ecfa0bc126b41f68c3f62f9774
 
 RUN addgroup --system user && adduser --ingroup user --system user
 USER user:user
