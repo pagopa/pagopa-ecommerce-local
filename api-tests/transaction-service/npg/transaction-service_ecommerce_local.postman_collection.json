@@ -753,6 +753,50 @@
 			"response": []
 		},
 		{
+			"name": "Get transaction outcomes by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for NPG transaction\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.outcome).to.be.a('number');",
+							"  pm.expect(responseJson.outcome).to.be.oneOf([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18, 25, 99, 116, 117, 121]);",
+							"  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');",
+							"  if (responseJson.totalAmount !== undefined) {",
+							"    pm.expect(responseJson.totalAmount).to.be.a('number');",
+							"  }",
+							"  if (responseJson.fees !== undefined) {",
+							"    pm.expect(responseJson.fees).to.be.a('number');",
+							"  }",
+							"  pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/outcomes",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
+						"transactions",
+						"{{TRANSACTION_ID}}",
+						"outcomes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get transaction by id V2",
 			"event": [
 				{
@@ -859,50 +903,6 @@
 						"transactions",
 						"{{TRANSACTION_ID}}",
 						"auth-requests"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get transaction outcomes by id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for NPG transaction\", () => {",
-							"  const responseJson = pm.response.json();",
-							"  pm.expect(responseJson.outcome).to.be.a('number');",
-							"  pm.expect(responseJson.outcome).to.be.oneOf([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18, 25, 99, 116, 117, 121]);",
-							"  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');",
-							"  if (responseJson.totalAmount !== undefined) {",
-							"    pm.expect(responseJson.totalAmount).to.be.a('number');",
-							"  }",
-							"  if (responseJson.fees !== undefined) {",
-							"    pm.expect(responseJson.fees).to.be.a('number');",
-							"  }",
-							"  pm.response.to.have.status(200);",
-							"});",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/outcomes",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"port": "{{TRANSACTION_SERVICE_PORT}}",
-					"path": [
-						"transactions",
-						"{{TRANSACTION_ID}}",
-						"outcomes"
 					]
 				}
 			},
