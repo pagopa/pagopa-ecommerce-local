@@ -193,7 +193,7 @@
 						"exec": [
 							"pm.test(\"[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)\", () => {",
 							"  const responseJson = pm.response.json();",
-							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\", \"methodManagement\"]);",
+							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\", \"methodManagement\",\"brandAssets\"]);",
 							"  pm.expect(responseJson).to.satisfy(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property)));",
 							"  pm.expect(pm.response.code).to.eql(200);  ",
 							"});"
@@ -233,7 +233,7 @@
 						"exec": [
 							"pm.test(\"[pagopa-ecommerce-payment-method-service] Get existing payment method response (status code is 200)\", () => {",
 							"  const responseJson = pm.response.json();",
-							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\",\"methodManagement\"]);",
+							"  const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\",\"methodManagement\",\"brandAssets\"]);",
 							"  pm.expect(responseJson).to.satisfy(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property)));",
 							"  pm.expect(pm.response.code).to.eql(200);  ",
 							"});"
