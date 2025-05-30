@@ -244,6 +244,20 @@ services:
     networks:
       - pagopa-ecommerce-net
   
+  pagopa-jwt-issuer-mock:
+    build:
+      context: .
+      dockerfile: pagopa-jwt-issuer-mock/Dockerfile.jwt-issuer-mock
+    volumes:
+      - type: bind
+        source: ./pagopa-jwt-issuer-mock
+        target: /config
+        read_only: true
+    ports:
+      - "${JWT_ISSUER_MOCK_PORT}:8080"
+    networks:
+      - pagopa-ecommerce-net
+  
   azurite-init:
     container_name: azurite-init
     build:
