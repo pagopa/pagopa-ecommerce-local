@@ -1,0 +1,200 @@
+{
+	"info": {
+		"name": "Ecommerce helpdesk-commands-service tests",
+		"description": "Integration tests with transaction lifecycle polling - requires docker-compose environment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Request Transaction Refund - Integration Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Request Transaction Refund - Status code is 202\", function () {\\r",
+							"    pm.response.to.have.status(202);\\r",
+							"});\\r",
+							"\\r",
+							"const transactionId = pm.environment.get('REFUNDABLE_TRANSACTION_ID');\\r",
+							"const initialStatus = \"CLOSED\";\\r",
+							"const expectedTransactionStatus = \"REFUND_REQUESTED\";\\r",
+							"\\r",
+							"const getTransaction = {\\r",
+							"    url: `${pm.environment.get(\"TRANSACTION_SERVICE_HOST\")}/transactions/${transactionId}`,\\r",
+							"    method: 'GET',\\r",
+							"    header: {\\r",
+							"        'Content-Type': 'application/json'\\r",
+							"    }\\r",
+							"};\\r",
+							"\\r",
+							"async function executeGetTransactionRequest() {\\r",
+							"        const maxAttempts = 10;\\r",
+							"        var counter = 0;\\r",
+							"        var transactionStatus = null;\\r",
+							"        while (counter < maxAttempts && transactionStatus != expectedTransactionStatus) {\\r",
+							"            await new Promise(r => setTimeout(r, 1000));\\r",
+							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {\\r",
+							"                if (error) {\\r",
+							"                    console.log(`Error retrieving transaction by id: ${error.code}`);\\r",
+							"                    reject(error)\\r",
+							"                } else {\\r",
+							"                    const responseBody = response.json();\\r",
+							"                    transactionStatus = responseBody.status;\\r",
+							"                    console.log(`The transaction status: ${transactionStatus}`)\\r",
+							"                    resolve(transactionStatus);\\r",
+							"                }\\r",
+							"            }));\\r",
+							"        counter++;\\r",
+							"    }\\r",
+							"    return transactionStatus;\\r",
+							"}\\r",
+							"\\r",
+							"pm.test(`[pagopa-ecommerce-helpdesk-commands-service] Check transaction status from ${initialStatus} to ${expectedTransactionStatus}`, async () => {\\r",
+							"    const transactionStatus = await executeGetTransactionRequest();\\r",
+							"    pm.expect(expectedTransactionStatus).to.be.eq(transactionStatus);\\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{API_SUBSCRIPTION_KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					},
+					{
+						"key": "X-User-Id",
+						"value": "{{X_USER_ID}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Forwarded-For",
+						"value": "{{X_FORWARDED_ID}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/commands/transactions/{{REFUNDABLE_TRANSACTION_ID}}/refund",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"commands",
+						"transactions",
+						"{{REFUNDABLE_TRANSACTION_ID}}",
+						"refund"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resend Transaction Email - Integration Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Resend Transaction Email - Status code is 202\", function () {\\r",
+							"    pm.response.to.have.status(202);\\r",
+							"});\\r",
+							"\\r",
+							"const transactionId = pm.environment.get('REFUNDABLE_TRANSACTION_ID');\\r",
+							"const initialStatus = \"NOTIFICATION_ERROR\";\\r",
+							"const expectedEventCode = \"TRANSACTION_USER_RECEIPT_REQUESTED_EVENT\";\\r",
+							"\\r",
+							"const getTransaction = {\\r",
+							"    url: `${pm.environment.get(\"TRANSACTION_SERVICE_HOST\")}/transactions/${transactionId}`,\\r",
+							"    method: 'GET',\\r",
+							"    header: {\\r",
+							"        'Content-Type': 'application/json'\\r",
+							"    }\\r",
+							"};\\r",
+							"\\r",
+							"async function executeGetTransactionRequest() {\\r",
+							"        const maxAttempts = 10;\\r",
+							"        var counter = 0;\\r",
+							"        var hasExpectedEvent = false;\\r",
+							"        while (counter < maxAttempts && !hasExpectedEvent) {\\r",
+							"            await new Promise(r => setTimeout(r, 1000));\\r",
+							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {\\r",
+							"                if (error) {\\r",
+							"                    console.log(`Error retrieving transaction by id: ${error.code}`);\\r",
+							"                    reject(error)\\r",
+							"                } else {\\r",
+							"                    const responseBody = response.json();\\r",
+							"                    hasExpectedEvent = responseBody.events && responseBody.events.some(\\r",
+							"                        event => event.eventCode === expectedEventCode\\r",
+							"                    );\\r",
+							"                    const eventCodes = responseBody.events ? responseBody.events.map(e => e.eventCode) : [];\\r",
+							"                    console.log(`Transaction events: ${eventCodes.join(', ')}`);\\r",
+							"                    resolve(hasExpectedEvent);\\r",
+							"                }\\r",
+							"            }));\\r",
+							"        counter++;\\r",
+							"    }\\r",
+							"    return hasExpectedEvent;\\r",
+							"}\\r",
+							"\\r",
+							"pm.test(`[pagopa-ecommerce-helpdesk-commands-service] Check transaction event from ${initialStatus} to ${expectedEventCode}`, async () => {\\r",
+							"    const hasExpectedEvent = await executeGetTransactionRequest();\\r",
+							"    pm.expect(hasExpectedEvent).to.be.true;\\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{API_SUBSCRIPTION_KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					},
+					{
+						"key": "X-User-Id",
+						"value": "{{X_USER_ID}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Forwarded-For",
+						"value": "{{X_FORWARDED_ID}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/commands/transactions/{{REFUNDABLE_TRANSACTION_ID}}/resend-email",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"commands",
+						"transactions",
+						"{{REFUNDABLE_TRANSACTION_ID}}",
+						"resend-email"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
