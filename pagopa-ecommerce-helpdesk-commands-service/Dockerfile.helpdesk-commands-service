@@ -1,0 +1,35 @@
+### 1. Cloning stage
+FROM alpine/git:latest AS clone
+WORKDIR /workspace/pagopa-ecommerce-helpdesk-commands-service
+
+ARG ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA
+
+RUN rm -rf * && \
+    git clone https://github.com/pagopa/pagopa-ecommerce-helpdesk-commands-service.git /workspace/pagopa-ecommerce-helpdesk-commands-service && \
+    git checkout ${ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA} 
+
+### 2. Build stage
+FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16 AS build
+WORKDIR /workspace/pagopa-ecommerce-helpdesk-commands-service/
+
+ARG REPO=/workspace/pagopa-ecommerce-helpdesk-commands-service
+
+COPY --from=clone ${REPO}/ .
+RUN gradle build -x test
+
+### 3. Run stage
+FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16
+
+RUN addgroup --system user && adduser --ingroup user --system user
+USER user:user
+
+ARG EXTRACTED=/workspace/pagopa-ecommerce-helpdesk-commands-service/build/extracted
+
+COPY --from=build --chown=user ${EXTRACTED} .
+
+ARG JAR_FILE=pagopa*.jar
+ENV APP_NAME=$JAR_FILE
+
+ADD --chown=user https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.25.1/opentelemetry-javaagent.jar .
+
+CMD java --enable-preview -javaagent:opentelemetry-javaagent.jar -jar $APP_NAME
