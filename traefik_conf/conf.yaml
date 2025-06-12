@@ -20,6 +20,12 @@ http:
         - payment-methods-headers
         - payment-methods-prefix
 
+    transactions-router:
+      service: "pagopa-ecommerce-transactions-service"
+      rule: "PathPrefix(`/transactions-service`)"
+      middlewares:
+        - transactions-prefix
+
   middlewares:
 
     notifications-headers:
@@ -45,6 +51,11 @@ http:
         customRequestHeaders:
           X-Client-ID: "CHECKOUT"
 
+    transactions-prefix:
+      stripPrefix:
+        prefixes:
+          - "/transactions-service"
+
 
   services:
     pagopa-notifications-service:
@@ -60,4 +71,9 @@ http:
     pagopa-ecommerce-payment-methods-service:
           loadBalancer:
             servers:
-              - url: "http://pagopa-ecommerce-payment-methods-service:8080"
+              - url: "http://pagopa-ecommerce-payment-methods-service:8080"              - url: "http://pagopa-ecommerce-payment-methods-service:8080"
+
+    pagopa-ecommerce-transactions-service:
+      loadBalancer:
+        servers:
+          - url: "http://pagopa-ecommerce-transactions-service:8080"
