@@ -96,6 +96,19 @@ services:
     networks:
       - pagopa-ecommerce-net
 
+  pagopa-ecommerce-helpdesk-commands-service:
+    container_name: pagopa-ecommerce-helpdesk-commands-service
+    env_file: pagopa-ecommerce-helpdesk-commands-service/helpdesk-commands-service.env
+    build:
+      context: .
+      args:
+        ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA: ${ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA}
+      dockerfile: pagopa-ecommerce-helpdesk-commands-service/Dockerfile.helpdesk-commands-service
+    ports:
+        - "${ECOMMERCE_HELPDESK_COMMANDS_PORT}:8080"
+    networks:
+      - pagopa-ecommerce-net
+
   pagopa-ecommerce-user-stats-service:
     container_name: pagopa-ecommerce-user-stats-service
     env_file: pagopa-ecommerce-user-stats-service/user-stats-service.env
