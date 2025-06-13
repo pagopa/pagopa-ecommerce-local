@@ -66,6 +66,63 @@
 			"response": []
 		},
 		{
+			"name": "Post carts 401",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "blue",
+						"type": "text"
+					},
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT_CART",
+						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "ARE-YOU-SURE-ABOUT-THIS-API-KEY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"77777777777\",\n            \"amount\": 10000,\n            \"companyName\": \"companyName\",\n            \"description\": \"description\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOSTNAME}}/carts",
+					"protocol": "http",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"carts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get cart",
 			"event": [
 				{
@@ -97,6 +154,53 @@
 					{
 						"key": "X-Api-Key",
 						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{HOSTNAME}}/carts/{{CART_ID}}",
+					"protocol": "http",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"carts",
+						"{{CART_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get cart 401",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401 retrieving cart\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "blue",
+						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "ARE-YOU-SURE-ABOUT-THIS-API-KEY",
 						"type": "text"
 					}
 				],
