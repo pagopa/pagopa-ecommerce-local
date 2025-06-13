@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "aa992438-93de-45d7-8bea-b2ece154050d",
+		"_postman_id": "21bdda5c-6a35-47be-bc0b-d2fb94343ea9",
 		"name": "Payment-request-local",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "36392360"
@@ -35,6 +35,11 @@
 					{
 						"key": "x-client-id",
 						"value": "CHECKOUT_CART",
+						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "{{PRIMARY_API_KEY}}",
 						"type": "text"
 					}
 				],
@@ -76,7 +81,8 @@
 							"",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -86,6 +92,11 @@
 					{
 						"key": "deployment",
 						"value": "blue",
+						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "{{PRIMARY_API_KEY}}",
 						"type": "text"
 					}
 				],
