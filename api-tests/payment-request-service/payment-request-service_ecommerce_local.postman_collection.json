@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "aa992438-93de-45d7-8bea-b2ece154050d",
+		"_postman_id": "21bdda5c-6a35-47be-bc0b-d2fb94343ea9",
 		"name": "Payment-request-local",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "36392360"
@@ -35,6 +35,68 @@
 					{
 						"key": "x-client-id",
 						"value": "CHECKOUT_CART",
+						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"77777777777\",\n            \"amount\": 10000,\n            \"companyName\": \"companyName\",\n            \"description\": \"description\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOSTNAME}}/carts",
+					"protocol": "http",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"carts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post carts 401",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "blue",
+						"type": "text"
+					},
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT_CART",
+						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "ARE-YOU-SURE-ABOUT-THIS-API-KEY",
 						"type": "text"
 					}
 				],
@@ -76,7 +138,8 @@
 							"",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -86,6 +149,58 @@
 					{
 						"key": "deployment",
 						"value": "blue",
+						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{HOSTNAME}}/carts/{{CART_ID}}",
+					"protocol": "http",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"carts",
+						"{{CART_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get cart 401",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401 retrieving cart\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "blue",
+						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "ARE-YOU-SURE-ABOUT-THIS-API-KEY",
 						"type": "text"
 					}
 				],
