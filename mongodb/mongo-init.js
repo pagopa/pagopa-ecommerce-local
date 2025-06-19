@@ -642,9 +642,9 @@ const transactions = [
     // 24 - TransactionExpirationQueueConsumerV2 - NOTIFICATION_REQUESTED (for event-based notification resend)
     {
         transactionId: "00000000000000000000000000000024",
-        status: 'NOTIFIED_KO',
+        status: 'NOTIFICATION_REQUESTED',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
-        sendPaymentResultOutcome: "KO",
+        sendPaymentResultOutcome: "OK",
         events: [
             {
                 eventId: '00000001-0000-0000-0000-000000000024',
@@ -675,13 +675,7 @@ const transactions = [
                 eventId: '00000006-0000-0000-0000-000000000024',
                 eventCode: 'TRANSACTION_USER_RECEIPT_REQUESTED_EVENT',
                 creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]",
-                responseOutcome: "KO"
-            },
-            {
-                eventId: '00000007-0000-0000-0000-000000000024',
-                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
-                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]",
-                responseOutcome: "KO"
+                responseOutcome: "OK"
             }
         ]
     },
