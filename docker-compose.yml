@@ -223,7 +223,7 @@ services:
       - pagopa-ecommerce-net
 
   storage:
-    image: mcr.microsoft.com/azure-storage/azurite:3.24.0
+    image: mcr.microsoft.com/azure-storage/azurite:latest
     container_name: azurite
     ports:
       - "10000:10000"
