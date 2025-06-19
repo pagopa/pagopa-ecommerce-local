@@ -642,7 +642,7 @@ const transactions = [
     // 24 - TransactionExpirationQueueConsumerV2 - NOTIFICATION_REQUESTED (for event-based notification resend)
     {
         transactionId: "00000000000000000000000000000024",
-        status: 'NOTIFICATION_REQUESTED',
+        status: 'NOTIFIED_KO',
         creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
         sendPaymentResultOutcome: "KO",
         events: [

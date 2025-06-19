@@ -17,7 +17,7 @@
 							"});\r",
 							"\r",
 							"const transactionId = pm.environment.get('REFUNDABLE_TRANSACTION_ID');\r",
-							"const initialStatus = \"CLOSED\";\r",
+							"const initialStatus = \"REFUND_ERROR\";\r",
 							"const expectedTransactionStatus = \"REFUND_REQUESTED\";\r",
 							"\r",
 							"const getTransaction = {\r",
