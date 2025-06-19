@@ -639,6 +639,90 @@ const transactions = [
             }
         ]
     },
+    // 24 - TransactionExpirationQueueConsumerV2 - NOTIFICATION_REQUESTED (for event-based notification resend)
+    {
+        transactionId: "00000000000000000000000000000024",
+        status: 'NOTIFICATION_REQUESTED',
+        creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+        sendPaymentResultOutcome: "KO",
+        events: [
+            {
+                eventId: '00000001-0000-0000-0000-000000000024',
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
+                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000002-0000-0000-0000-000000000024',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000003-0000-0000-0000-000000000024',
+                eventCode: 'TRANSACTION_AUTHORIZATION_COMPLETED_EVENT',
+                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000004-0000-0000-0000-000000000024',
+                eventCode: 'TRANSACTION_CLOSURE_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000005-0000-0000-0000-000000000024',
+                eventCode: 'TRANSACTION_CLOSED_EVENT',
+                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000006-0000-0000-0000-000000000024',
+                eventCode: 'TRANSACTION_USER_RECEIPT_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]",
+                responseOutcome: "KO"
+            },
+            {
+                eventId: '00000007-0000-0000-0000-000000000024',
+                eventCode: 'TRANSACTION_USER_RECEIPT_ADDED_EVENT',
+                creationDate: "2025-01-13T09:18:22.000000000Z[Etc/UTC]",
+                responseOutcome: "KO"
+            }
+        ]
+    },
+    // 25 - TransactionRefundRetryQueueConsumerV2 - REFUND_ERROR (for event-based refund request)
+    {
+        transactionId: "00000000000000000000000000000025",
+        status: 'REFUND_ERROR',
+        creationDate: "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+        events: [
+            {
+                eventId: '00000001-0000-0000-0000-000000000025',
+                eventCode: 'TRANSACTION_ACTIVATED_EVENT',
+                creationDate: "2025-01-13T09:18:16.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000002-0000-0000-0000-000000000025',
+                eventCode: 'TRANSACTION_AUTHORIZATION_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:17.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000003-0000-0000-0000-000000000025',
+                eventCode: 'TRANSACTION_EXPIRED_EVENT',
+                creationDate: "2025-01-13T09:18:18.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000004-0000-0000-0000-000000000025',
+                eventCode: 'TRANSACTION_REFUND_REQUESTED_EVENT',
+                creationDate: "2025-01-13T09:18:19.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000005-0000-0000-0000-000000000025',
+                eventCode: 'TRANSACTION_REFUND_ERROR_EVENT',
+                creationDate: "2025-01-13T09:18:20.000000000Z[Etc/UTC]"
+            },
+            {
+                eventId: '00000006-0000-0000-0000-000000000025',
+                eventCode: 'TRANSACTION_REFUND_RETRIED_EVENT',
+                creationDate: "2025-01-13T09:18:21.000000000Z[Etc/UTC]"
+            }
+        ]
+    },
 ];
 
 const transactionsView = [];
