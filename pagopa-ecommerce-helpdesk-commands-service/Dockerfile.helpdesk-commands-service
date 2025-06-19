@@ -1,55 +1,54 @@
 ### 1. Cloning stage
 FROM alpine/git:latest AS clone
-WORKDIR /workspace/pagopa-ecommerce-helpdesk-commands-service
-
+WORKDIR /workspace
 ARG ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA
-
-RUN rm -rf * && \
-    git clone https://github.com/pagopa/pagopa-ecommerce-helpdesk-commands-service.git /workspace/pagopa-ecommerce-helpdesk-commands-service && \
+RUN git clone https://github.com/pagopa/pagopa-ecommerce-helpdesk-commands-service.git && \
+    cd pagopa-ecommerce-helpdesk-commands-service && \
     git checkout ${ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA}
 
-### 2. Build stage
+### 2. Commons build stage
+FROM openjdk:17-jdk@sha256:528707081fdb9562eb819128a9f85ae7fe000e2fbaeaf9f87662e7b3f38cb7d8 AS commons-builder
+WORKDIR /workspace/app
+RUN microdnf install -y findutils git
+
+COPY --from=clone /workspace/pagopa-ecommerce-helpdesk-commands-service/ ./
+
+# Now these files exist and can be used
+RUN chmod +x ./gradlew
+RUN chmod +x ./pagopa-ecommerce-commons-maven-install.sh
+RUN ./pagopa-ecommerce-commons-maven-install.sh 1.37.2
+
+### 3. Application build stage
 FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16 AS build
-WORKDIR /workspace/pagopa-ecommerce-helpdesk-commands-service/
+WORKDIR /workspace/app
 
-# Install git, maven, and Java 17 for the buildCommons task
-RUN apk add --no-cache git maven openjdk17
+# Install dependencies
+RUN apk add --no-cache git maven
 
-ARG REPO=/workspace/pagopa-ecommerce-helpdesk-commands-service
+# Copy the cloned source code
+COPY --from=clone /workspace/pagopa-ecommerce-helpdesk-commands-service/ ./
 
-COPY --from=clone ${REPO}/ .
+# Copy commons dependencies
+COPY --from=commons-builder /root/.m2 /root/.m2
 
-RUN chmod +x gradlew
-# Set JAVA_HOME_17 environment variable to ensure the commons build uses Java 17
-ENV JAVA_HOME_17=/usr/lib/jvm/java-17-openjdk
-RUN ./gradlew build -PbuildCommons -x test --stacktrace --info
-RUN mkdir build/extracted && java -Djarmode=layertools -jar build/libs/*.jar extract --destination build/extracted
+# Build application
+RUN chmod +x ./gradlew
+RUN ./gradlew build -x test
 
-# Debug: Try individual tasks to isolate the issue
-# RUN ./gradlew helpdeskcommands-v1 --stacktrace || echo "helpdeskcommands-v1 failed"
-# RUN ./gradlew npg-api --stacktrace || echo "npg-api failed"
-# RUN ./gradlew redirect-api-v1 --stacktrace || echo "redirect-api-v1 failed"
-# RUN ./gradlew node-forwarder-api-v1 --stacktrace || echo "node-forwarder-api-v1 failed"
-# RUN ./gradlew installLibs -PbuildCommons --stacktrace || echo "installLibs failed"
-# RUN ./gradlew compileKotlin -PbuildCommons --stacktrace --debug
-# RUN mkdir build/extracted && java -Djarmode=layertools -jar build/libs/*.jar extract --destination build/extracted
+RUN mkdir build/extracted && \
+    java -Djarmode=layertools -jar build/libs/*.jar extract --destination build/extracted
 
-### 3. Run stage
+### 4. Runtime stage
 FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16
 
 RUN addgroup --system user && adduser --ingroup user --system user
 USER user:user
 
-ARG EXTRACTED=/workspace/pagopa-ecommerce-helpdesk-commands-service/build/extracted
+ARG EXTRACTED=/workspace/app/build/extracted
 
 COPY --from=build --chown=user ${EXTRACTED}/dependencies/ ./
-RUN true
 COPY --from=build --chown=user ${EXTRACTED}/spring-boot-loader/ ./
-RUN true
 COPY --from=build --chown=user ${EXTRACTED}/snapshot-dependencies/ ./
-RUN true
 COPY --from=build --chown=user ${EXTRACTED}/application/ ./
-RUN true
 
-
-ENTRYPOINT ["java","org.springframework.boot.loader.launch.JarLauncher"]
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
