@@ -20,19 +20,6 @@ http:
         - payment-methods-headers
         - payment-methods-prefix
 
-    helpdesk-commands-router:
-      service: "pagopa-ecommerce-helpdesk-commands-service"
-      rule: "PathPrefix(`/helpdesk-commands-service`)"
-      middlewares:
-        - helpdesk-commands-headers
-        - helpdesk-commands-prefix
-
-    transactions-router:
-      service: "pagopa-ecommerce-transactions-service"
-      rule: "PathPrefix(`/transactions-service`)"
-      middlewares:
-        - transactions-prefix
-
   middlewares:
 
     notifications-headers:
@@ -58,21 +45,6 @@ http:
         customRequestHeaders:
           X-Client-ID: "CHECKOUT"
 
-    helpdesk-commands-prefix:
-      stripPrefix:
-        prefixes:
-          - "/helpdesk-commands-service"
-    helpdesk-commands-headers:
-      headers:
-        customRequestHeaders:
-          X-Client-ID: "HELPDESK"
-
-    transactions-prefix:
-      stripPrefix:
-        prefixes:
-          - "/transactions-service"
-
-
   services:
     pagopa-notifications-service:
       loadBalancer:
@@ -88,13 +60,3 @@ http:
           loadBalancer:
             servers:
               - url: "http://pagopa-ecommerce-payment-methods-service:8080"
-
-    pagopa-ecommerce-helpdesk-commands-service:
-      loadBalancer:
-        servers:
-          - url: "http://pagopa-ecommerce-helpdesk-commands-service:8080"
-
-    pagopa-ecommerce-transactions-service:
-      loadBalancer:
-        servers:
-          - url: "http://pagopa-ecommerce-transactions-service:8080"

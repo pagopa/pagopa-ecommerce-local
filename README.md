@@ -81,10 +81,6 @@ The `pagopa-ecommerce-helpdesk-commands-service` provides manual operations supp
 - **Notification Management**: Email notification resending capabilities
 - **Integration Testing**: Includes polling-based tests that verify transaction state transitions
 
-**Traefik Routing**:
-- Helpdesk Commands: `/helpdesk-commands-service`
-- Transactions (for polling): `/transactions-service`
-
 ### Troubleshooting
 
 To fix:
