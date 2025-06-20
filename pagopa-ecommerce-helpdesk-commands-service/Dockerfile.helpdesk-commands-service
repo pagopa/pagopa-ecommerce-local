@@ -1,0 +1,55 @@
+### 1. Cloning stage
+FROM alpine/git:latest AS clone
+WORKDIR /workspace
+ARG ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA
+RUN git clone https://github.com/pagopa/pagopa-ecommerce-helpdesk-commands-service.git && \
+    cd pagopa-ecommerce-helpdesk-commands-service && \
+    git checkout ${ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA}
+
+### 2. Commons build stage
+FROM openjdk:17-jdk@sha256:528707081fdb9562eb819128a9f85ae7fe000e2fbaeaf9f87662e7b3f38cb7d8 AS commons-builder
+WORKDIR /workspace/app
+RUN microdnf install -y findutils git
+
+COPY --from=clone /workspace/pagopa-ecommerce-helpdesk-commands-service/ ./
+
+# Now these files exist and can be used
+RUN chmod +x ./gradlew
+RUN chmod +x ./pagopa-ecommerce-commons-maven-install.sh
+RUN COMMONS_VERSION=$(./gradlew -q printCommonsVersion) && \
+    ./pagopa-ecommerce-commons-maven-install.sh $COMMONS_VERSION
+
+### 3. Application build stage
+FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16 AS build
+WORKDIR /workspace/app
+
+# Install dependencies
+RUN apk add --no-cache git maven
+
+# Copy the cloned source code
+COPY --from=clone /workspace/pagopa-ecommerce-helpdesk-commands-service/ ./
+
+# Copy commons dependencies
+COPY --from=commons-builder /root/.m2 /root/.m2
+
+# Build application
+RUN chmod +x ./gradlew
+RUN ./gradlew build -x test
+
+RUN mkdir build/extracted && \
+    java -Djarmode=layertools -jar $(find build/libs/ -name "*.jar" ! -name "*-plain.jar") extract --destination build/extracted
+
+### 4. Runtime stage
+FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16
+
+RUN addgroup --system user && adduser --ingroup user --system user
+USER user:user
+
+ARG EXTRACTED=/workspace/app/build/extracted
+
+COPY --from=build --chown=user ${EXTRACTED}/dependencies/ ./
+COPY --from=build --chown=user ${EXTRACTED}/spring-boot-loader/ ./
+COPY --from=build --chown=user ${EXTRACTED}/snapshot-dependencies/ ./
+COPY --from=build --chown=user ${EXTRACTED}/application/ ./
+
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]

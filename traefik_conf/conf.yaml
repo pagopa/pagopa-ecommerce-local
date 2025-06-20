@@ -45,7 +45,6 @@ http:
         customRequestHeaders:
           X-Client-ID: "CHECKOUT"
 
-
   services:
     pagopa-notifications-service:
       loadBalancer:
