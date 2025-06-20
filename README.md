@@ -27,9 +27,11 @@ In the _.env_ file there are a configurations related to conainers that can be c
 | NOTIFICATIONS_SERVICE_COMMIT_SHA         | The branch or commit SHA of pagopa-notifications-service you want to build from. Used when the code is fetched from remote repo.                 |
 | ECOMMERCE_PAYMENT_REQUESTS_COMMIT_SHA    | The branch or commit SHA of pagopa-ecommerce-payment-requests-service you want to build from. Used when the code is fetched from remote repo.    | 
 | ECOMMERCE_PAYMENT_REQUESTS_PORT          | The port the pagopa-ecommerce-payment-requests-service listens to.                                                                               |
+| ECOMMERCE_HELPDESK_COMMANDS_PORT         | The port the pagopa-ecommerce-helpdesk-commands-service listens to.                                                                              |
+| ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA   | The branch or commit SHA of pagopa-ecommerce-helpdesk-commands-service you want to build from. Used when the code is fetched from remote repo.   |
 | PGS_PORT                                 | The port the pagopa-pgs-mock                                                                                                                     |
 | NPG_PORT                                 | The port the pagopa-npg-mock                                                                                                                     |
-| WALLET_PORT                              | The port the pagopa-wallet-mock                                                                                                                   |
+| WALLET_PORT                              | The port the pagopa-wallet-mock                                                                                                                  |
 
 In addiction, the parameters of the individual microservices can also be customized by editing the env file contained in the folder of the specific service.
 
@@ -47,6 +49,7 @@ If you use the default configurations, we will have the following services expos
 | `pagopa-ecommerce-transactions-service`        | http://localhost:8080/transactions                                      |
 | `pagopa-ecommerce-payment-methods-service`     | http://localhost:8083/payment-methods                                   |
 | `pagopa-ecommerce-payment-requests-service`    | http://localhost:8088/payment-requests and http://localhost:8088/carts  |
+| `pagopa-ecommerce-helpdesk-commands-service`   | http://localhost:8087/commands                                          |
 
 
 You can check data persisted to either Mongo or Redis with their respective web interfaces (Mongo express/Redis Insight). To do so, go to:
@@ -68,6 +71,15 @@ There is the `azurite-init` container that automatically creates all queue and, 
 To recreate the queues simply run again the above container.
 
 If env files have been changed run again azurite-init to make the container again to start new queues automatic creation processing
+
+### Service Integration Notes
+
+#### Helpdesk Commands Service
+The `pagopa-ecommerce-helpdesk-commands-service` provides manual operations support for the ecommerce platform:
+
+- **Refund Operations**: Manual transaction refunds across payment gateways
+- **Notification Management**: Email notification resending capabilities
+- **Integration Testing**: Includes polling-based tests that verify transaction state transitions
 
 ### Troubleshooting
 
