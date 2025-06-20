@@ -16,7 +16,8 @@ COPY --from=clone /workspace/pagopa-ecommerce-helpdesk-commands-service/ ./
 # Now these files exist and can be used
 RUN chmod +x ./gradlew
 RUN chmod +x ./pagopa-ecommerce-commons-maven-install.sh
-RUN ./pagopa-ecommerce-commons-maven-install.sh 1.37.2
+RUN COMMONS_VERSION=$(./gradlew -q printCommonsVersion) && \
+    ./pagopa-ecommerce-commons-maven-install.sh $COMMONS_VERSION
 
 ### 3. Application build stage
 FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16 AS build
