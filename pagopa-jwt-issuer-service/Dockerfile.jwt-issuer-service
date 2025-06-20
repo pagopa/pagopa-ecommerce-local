@@ -1,5 +1,5 @@
 ### 1. Cloning stage
-FROM alpine/git:latest AS clone
+FROM alpine/git:latest@sha256:ec66a89e1ad387a8a0544ddf8e9d34aa5aaffa97c6dc04e67fe75ecd10897e98 AS clone
 WORKDIR /workspace/pagopa-jwt-issuer-service
 
 ARG PAGOPA_JWT_ISSUER_COMMIT_SHA
