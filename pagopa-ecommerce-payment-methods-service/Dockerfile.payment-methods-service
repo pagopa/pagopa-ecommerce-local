@@ -15,6 +15,7 @@ WORKDIR /workspace/pagopa-ecommerce-payment-methods-service/
 ARG REPO=/workspace/pagopa-ecommerce-payment-methods-service
 
 COPY --from=clone ${REPO}/ .
+
 RUN chmod +x ./mvnw
 RUN ./mvnw -f ./pom.xml validate -DskipTests -Dmaven.javadoc.skip=true
 RUN ./mvnw -f ./pom.xml clean package -DskipTests -Dmaven.javadoc.skip=true
@@ -25,13 +26,14 @@ FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1
 RUN addgroup --system user && adduser --ingroup user --system user
 USER user:user
 
-ARG EXTRACTED=/workspace/pagopa-ecommerce-payment-methods-service/target/
+COPY --from=build --chown=user ${EXTRACTED}/dependencies/ ./
+RUN true
+COPY --from=build --chown=user ${EXTRACTED}/spring-boot-loader/ ./
+RUN true
+COPY --from=build --chown=user ${EXTRACTED}/snapshot-dependencies/ ./
+RUN true
+COPY --from=build --chown=user ${EXTRACTED}/application/ ./
+RUN true
 
-COPY --from=build --chown=user ${EXTRACTED} .
 
-ARG JAR_FILE=pagopa*.jar
-ENV APP_NAME=$JAR_FILE
-
-ADD --chown=user https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.10.0/opentelemetry-javaagent.jar .
-
-CMD java -javaagent:opentelemetry-javaagent.jar -jar $APP_NAME
+ENTRYPOINT ["java","org.springframework.boot.loader.launch.JarLauncher"]
