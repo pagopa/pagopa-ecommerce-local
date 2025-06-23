@@ -9,7 +9,7 @@ RUN rm -rf * && \
     git checkout ${ECOMMERCE_PAYMENT_METHODS_COMMIT_SHA} 
 
 ### 2. Build stage
-FROM maven:3.9.6-openjdk-21 AS build
+FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16 AS build
 WORKDIR /workspace/pagopa-ecommerce-payment-methods-service/
 
 ARG REPO=/workspace/pagopa-ecommerce-payment-methods-service
@@ -19,7 +19,7 @@ RUN mvn -f ./pom.xml validate -DskipTests
 RUN mvn -f ./pom.xml clean package -DskipTests
 
 ### 3. Run stage
-FROM openjdk:21-slim
+FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16
 
 RUN addgroup --system user && adduser --ingroup user --system user
 USER user:user
