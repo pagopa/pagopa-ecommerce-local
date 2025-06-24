@@ -10,6 +10,7 @@ RUN rm -rf * && \
 
 ### 2. Build stage
 FROM maven:3.9.9-eclipse-temurin-21 AS build
+ARG CACHE_BUST=2025-06-24-java21
 WORKDIR /workspace/pagopa-ecommerce-payment-requests-service/
 
 ARG REPO=/workspace/pagopa-ecommerce-payment-requests-service
