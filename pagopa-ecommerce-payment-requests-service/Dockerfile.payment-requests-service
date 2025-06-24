@@ -19,7 +19,7 @@ COPY --from=clone ${REPO}/ .
 RUN mvn -f ./pom.xml clean package -DskipTests
 
 ### 3. Run stage
-FROM eclipse-temurin:21-jre-alpine
+FROM openjdk:21-slim
 
 RUN addgroup --system user && adduser --ingroup user --system user
 USER user:user
