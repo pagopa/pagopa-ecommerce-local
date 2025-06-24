@@ -352,7 +352,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-notification-service] Email sent successfully (status code is 200)\", function () {",
+							"pm.test(\"[pagopa-notification-service] KO received for invalid request api key \", function () {",
 							"    pm.response.to.have.status(401);",
 							"});"
 						],
