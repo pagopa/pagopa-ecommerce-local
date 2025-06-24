@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3931e83c-3ebf-4630-a8d0-cb3cac77ca82",
+		"_postman_id": "a3a34ba0-f280-484c-a4ef-9159aa89f53d",
 		"name": "Transaction service for local eCommerce NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -912,6 +912,55 @@
 					"port": "{{TRANSACTION_SERVICE_PORT}}",
 					"path": [
 						"v2",
+						"transactions",
+						"{{TRANSACTION_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Service reject api call for wrong api key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Service reject api call for wrong api key\", () => {",
+							"  pm.response.to.have.status(401);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "wrong-api-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
 						"transactions",
 						"{{TRANSACTION_ID}}"
 					]
