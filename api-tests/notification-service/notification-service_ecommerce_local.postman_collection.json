@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "6024a840-0a64-4b68-87b1-bd130aa4ce28",
+		"_postman_id": "d780d378-546a-405c-8383-21e01f4844b9",
 		"name": "Notification API",
 		"description": "API to support notifications",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "24209240"
+		"_exporter_id": "36392360"
 	},
 	"item": [
 		{
@@ -20,7 +20,8 @@
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -38,6 +39,11 @@
 					{
 						"key": "X-Client-Id",
 						"value": "CLIENT_ECOMMERCE_TEST",
+						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "{{PRIMARY_API_KEY}}",
 						"type": "text"
 					}
 				],
@@ -184,7 +190,8 @@
 							"    pm.response.to.have.status(202);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -202,6 +209,11 @@
 					{
 						"key": "X-Client-Id",
 						"value": "CLIENT_ECOMMERCE",
+						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "{{PRIMARY_API_KEY}}",
 						"type": "text"
 					}
 				],
@@ -346,7 +358,8 @@
 							"    pm.response.to.have.status(400);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -364,6 +377,11 @@
 					{
 						"key": "X-Client-Id",
 						"value": "CLIENT_ECOMMERCE_TEST",
+						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "{{PRIMARY_API_KEY}}",
 						"type": "text"
 					}
 				],
