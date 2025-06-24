@@ -9,7 +9,7 @@ RUN rm -rf * && \
     git checkout ${ECOMMERCE_PAYMENT_REQUESTS_COMMIT_SHA} 
 
 ### 2. Build stage
-FROM maven:3.9.8-eclipse-temurin-21 AS build
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /workspace/pagopa-ecommerce-payment-requests-service/
 
 ARG REPO=/workspace/pagopa-ecommerce-payment-requests-service
