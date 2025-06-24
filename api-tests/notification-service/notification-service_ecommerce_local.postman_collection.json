@@ -376,6 +376,11 @@
 						"key": "X-Client-Id",
 						"value": "CLIENT_ECOMMERCE_TEST",
 						"type": "text"
+					},
+					{
+						"key": "X-Api-Key",
+						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
 					}
 				],
 				"body": {
