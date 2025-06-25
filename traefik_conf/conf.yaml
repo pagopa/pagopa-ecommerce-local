@@ -26,6 +26,7 @@ http:
       headers:
         customRequestHeaders:
           X-Client-ID: "CLIENT_ECOMMERCE"
+          x-api-key: "primary-key"
     notifications-prefix:
       stripPrefix:
         prefixes:
