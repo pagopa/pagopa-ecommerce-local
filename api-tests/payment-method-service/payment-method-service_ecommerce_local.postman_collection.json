@@ -739,3 +739,1074 @@
 					"path": [
 						"payment-methods",
 						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get card data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve card data by order id (status code is 200)\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.bin).to.be.a('string');",
+							"  pm.expect(responseJson.bin).to.have.length.greaterThan(0);",
+							"  pm.expect(pm.response.code).to.eql(200);  ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get card data 401 Invalid Api Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve card data by order id - 401 invalid api key\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);  ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "invalida-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get card data 401 Missing Api Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve card data by order id - 401 missing api key\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);  ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get card data with invalid orderId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve card data with invalid order id (status code is 404)\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  const expectedProblemJsonKeys = new Set([\"detail\",\"status\",\"title\"]);",
+							"  pm.expect(responseJson).to.satisfy(element => Object.keys(element).every(property => expectedProblemJsonKeys.has(property)));",
+							"  pm.expect(pm.response.code).to.eql(404);  ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/invalidOrderId",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"invalidOrderId"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calculate Fees v1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[Payment Methods] Fees retrieved with POST fees\", function(){",
+							"   ",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"    const expectedWithoutBundles = {",
+							"        \"paymentMethodStatus\": \"ENABLED\",",
+							"        \"belowThreshold\": true",
+							"    };",
+							"    pm.expect(response.paymentMethodName).eql(\"CARDS\");",
+							"    pm.expect(response.paymentMethodDescription).eql(\"description\");",
+							"    pm.expect(response.paymentMethodStatus).eql(expectedWithoutBundles.paymentMethodStatus);",
+							"    pm.expect(response.belowThreshold).eql(expectedWithoutBundles.belowThreshold);",
+							"    pm.expect(response.bundles).to.be.not.empty;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"bin\": \"12345678\",\n  \"idPspList\": [\n    \"123\"\n  ],\n  \"paymentAmount\": 100,\n  \"primaryCreditorInstitution\": \"77777777777\",\n  \"transferList\": [\n    {\n      \"creditorInstitution\": \"77777777777\",\n      \"digitalStamp\": true\n    }\n  ],\n  \"isAllCCP\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"fees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calculate Fees v1 401 Invalid Api Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[Payment Methods] POST fees - 401 invalid api key\", function(){",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "invalida-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"bin\": \"12345678\",\n  \"idPspList\": [\n    \"123\"\n  ],\n  \"paymentAmount\": 100,\n  \"primaryCreditorInstitution\": \"77777777777\",\n  \"transferList\": [\n    {\n      \"creditorInstitution\": \"77777777777\",\n      \"digitalStamp\": true\n    }\n  ],\n  \"isAllCCP\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"fees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calculate Fees v1 401 Missing Api Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[Payment Methods] POST fees - 401 missing api key\", function(){",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"bin\": \"12345678\",\n  \"idPspList\": [\n    \"123\"\n  ],\n  \"paymentAmount\": 100,\n  \"primaryCreditorInstitution\": \"77777777777\",\n  \"transferList\": [\n    {\n      \"creditorInstitution\": \"77777777777\",\n      \"digitalStamp\": true\n    }\n  ],\n  \"isAllCCP\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"fees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calculate Fees v2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[Payment Methods] Fees retrieved with POST fees\", function(){",
+							"   ",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"    const expectedWithoutBundles = {",
+							"        \"paymentMethodStatus\": \"ENABLED\",",
+							"        \"belowThreshold\": true",
+							"    };",
+							"    pm.expect(response.paymentMethodName).eql(\"CARDS\");",
+							"    pm.expect(response.paymentMethodDescription).eql(\"description\");",
+							"    pm.expect(response.paymentMethodStatus).eql(expectedWithoutBundles.paymentMethodStatus);",
+							"    pm.expect(response.belowThreshold).eql(expectedWithoutBundles.belowThreshold);",
+							"    pm.expect(response.bundles).to.be.not.empty;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"bin\": \"12345678\",\n  \"idPspList\": [\n    \"123\"\n  ],\n  \"paymentNotices\": [\n    {\n        \"paymentAmount\": 5,\n        \"primaryCreditorInstitution\": \"77777777777\",\n        \"transferList\": [\n            {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": true,\n            \"transferCategory\": \"string\"\n            }\n        ]\n    },\n    {\n        \"paymentAmount\": 10,\n        \"primaryCreditorInstitution\": \"77777777777\",\n        \"transferList\": [\n            {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": true,\n            \"transferCategory\": \"string\"\n            }\n        ]\n    }\n  ],\n  \"isAllCCP\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"v2",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"fees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calculate Fees v2 401 Invalid Api Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[Payment Methods] POST fees - 401 invalid api key\", function(){",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "invalida-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"bin\": \"12345678\",\n  \"idPspList\": [\n    \"123\"\n  ],\n  \"paymentNotices\": [\n    {\n        \"paymentAmount\": 5,\n        \"primaryCreditorInstitution\": \"77777777777\",\n        \"transferList\": [\n            {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": true,\n            \"transferCategory\": \"string\"\n            }\n        ]\n    },\n    {\n        \"paymentAmount\": 10,\n        \"primaryCreditorInstitution\": \"77777777777\",\n        \"transferList\": [\n            {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": true,\n            \"transferCategory\": \"string\"\n            }\n        ]\n    }\n  ],\n  \"isAllCCP\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"v2",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"fees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calculate Fees v2 401 Missing Api Key Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[Payment Methods] POST fees - 401 missing api key\", function(){",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"bin\": \"12345678\",\n  \"idPspList\": [\n    \"123\"\n  ],\n  \"paymentNotices\": [\n    {\n        \"paymentAmount\": 5,\n        \"primaryCreditorInstitution\": \"77777777777\",\n        \"transferList\": [\n            {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": true,\n            \"transferCategory\": \"string\"\n            }\n        ]\n    },\n    {\n        \"paymentAmount\": 10,\n        \"primaryCreditorInstitution\": \"77777777777\",\n        \"transferList\": [\n            {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": true,\n            \"transferCategory\": \"string\"\n            }\n        ]\n    }\n  ],\n  \"isAllCCP\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"v2",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"fees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Associate transaction id to NPG session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] PATCH NPG session with transaction id is OK (status code is 204)\", () => {",
+							"  pm.expect(pm.response.code).to.eql(204);  ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"transactionId\": \"3d6fc69c949741e9af6cc5b7a05cbd0d\"\n}\n\n //b64 encoding -> PW_GnJSXQemvbMW3oFy9DQ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Associate transaction id to NPG session 401 Invalid Api Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] PATCH NPG session with transaction id - 401 invalid api key\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);  ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "invalida-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"transactionId\": \"3d6fc69c949741e9af6cc5b7a05cbd0d\"\n}\n\n //b64 encoding -> PW_GnJSXQemvbMW3oFy9DQ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Associate transaction id to NPG session 401 Missing Api Ke",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] PATCH NPG session with transaction id - 401 missing api key\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);  ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "invalida-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"transactionId\": \"3d6fc69c949741e9af6cc5b7a05cbd0d\"\n}\n\n //b64 encoding -> PW_GnJSXQemvbMW3oFy9DQ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve transaction id associated to NPG session V1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve transaction id V1 is OK (status code is 200)\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.transactionId).to.eq('PW_GnJSXQemvbMW3oFy9DQ');",
+							"  pm.expect(pm.response.code).to.eql(200);  ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{NPG_SECURITY_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}",
+						"transactionId"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve transaction id associated to NPG session V1 401 Invalid Api Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve transaction id V1 - 401 invalid api key\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);  ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "invalida-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}",
+						"transactionId"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve transaction id associated to NPG session V1 401 Missing Api Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve transaction id V1 - 401 missing api key\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);  ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "invalida-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}",
+						"transactionId"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve transaction id associated to NPG session V2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve transaction id V2 is OK (status code is 200)\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.base64EncodedTransactionId).to.eq('PW_GnJSXQemvbMW3oFy9DQ');",
+							"  pm.expect(responseJson.transactionId).to.eq('3d6fc69c949741e9af6cc5b7a05cbd0d');",
+							"  pm.expect(pm.response.code).to.eql(200);  ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{NPG_SECURITY_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"v2",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}",
+						"transactionId"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve transaction id associated to NPG session V2 401 Invalid Api Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve transaction id V2 - 401 invalid api key\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);  ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "invalida-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"v2",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}",
+						"transactionId"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve transaction id associated to NPG session V2 401 Missing Api Ke",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve transaction id V2 - 401 missing api key\", () => {",
+							"  pm.expect(pm.response.code).to.eql(401);  ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"v2",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"sessions",
+						"{{ORDER_ID}}",
+						"transactionId"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{PRIMARY_API_KEY}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
