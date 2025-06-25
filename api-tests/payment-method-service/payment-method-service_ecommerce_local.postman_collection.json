@@ -602,7 +602,13 @@
 					]
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": " ",
@@ -662,7 +668,13 @@
 					]
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": " ",
