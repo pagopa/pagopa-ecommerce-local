@@ -33,21 +33,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
 				"method": "PUT",
 				"header": [],
 				"body": {
@@ -94,21 +79,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
@@ -157,21 +127,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
 				"method": "PUT",
 				"header": [],
 				"body": {
@@ -218,21 +173,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
@@ -275,21 +215,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
@@ -332,21 +257,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
@@ -399,21 +309,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
 				"method": "PUT",
 				"header": [],
 				"body": {
@@ -478,6 +373,43 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{API_KEY}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
