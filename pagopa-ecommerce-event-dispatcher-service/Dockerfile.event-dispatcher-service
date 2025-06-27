@@ -17,7 +17,8 @@ RUN apk add --no-cache git curl ca-certificates
 ARG REPO=/workspace/pagopa-ecommerce-event-dispatcher-service
 
 COPY --from=clone ${REPO}/ .
-COPY --from=./mvnw .
+COPY --from=clone ${REPO}/mvnw .
+RUN chmod +x ./mvnw
 RUN ./mvnw -f ./pom.xml validate -DskipTests
 RUN ./mvnw -f ./pom.xml package -DskipTests
 
