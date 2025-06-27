@@ -9,8 +9,10 @@ RUN rm -rf * && \
     git checkout ${ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA} 
 
 ### 2. Build stage
-FROM maven:3.8.3-openjdk-17 AS build
+FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16 AS build
 WORKDIR /workspace/pagopa-ecommerce-event-dispatcher-service/
+
+RUN apk add --no-cache git curl ca-certificates
 
 ARG REPO=/workspace/pagopa-ecommerce-event-dispatcher-service
 
@@ -19,7 +21,7 @@ RUN mvn -f ./pom.xml validate -DskipTests
 RUN mvn -f ./pom.xml package -DskipTests
 
 ### 3. Run stage
-FROM openjdk:17-slim
+FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16
 
 RUN addgroup --system user && adduser --ingroup user --system user
 USER user:user
@@ -33,4 +35,4 @@ ENV APP_NAME=$JAR_FILE
 
 ADD --chown=user https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.25.1/opentelemetry-javaagent.jar .
 
-CMD java --enable-preview -javaagent:opentelemetry-javaagent.jar -jar $APP_NAME
+CMD java -javaagent:opentelemetry-javaagent.jar -jar $APP_NAME
