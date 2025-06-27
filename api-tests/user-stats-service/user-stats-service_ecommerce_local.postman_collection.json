@@ -373,6 +373,59 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Service reject api call for wrong api key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce user stats] Service reject api call for wrong api key\", function() {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "wrong-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "{{USER_ID}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/user/lastPaymentMethodUsed",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"user",
+						"lastPaymentMethodUsed"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
