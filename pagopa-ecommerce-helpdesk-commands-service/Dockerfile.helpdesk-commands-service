@@ -11,6 +11,9 @@ FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1
 WORKDIR /workspace/app
 RUN microdnf install -y findutils git
 
+ENV JAVA_HOME=/usr/lib/jvm/java-21-amazon-corretto
+ENV PATH=$JAVA_HOME/bin:$PATH
+
 COPY --from=clone /workspace/pagopa-ecommerce-helpdesk-commands-service/ ./
 
 # Now these files exist and can be used
@@ -25,6 +28,9 @@ WORKDIR /workspace/app
 
 # Install dependencies
 RUN apk add --no-cache git maven
+
+ENV JAVA_HOME=/usr/lib/jvm/java-21-amazon-corretto
+ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Copy the cloned source code
 COPY --from=clone /workspace/pagopa-ecommerce-helpdesk-commands-service/ ./
@@ -41,6 +47,9 @@ RUN mkdir build/extracted && \
 
 ### 4. Runtime stage
 FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16
+
+ENV JAVA_HOME=/usr/lib/jvm/java-21-amazon-corretto
+ENV PATH=$JAVA_HOME/bin:$PATH
 
 RUN addgroup --system user && adduser --ingroup user --system user
 USER user:user
