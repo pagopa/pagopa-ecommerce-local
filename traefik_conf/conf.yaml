@@ -62,3 +62,4 @@ http:
           loadBalancer:
             servers:
               - url: "http://pagopa-ecommerce-payment-methods-service:8080"
+              - url: "http://localhost:8083"
