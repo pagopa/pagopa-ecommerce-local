@@ -1,8 +1,10 @@
 {
 	"info": {
+		"_postman_id": "22ade53c-cfac-4c1d-8ae4-8b77b42ab920",
 		"name": "Ecommerce helpdesk-commands-service tests",
 		"description": "Integration tests with transaction lifecycle polling - requires docker-compose environment",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -12,7 +14,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Request Transaction Refund - Status code is 202\", function () {\r",
+							"pm.test(\"[ecommerce-helpdesk-commands-service] - Request Transaction Refund - Status code is 202\", function () {\r",
 							"    pm.response.to.have.status(202);\r",
 							"});\r",
 							"\r",
@@ -64,16 +66,6 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "Ocp-Apim-Subscription-Key",
-						"value": "{{API_SUBSCRIPTION_KEY}}",
-						"type": "text"
-					},
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT}}",
-						"type": "text"
-					},
-					{
 						"key": "X-User-Id",
 						"value": "{{X_USER_ID}}",
 						"type": "text"
@@ -106,7 +98,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Resend Transaction Email - Status code is 202\", function () {\r",
+							"pm.test(\"[ecommerce-helpdesk-commands-service] - Resend Transaction Email - Status code is 202\", function () {\r",
 							"    pm.response.to.have.status(202);\r",
 							"});\r",
 							"\r",
@@ -158,16 +150,6 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "Ocp-Apim-Subscription-Key",
-						"value": "{{API_SUBSCRIPTION_KEY}}",
-						"type": "text"
-					},
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT}}",
-						"type": "text"
-					},
-					{
 						"key": "X-User-Id",
 						"value": "{{X_USER_ID}}",
 						"type": "text"
@@ -192,6 +174,151 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Unauthorized for missing api key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[ecommerce-helpdesk-commands-service] - Status code is 401 for missing x-api-key header\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-User-Id",
+						"value": "{{X_USER_ID}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Forwarded-For",
+						"value": "{{X_FORWARDED_ID}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/commands/transactions/{{REFUNDABLE_TRANSACTION_ID}}/refund",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"commands",
+						"transactions",
+						"{{REFUNDABLE_TRANSACTION_ID}}",
+						"refund"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Unauthorized for wrong api key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[ecommerce-helpdesk-commands-service] - Status code is 401 for wrong x-api-key header value\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "wrong-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-User-Id",
+						"value": "{{X_USER_ID}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Forwarded-For",
+						"value": "{{X_FORWARDED_ID}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/commands/transactions/{{REFUNDABLE_TRANSACTION_ID}}/refund",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"commands",
+						"transactions",
+						"{{REFUNDABLE_TRANSACTION_ID}}",
+						"refund"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{SERVICE_API_KEY}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
