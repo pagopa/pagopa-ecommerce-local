@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "87bc5c60-76d5-43c5-bd14-8d7508c860c6",
+		"_postman_id": "2e41c6b9-ab5f-4c95-920f-3c9da4a14a32",
 		"name": "Transaction service for local eCommerce REDIRECT",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23963988"
+		"_exporter_id": "36392360"
 	},
 	"item": [
 		{
@@ -42,7 +42,8 @@
 							"    method: 'GET',",
 							"    header: {",
 							"        'Content-Type': 'application/json',",
-							"        'x-client-id': 'CHECKOUT'",
+							"        'x-client-id': 'CHECKOUT',",
+							"        'x-api-key': 'PRIMARY-KEY'",
 							"    }",
 							"};",
 							"",
@@ -80,7 +81,8 @@
 							"        url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
 							"        method: 'POST',",
 							"        header: {",
-							"            'Content-Type': 'application/json'",
+							"            'Content-Type': 'application/json',",
+							"            'x-api-key': 'PRIMARY-KEY'",
 							"        },",
 							"        body: {",
 							"            mode: 'raw',",
@@ -106,6 +108,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -154,7 +171,8 @@
 							"    pm.environment.set(\"PSP_TRANSACTION_ID\", response.authorizationRequestId);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -163,27 +181,29 @@
 						"exec": [
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"type": "apikey",
+					"apikey": [
 						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
 				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
-					},
 					{
 						"key": "x-pgs-id",
 						"value": "REDIRECT"
@@ -244,22 +264,22 @@
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"type": "apikey",
+					"apikey": [
 						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
 							"type": "string"
 						}
 					]
 				},
 				"method": "PATCH",
-				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n  \"timestampOperation\": \"2023-10-10T18:16:01.6880000+00:00\",\n  \"outcomeGateway\": {\n    \"paymentGatewayType\": \"REDIRECT\",\n    \"pspTransactionId\": \"{{PSP_TRANSACTION_ID}}\",\n    \"pspId\": \"REDIRECT\",\n    \"outcome\": \"OK\",\n    \"authorizationCode\": \"000\"\n  }\n}",
@@ -309,7 +329,8 @@
 							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
 							"    method: 'GET',",
 							"    header: {",
-							"        'Content-Type': 'application/json'",
+							"        'Content-Type': 'application/json',",
+							"        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
 							"    }",
 							"};",
 							"",
@@ -368,22 +389,22 @@
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"type": "apikey",
+					"apikey": [
 						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
-				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"outcome\": \"OK\",\n    \"paymentDate\": \"2023-01-01T00:00:00.000Z\",\n    \"payments\": [\n        {\n            \"paymentToken\": \"mismatchedPaymentToken\",\n            \"description\": \"description\",\n            \"creditorReferenceId\": \"creditorReferenceId\",\n            \"fiscalCode\": \"fiscalCode\",\n            \"companyName\": \"companyName\",\n            \"officeName\": \"officeName\",\n            \"debtor\": \"debtor\"\n        }\n    ]\n}",
@@ -451,7 +472,8 @@
 							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
 							"    method: 'GET',",
 							"    header: {",
-							"        'Content-Type': 'application/json'",
+							"        'Content-Type': 'application/json',",
+							"        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
 							"    }",
 							"};",
 							"",
@@ -510,22 +532,22 @@
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"type": "apikey",
+					"apikey": [
 						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
-				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": "{{ADD_USER_RECEIPT_REQUEST}}",
@@ -568,11 +590,27 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -611,11 +649,27 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -657,6 +711,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -684,7 +753,7 @@
 							"pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V2 -  Authorization completed POST notify REDIRECT (status code 200)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
-							"    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\",\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\"]);",
+							"    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\",\"NOTIFICATION_REQUESTED\",\"NOTIFIED_ERROR\",\"NOTIFIED_OK\"]);",
 							"});"
 						],
 						"type": "text/javascript",
@@ -704,22 +773,22 @@
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"type": "apikey",
+					"apikey": [
 						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
 							"type": "string"
 						}
 					]
 				},
 				"method": "PATCH",
-				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n  \"timestampOperation\": \"2023-10-10T18:16:01.6880000+00:00\",\n  \"outcomeGateway\": {\n    \"paymentGatewayType\": \"REDIRECT\",\n    \"pspTransactionId\": \"{{PSP_TRANSACTION_ID}}\",\n    \"pspId\": \"REDIRECT\",\n    \"outcome\": \"OK\",\n    \"authorizationCode\": \"000\"\n  }\n}",
