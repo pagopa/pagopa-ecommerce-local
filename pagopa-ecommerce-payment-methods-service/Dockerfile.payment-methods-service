@@ -6,8 +6,7 @@ ARG ECOMMERCE_PAYMENT_METHODS_COMMIT_SHA
 
 RUN rm -rf * && \
     git clone https://github.com/pagopa/pagopa-ecommerce-payment-methods-service.git /workspace/pagopa-ecommerce-payment-methods-service && \
-    git checkout CHK-4222-update-java-21
-    #git checkout ${ECOMMERCE_PAYMENT_METHODS_COMMIT_SHA}
+    git checkout ${ECOMMERCE_PAYMENT_METHODS_COMMIT_SHA}
 
 ### 2. Build stage
 FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16 AS build
