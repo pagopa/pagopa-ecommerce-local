@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f7ca9871-e99d-4ed7-83d7-669dcd697044",
+		"_postman_id": "a3a34ba0-f280-484c-a4ef-9159aa89f53d",
 		"name": "Transaction service for local eCommerce NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -133,6 +133,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -294,6 +309,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -342,7 +372,8 @@
 							"    pm.expect(response.authorizationRequestId).to.be.eq(pm.environment.get(\"ORDER_ID\"));",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -351,27 +382,29 @@
 						"exec": [
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"type": "apikey",
+					"apikey": [
 						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
 				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
-					},
 					{
 						"key": "x-pgs-id",
 						"value": "NPG"
@@ -411,7 +444,7 @@
 							"pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V1 -  Authorization completed POST notify NPG (status code 200)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
-							"    pm.expect(response.status).to.be.eq(\"CLOSURE_REQUESTED\");",
+							"    pm.expect(response.status).to.be.eq(\"CLOSURE_REQUESTED\",\"CLOSED\");",
 							"    pm.expect(response.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
 							"});"
 						],
@@ -432,22 +465,22 @@
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"type": "apikey",
+					"apikey": [
 						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
 							"type": "string"
 						}
 					]
 				},
 				"method": "PATCH",
-				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n  \"timestampOperation\": \"2023-09-14T14:57:22.605Z\",\n  \"outcomeGateway\": {\n    \"paymentGatewayType\": \"NPG\",\n    \"operationResult\": \"EXECUTED\",\n    \"orderId\": \"btid2384983\",\n    \"operationId\": \"3470744\",\n    \"authorizationCode\": \"647189\",\n    \"paymentEndToEndId\": \"e723hedsdew\",\n    \"rrn\": \"rrn\"\n  }\n}",
@@ -483,7 +516,8 @@
 							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
 							"    method: 'GET',",
 							"    header: {",
-							"        'Content-Type': 'application/json'",
+							"        'Content-Type': 'application/json',",
+							"        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
 							"    }",
 							"};",
 							"",
@@ -544,22 +578,22 @@
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"type": "apikey",
+					"apikey": [
 						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
-				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"outcome\": \"OK\",\n    \"paymentDate\": \"2023-01-01T00:00:00.000Z\",\n    \"payments\": [\n        {\n            \"paymentToken\": \"mismatchedPaymentToken\",\n            \"description\": \"description\",\n            \"creditorReferenceId\": \"creditorReferenceId\",\n            \"fiscalCode\": \"fiscalCode\",\n            \"companyName\": \"companyName\",\n            \"officeName\": \"officeName\",\n            \"debtor\": \"debtor\"\n        }\n    ]\n}",
@@ -612,7 +646,8 @@
 							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
 							"    method: 'GET',",
 							"    header: {",
-							"        'Content-Type': 'application/json'",
+							"        'Content-Type': 'application/json',",
+							"        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
 							"    }",
 							"};",
 							"",
@@ -673,22 +708,22 @@
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"type": "apikey",
+					"apikey": [
 						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
-				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": "{{ADD_USER_RECEIPT_REQUEST}}",
@@ -731,11 +766,27 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -774,11 +825,27 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -820,6 +887,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -838,6 +920,55 @@
 			"response": []
 		},
 		{
+			"name": "Service reject api call for wrong api key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Service reject api call for wrong api key\", () => {",
+							"  pm.response.to.have.status(401);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "wrong-api-key",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
+						"transactions",
+						"{{TRANSACTION_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Authorization completed V2",
 			"event": [
 				{
@@ -847,7 +978,7 @@
 							"pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V2 - Authorization completed POST notify NPG (status code 200)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
-							"    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\",\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\"]);",
+							"    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\",\"NOTIFICATION_REQUESTED\",\"NOTIFIED_ERROR\",\"NOTIFIED_OK\"]);",
 							"});"
 						],
 						"type": "text/javascript",
@@ -867,22 +998,22 @@
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"type": "apikey",
+					"apikey": [
 						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
 							"type": "string"
 						}
 					]
 				},
 				"method": "PATCH",
-				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n  \"timestampOperation\": \"2023-09-14T14:57:22.605Z\",\n  \"outcomeGateway\": {\n    \"paymentGatewayType\": \"NPG\",\n    \"operationResult\": \"EXECUTED\",\n    \"orderId\": \"btid2384983\",\n    \"operationId\": \"3470744\",\n    \"authorizationCode\": \"647189\",\n    \"paymentEndToEndId\": \"e723hedsdew\",\n    \"rrn\": \"rrn\"\n  }\n}",

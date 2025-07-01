@@ -45,6 +45,7 @@ http:
       headers:
         customRequestHeaders:
           X-Client-ID: "CHECKOUT"
+          x-api-key: "PRIMARY-KEY"
 
   services:
     pagopa-notifications-service:
