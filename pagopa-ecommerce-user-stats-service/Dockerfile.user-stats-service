@@ -1,5 +1,5 @@
 ### 1. Cloning stage
-FROM alpine/git:latest AS clone
+FROM alpine/git:latest@sha256:20cc3c332d30302b423ce036dcd7e5463884bc6ba1f867184a5b375a9aa1ebae AS clone
 WORKDIR /workspace/pagopa-ecommerce-user-stats-service
 
 ARG ECOMMERCE_USER_STATS_COMMIT_SHA
