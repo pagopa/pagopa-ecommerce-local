@@ -9,7 +9,7 @@ RUN rm -rf * && \
     git checkout ${ECOMMERCE_PAYMENT_REQUESTS_COMMIT_SHA} 
 
 ### 2. Build stage
-FROM maven:3.8.3-openjdk-17 AS build
+FROM maven:3.9.8-eclipse-temurin-21@sha256:de18e4e51396ad9266f76669779ed6d6b49fbb0f45ed6f39169d87378d548d7d AS build
 WORKDIR /workspace/pagopa-ecommerce-payment-requests-service/
 
 ARG REPO=/workspace/pagopa-ecommerce-payment-requests-service
@@ -18,7 +18,7 @@ COPY --from=clone ${REPO}/ .
 RUN mvn -f ./pom.xml clean package -DskipTests
 
 ### 3. Run stage
-FROM openjdk:17-slim
+FROM eclipse-temurin:21-jre-alpine@sha256:8728e354e012e18310faa7f364d00185277dec741f4f6d593af6c61fc0eb15fd
 
 RUN addgroup --system user && adduser --ingroup user --system user
 USER user:user
