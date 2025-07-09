@@ -222,6 +222,20 @@ services:
       - "${ECOMMERCE_TRANSACTIONS_SCHEDULER_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
+
+  pagopa-ecommerce-cdc-service:
+    container_name: pagopa-ecommerce-cdc-service
+    env_file: pagopa-ecommerce-cdc-service/ecommerce-cdc-service.env
+    build:
+      context: .
+      args:
+        ECOMMERCE_CDC_COMMIT_SHA: ${ECOMMERCE_CDC_COMMIT_SHA}
+      dockerfile: pagopa-ecommerce-cdc-service/Dockerfile.ecommerce-cdc-service
+    ports:
+      - "${ECOMMERCE_CDC_PORT}:8080"
+    networks:
+      - pagopa-ecommerce-net
+
   traefik:
     container_name: pagopa-ecommerce-traefik
     image: traefik:v2.7
