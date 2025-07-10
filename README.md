@@ -29,6 +29,8 @@ In the _.env_ file there are a configurations related to conainers that can be c
 | ECOMMERCE_PAYMENT_REQUESTS_PORT          | The port the pagopa-ecommerce-payment-requests-service listens to.                                                                               |
 | ECOMMERCE_HELPDESK_COMMANDS_PORT         | The port the pagopa-ecommerce-helpdesk-commands-service listens to.                                                                              |
 | ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA   | The branch or commit SHA of pagopa-ecommerce-helpdesk-commands-service you want to build from. Used when the code is fetched from remote repo.   |
+| ECOMMERCE_CDC_PORT                       | The port the pagopa-ecommerce-cdc-service listens to.                                                                                            |
+| ECOMMERCE_CDC_COMMIT_SHA                 | The branch or commit SHA of pagopa-ecommerce-cdc-service you want to build from. Used when the code is fetched from remote repo.                 |
 | PGS_PORT                                 | The port the pagopa-pgs-mock                                                                                                                     |
 | NPG_PORT                                 | The port the pagopa-npg-mock                                                                                                                     |
 | WALLET_PORT                              | The port the pagopa-wallet-mock                                                                                                                  |
@@ -80,6 +82,14 @@ The `pagopa-ecommerce-helpdesk-commands-service` provides manual operations supp
 - **Refund Operations**: Manual transaction refunds across payment gateways
 - **Notification Management**: Email notification resending capabilities
 - **Integration Testing**: Includes polling-based tests that verify transaction state transitions
+
+#### eCommerce CDC Service
+The `pagopa-ecommerce-cdc-service` provides real-time Change Data Capture functionality for the ecommerce platform:
+
+- **Transaction Event Processing**: Monitors MongoDB change streams for transaction lifecycle events
+- **Real-time Updates**: Processes transaction state changes in near real-time
+- **Event Streaming**: Captures and processes events such as transaction creation, authorization, and completion
+- **Integration Testing**: Provides comprehensive event processing capabilities for testing transaction flows
 
 ### Troubleshooting
 
