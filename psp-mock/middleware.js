@@ -132,9 +132,33 @@ function redirectRefund(requestBody) {
       idTransaction
     };
   }
+  switch (idTransaction) {
+    case "00000000000000000000000000000001": {
+      return {
+        idTransaction: idTransaction,
+        outcome: "KO"
+      };
+    }
+     case "00000000000000000000000000000002": {
+      return {
+      detail: "Mock error response - 404",
+      status: 404,
+      idTransaction
+    };
+    }
+     case "00000000000000000000000000000003": {
+      return {
+      detail: "Mock error response - 500",
+      status: 500,
+      idTransaction
+    };
+    }
+     default: {
+      return {
+        idTransaction: idTransaction,
+        outcome: "OK"
+      };
+    }
+  }
 
-  return {
-    idTransaction: idTransaction,
-    outcome: "OK"
-  };
 }
