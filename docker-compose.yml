@@ -12,13 +12,26 @@ services:
     networks:
       - pagopa-ecommerce-net
     healthcheck:
-      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]}) }" | mongosh --port 27017 --quiet
+      test: |
+        mongosh --host localhost --port 27017 --eval "db.adminCommand('ping')"
       interval: 5s
-      timeout: 30s
-      start_period: 0s
-      retries: 30
+      timeout: 10s
+      retries: 10
+      start_period: 5s
+
+  mongo-init:
+    container_name: mongo-init
+    image: mongo
+    # connects to the mongo service and runs the script.
+    # it run once and then exit
+    command: mongosh --host pagopa-ecommerce-mongo:27017 --file /scripts/mongo-init.js
     volumes:
-      - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./mongodb/mongo-init.js:/scripts/mongo-init.js:ro
+    networks:
+      - pagopa-ecommerce-net
+    depends_on:
+      mongo:
+        condition: service_healthy
 
   mongo-express:
     container_name: pagopa-ecommerce-mongo-express
@@ -241,6 +254,9 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - pagopa-ecommerce-net
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
 
   traefik:
     container_name: pagopa-ecommerce-traefik
