@@ -4,6 +4,7 @@ services:
 
   mongo:
     container_name: pagopa-ecommerce-mongo
+    command: [ "--replSet", "rs0", "--bind_ip_all", "--noauth", "--port", "27017"]
     image: mongo
     env_file: mongodb/mongodb.env
     ports:
@@ -11,8 +12,11 @@ services:
     networks:
       - pagopa-ecommerce-net
     healthcheck:
-      test: echo "db.stats().ok" | mongo --quiet
-      interval: 10s
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      retries: 30
     volumes:
       - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
@@ -227,12 +231,14 @@ services:
     container_name: pagopa-ecommerce-cdc-service
     env_file: pagopa-ecommerce-cdc-service/ecommerce-cdc-service.env
     build:
-      context: .
+      context: ../pagopa-ecommerce-cdc-service
+      dockerfile: ../pagopa-ecommerce-local/pagopa-ecommerce-cdc-service/Dockerfile.ecommerce-cdc-service
       args:
         ECOMMERCE_CDC_COMMIT_SHA: ${ECOMMERCE_CDC_COMMIT_SHA}
-      dockerfile: pagopa-ecommerce-cdc-service/Dockerfile.ecommerce-cdc-service
     ports:
       - "${ECOMMERCE_CDC_PORT}:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - pagopa-ecommerce-net
 

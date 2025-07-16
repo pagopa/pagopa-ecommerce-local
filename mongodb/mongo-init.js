@@ -740,7 +740,8 @@ transactions.forEach(transaction => {
     })
 });
 
-conn = new Mongo();
+conn = new Mongo("mongodb://localhost:27017/ecommerce?replicaSet=rs0");
+
 db = conn.getDB("ecommerce");
 
 db.getCollection('transactions-view').insertMany(transactionsView);
