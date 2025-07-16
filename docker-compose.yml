@@ -244,8 +244,8 @@ services:
     container_name: pagopa-ecommerce-cdc-service
     env_file: pagopa-ecommerce-cdc-service/ecommerce-cdc-service.env
     build:
-      context: ../pagopa-ecommerce-cdc-service
-      dockerfile: ../pagopa-ecommerce-local/pagopa-ecommerce-cdc-service/Dockerfile.ecommerce-cdc-service
+      context: .
+      dockerfile: pagopa-ecommerce-cdc-service/Dockerfile.ecommerce-cdc-service
       args:
         ECOMMERCE_CDC_COMMIT_SHA: ${ECOMMERCE_CDC_COMMIT_SHA}
     ports:
