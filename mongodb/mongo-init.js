@@ -41,7 +41,7 @@ for (let i = 0; i < 120; i++) { // polling for max 2 min
 
 if (!primaryReady) {
     print("ERROR: Timed out waiting for replica set primary to become available.");
-    quit(1);
+    quit(124);
 }
 
 print("Connecting to 'ecommerce' database for seeding...");
