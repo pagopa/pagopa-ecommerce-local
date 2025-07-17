@@ -24,12 +24,25 @@ module.exports = function (req, res, next) {
       res.json(db.get("buildApm"))
     }
   } else if (requestPath.includes("orders")) { // simulate GET /orders/{orderId}
-    res.json(db.get("orderAuthorized"));
-    // res.json(db.get("stateOkWithoutOperationId"));
-    // res.json(db.get("orderWithRefund"));
-    // res.sendStatus(404);
-    // res.sendStatus(500);
-    
+    const orderId = requestPath.match(/\/psp\/api\/v1\/orders\/(.*)\//)[1];
+    switch(orderId){
+      case "E00000000000000000" :{
+        res.json(db.get("orderWithRefund"));
+        break;
+      }
+      case "E00000000000000001" :{
+        res.sendStatus(404);
+        break;
+      }
+      case "E00000000000000002" :{
+        res.sendStatus(500);
+        break;
+      }
+      default :{
+        res.json(db.get("orderAuthorized"));
+        break;
+      }
+    }    
     // setTimeout(() => {
     //   res.json(db.get("orderAuthorized"));
     // }, 5000);
