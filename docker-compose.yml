@@ -21,10 +21,10 @@ services:
       - bash
       - -c
       - |
+          openssl rand -base64 756 > /data/replica.key 
           chmod 400 /data/replica.key
+          chown 999:999 /data/replica.key
           exec docker-entrypoint.sh mongod --replSet rs0 --bind_ip_all --port 27017 --keyFile /data/replica.key
-    volumes:
-      - ./mongodb/replica.key:/data/replica.key
 
   mongo-init:
     container_name: mongo-init
