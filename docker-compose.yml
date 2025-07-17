@@ -11,10 +11,34 @@ services:
     networks:
       - pagopa-ecommerce-net
     healthcheck:
-      test: echo "db.stats().ok" | mongo --quiet
-      interval: 10s
+      test: |
+        mongosh --host localhost --port 27017 --eval "db.adminCommand('ping')"
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 5s
+    entrypoint:
+      - bash
+      - -c
+      - |
+          chmod 400 /data/replica.key
+          exec docker-entrypoint.sh mongod --replSet rs0 --bind_ip_all --port 27017 --keyFile /data/replica.key
     volumes:
-      - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./mongodb/replica.key:/data/replica.key
+
+  mongo-init:
+    container_name: mongo-init
+    image: mongo
+    # connects to the mongo service and runs the script.
+    # it run once and then exit
+    command: mongosh --host pagopa-ecommerce-mongo --port 27017 --username admin --password password --file /scripts/mongo-init.js
+    volumes:
+      - ./mongodb/mongo-init.js:/scripts/mongo-init.js:ro
+    networks:
+      - pagopa-ecommerce-net
+    depends_on:
+      mongo:
+        condition: service_healthy
 
   mongo-express:
     container_name: pagopa-ecommerce-mongo-express
@@ -25,7 +49,8 @@ services:
     networks:
       - pagopa-ecommerce-net
     depends_on:
-      - mongo
+      mongo-init:
+        condition: service_completed_successfully
 
   redis:
     container_name: pagopa-ecommerce-redis
@@ -69,6 +94,9 @@ services:
         - "${ECOMMERCE_TRANSACTIONS_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
 
   pagopa-ecommerce-payment-methods-service:
     container_name: pagopa-ecommerce-payment-methods-service
@@ -82,6 +110,9 @@ services:
         - "${ECOMMERCE_PAYMENT_METHODS_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
 
   pagopa-ecommerce-event-dispatcher-service:
     container_name: pagopa-ecommerce-event-dispatcher-service
@@ -95,6 +126,9 @@ services:
         - "${ECOMMERCE_EVENT_DISPATCHER_PORT}:9000"
     networks:
       - pagopa-ecommerce-net
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
 
   pagopa-ecommerce-helpdesk-commands-service:
     container_name: pagopa-ecommerce-helpdesk-commands-service
@@ -108,6 +142,9 @@ services:
         - "${ECOMMERCE_HELPDESK_COMMANDS_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
 
   pagopa-ecommerce-user-stats-service:
     container_name: pagopa-ecommerce-user-stats-service
@@ -121,6 +158,9 @@ services:
         - "${ECOMMERCE_USER_STATS_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
 
   pagopa-gec-mock:
     build:
@@ -222,19 +262,27 @@ services:
       - "${ECOMMERCE_TRANSACTIONS_SCHEDULER_PORT}:8080"
     networks:
       - pagopa-ecommerce-net
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
 
   pagopa-ecommerce-cdc-service:
     container_name: pagopa-ecommerce-cdc-service
     env_file: pagopa-ecommerce-cdc-service/ecommerce-cdc-service.env
     build:
       context: .
+      dockerfile: pagopa-ecommerce-cdc-service/Dockerfile.ecommerce-cdc-service
       args:
         ECOMMERCE_CDC_COMMIT_SHA: ${ECOMMERCE_CDC_COMMIT_SHA}
-      dockerfile: pagopa-ecommerce-cdc-service/Dockerfile.ecommerce-cdc-service
     ports:
       - "${ECOMMERCE_CDC_PORT}:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - pagopa-ecommerce-net
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
 
   traefik:
     container_name: pagopa-ecommerce-traefik
