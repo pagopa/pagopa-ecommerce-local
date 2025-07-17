@@ -1013,9 +1013,14 @@ function getEventStore(transactionId, eventId, eventCode, creationDate, response
     }
 }
 
-db.getCollection('transactions-view').insertMany(transactionsView);
-print("Inserted " + transactionsView.length + " transactions into transactions-view collection");
-
+const transactionViewCollection = db.getCollection('transactions-view');
+const eventStoreCollection = db.getCollection('eventstore');
+transactionsView.forEach(transactionView =>{
+    transactionViewCollection.deleteOne({_id: transactionView._id});
+    eventStoreCollection.deleteMany({transactionId: transactionView._id});
+    transactionViewCollection.insertOne(transactionView);
+});
+print("Inserted " + transactionsView.length + " transaction in ecommerce view");
 db.getCollection('eventstore').insertMany(eventsStore);
 print("Inserted " + eventsStore.length + " events into eventstore collection");
 
