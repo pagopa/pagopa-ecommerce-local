@@ -4,7 +4,7 @@ services:
 
   mongo:
     container_name: pagopa-ecommerce-mongo
-    command: [ "--replSet", "rs0", "--bind_ip_all", "--noauth", "--port", "27017"]
+    command: [ "--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
     image: mongo
     env_file: mongodb/mongodb.env
     ports:
