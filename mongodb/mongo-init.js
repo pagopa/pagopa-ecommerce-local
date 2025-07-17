@@ -21,7 +21,7 @@ try {
 
 print("Waiting for a PRIMARY member to be elected...");
 let primaryReady = false;
-for (let i = 0; i < 30; i++) { // polling
+for (let i = 0; i < 120; i++) { // polling for max 2 min
     try {
         let status = rs.status();
         // look for a member with state 1 (primary)
@@ -30,9 +30,11 @@ for (let i = 0; i < 30; i++) { // polling
             primaryReady = true;
             print("Primary is ready at: " + primary.name);
             break;
+        } else {
+             print(`Waiting... primary not set yet, members: ${status.members} `);
         }
     } catch (e) {
-        print("Waiting... (current error: " + e.codeName + ")");
+        print(`Waiting... (current error: [${e.codeName}])`);
     }
     sleep(1000);
 }
