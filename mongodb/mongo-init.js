@@ -21,7 +21,7 @@ try {
 
 print("Waiting for a PRIMARY member to be elected...");
 let primaryReady = false;
-for (let i = 0; i < 30; i++) { // polling
+for (let i = 0; i < 120; i++) { // polling for max 2 min
     try {
         let status = rs.status();
         // look for a member with state 1 (primary)
@@ -30,16 +30,18 @@ for (let i = 0; i < 30; i++) { // polling
             primaryReady = true;
             print("Primary is ready at: " + primary.name);
             break;
+        } else {
+             print(`Waiting... primary not set yet, members: ${status.members} `);
         }
     } catch (e) {
-        print("Waiting... (current error: " + e.codeName + ")");
+        print(`Waiting... (current error: [${e.codeName}])`);
     }
     sleep(1000);
 }
 
 if (!primaryReady) {
     print("ERROR: Timed out waiting for replica set primary to become available.");
-    quit(1);
+    quit(124);
 }
 
 print("Connecting to 'ecommerce' database for seeding...");
@@ -1013,9 +1015,14 @@ function getEventStore(transactionId, eventId, eventCode, creationDate, response
     }
 }
 
-db.getCollection('transactions-view').insertMany(transactionsView);
-print("Inserted " + transactionsView.length + " transactions into transactions-view collection");
-
+const transactionViewCollection = db.getCollection('transactions-view');
+const eventStoreCollection = db.getCollection('eventstore');
+transactionsView.forEach(transactionView =>{
+    transactionViewCollection.deleteOne({_id: transactionView._id});
+    eventStoreCollection.deleteMany({transactionId: transactionView._id});
+    transactionViewCollection.insertOne(transactionView);
+});
+print("Inserted " + transactionsView.length + " transaction in ecommerce view");
 db.getCollection('eventstore').insertMany(eventsStore);
 print("Inserted " + eventsStore.length + " events into eventstore collection");
 
