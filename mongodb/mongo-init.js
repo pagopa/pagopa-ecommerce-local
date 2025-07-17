@@ -1,4 +1,4 @@
-print("Starting replica set initialization and data seeding...");
+print("Populating ecommerce DB with event data");
 
 try {
     let status = rs.status();
@@ -19,33 +19,7 @@ try {
     }
 }
 
-print("Waiting for a PRIMARY member to be elected...");
-let primaryReady = false;
-for (let i = 0; i < 120; i++) { // polling for max 2 min
-    try {
-        let status = rs.status();
-        // look for a member with state 1 (primary)
-        let primary = status.members.find(member => member.state === 1);
-        if (primary) {
-            primaryReady = true;
-            print("Primary is ready at: " + primary.name);
-            break;
-        } else {
-             print(`Waiting... primary not set yet, members: ${status.members} `);
-        }
-    } catch (e) {
-        print(`Waiting... (current error: [${e.codeName}])`);
-    }
-    sleep(1000);
-}
-
-if (!primaryReady) {
-    print("ERROR: Timed out waiting for replica set primary to become available.");
-    quit(124);
-}
-
-print("Connecting to 'ecommerce' database for seeding...");
-db = db.getSiblingDB("ecommerce");
+const db = connect("mongodb://admin:password@pagopa-ecommerce-mongo:27017/?retryWrites=true&replicaSet=rs0&readPreference=primary&maxIdleTimeMS=10000&connectTimeoutMS=10000&socketTimeoutMS=10000&serverSelectionTimeoutMS=60000&waitQueueTimeoutMS=10000");
 
 print("Seeding data into collections...");
 const transactions = [

@@ -28,7 +28,7 @@ services:
 
   mongo-init:
     container_name: mongo-init
-    image: mongo
+    image: alpine/mongosh
     # connects to the mongo service and runs the script.
     # it run once and then exit
     command: mongosh --host pagopa-ecommerce-mongo --port 27017 --username admin --password password --file /scripts/mongo-init.js
