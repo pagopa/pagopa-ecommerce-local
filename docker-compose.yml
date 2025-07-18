@@ -11,11 +11,8 @@ services:
     networks:
       - pagopa-ecommerce-net
     healthcheck:
-      test: |
-        test: echo "db.stats().ok" | mongo --quiet
+      test: echo "db.stats().ok" | mongo --quiet
       interval: 10s
-      retries: 10
-      start_period: 10s
     entrypoint:
       - bash
       - -c
