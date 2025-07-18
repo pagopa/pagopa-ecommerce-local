@@ -1,3 +1,27 @@
+print("Populating ecommerce DB with event data");
+
+try {
+    let status = rs.status();
+    print("Replica set is already initialized.");
+} catch (e) {
+    if (e.codeName === 'NotYetInitialized') {
+        print("Replica set not yet initialized. Initiating...");
+        rs.initiate({
+            _id: "rs0",
+            members: [
+                { _id: 0, host: "pagopa-ecommerce-mongo:27017" }
+            ]
+        });
+        print("Initiation command sent. Waiting for replica set to come online...");
+    } else {
+        print("Error checking replica set status: " + e.message);
+        quit(1);
+    }
+}
+
+const db = connect("mongodb://admin:password@pagopa-ecommerce-mongo:27017/?retryWrites=true&replicaSet=rs0&readPreference=primary&maxIdleTimeMS=10000&connectTimeoutMS=10000&socketTimeoutMS=10000&serverSelectionTimeoutMS=60000&waitQueueTimeoutMS=10000");
+
+print("Seeding data into collections...");
 const transactions = [
     // 1 - TransactionAuthorizationOutcomeWaitingQueueConsumerV2 - AUTHORIZATION_REQUESTED
     {
@@ -723,7 +747,7 @@ const transactionsView = [];
 const eventsStore = [];
 
 transactions.forEach(transaction => {
-    transactionsView.push(getTrasactionView(
+    transactionsView.push(getTransactionView(
         transaction.transactionId,
         transaction.status,
         transaction.creationDate,
@@ -740,16 +764,7 @@ transactions.forEach(transaction => {
     })
 });
 
-conn = new Mongo();
-db = conn.getDB("ecommerce");
-
-db.getCollection('transactions-view').insertMany(transactionsView);
-db.getCollection('eventstore').insertMany(eventsStore);
-
-
-
-
-function getTrasactionView(transactionId, transactionStatus, creationDate, sendPaymentResultOutcome) {
+function getTransactionView(transactionId, transactionStatus, creationDate, sendPaymentResultOutcome) {
     return {
         "_id": transactionId,
         "clientId": "CHECKOUT",
@@ -973,3 +988,18 @@ function getEventStore(transactionId, eventId, eventCode, creationDate, response
         creationDate
     }
 }
+
+const transactionViewCollection = db.getCollection('transactions-view');
+const eventStoreCollection = db.getCollection('eventstore');
+transactionsView.forEach(transactionView =>{
+    transactionViewCollection.deleteOne({_id: transactionView._id});
+    eventStoreCollection.deleteMany({transactionId: transactionView._id});
+    transactionViewCollection.insertOne(transactionView);
+});
+print("Inserted " + transactionsView.length + " transaction in ecommerce view");
+db.getCollection('eventstore').insertMany(eventsStore);
+print("Inserted " + eventsStore.length + " events into eventstore collection");
+
+print("Data seeding completed.");
+
+print("MongoDB initialization script finished successfully!");
