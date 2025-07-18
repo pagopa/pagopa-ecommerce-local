@@ -61,6 +61,13 @@ You can check data persisted to either Mongo or Redis with their respective web 
 | `Redis Insight` | http://localhost:8001 |
 | `Mongo Express` | http://localhost:8081 |
 
+If you want to connect to MongoDB using an external client than mongo express (such as Mongo Compass etc) you will have to add an entry in hosts file
+
+```
+127.0.0.1 pagopa-ecommerce-mongo
+```
+to map the pagopa-ecommerce-mongo hostname with localhost. This is required since mongo is started as a replicas with that hostname
+
 When changing configuration parameters, remember to rebuild containers with
 ```sh
 docker-compose build SERVICE_NAME [--no-cache]
