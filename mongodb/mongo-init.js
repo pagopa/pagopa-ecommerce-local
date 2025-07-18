@@ -1,51 +1,3 @@
-print("Starting replica set initialization and data seeding...");
-
-try {
-    let status = rs.status();
-    print("Replica set is already initialized.");
-} catch (e) {
-    if (e.codeName === 'NotYetInitialized') {
-        print("Replica set not yet initialized. Initiating...");
-        rs.initiate({
-            _id: "rs0",
-            members: [
-                { _id: 0, host: "pagopa-ecommerce-mongo:27017" }
-            ]
-        });
-        print("Initiation command sent. Waiting for replica set to come online...");
-    } else {
-        print("Error checking replica set status: " + e.message);
-        quit(1);
-    }
-}
-
-print("Waiting for a PRIMARY member to be elected...");
-let primaryReady = false;
-for (let i = 0; i < 30; i++) { // polling
-    try {
-        let status = rs.status();
-        // look for a member with state 1 (primary)
-        let primary = status.members.find(member => member.state === 1);
-        if (primary) {
-            primaryReady = true;
-            print("Primary is ready at: " + primary.name);
-            break;
-        }
-    } catch (e) {
-        print("Waiting... (current error: " + e.codeName + ")");
-    }
-    sleep(1000);
-}
-
-if (!primaryReady) {
-    print("ERROR: Timed out waiting for replica set primary to become available.");
-    quit(1);
-}
-
-print("Connecting to 'ecommerce' database for seeding...");
-db = db.getSiblingDB("ecommerce");
-
-print("Seeding data into collections...");
 const transactions = [
     // 1 - TransactionAuthorizationOutcomeWaitingQueueConsumerV2 - AUTHORIZATION_REQUESTED
     {
@@ -771,7 +723,7 @@ const transactionsView = [];
 const eventsStore = [];
 
 transactions.forEach(transaction => {
-    transactionsView.push(getTransactionView(
+    transactionsView.push(getTrasactionView(
         transaction.transactionId,
         transaction.status,
         transaction.creationDate,
@@ -788,7 +740,16 @@ transactions.forEach(transaction => {
     })
 });
 
-function getTransactionView(transactionId, transactionStatus, creationDate, sendPaymentResultOutcome) {
+conn = new Mongo();
+db = conn.getDB("ecommerce");
+
+db.getCollection('transactions-view').insertMany(transactionsView);
+db.getCollection('eventstore').insertMany(eventsStore);
+
+
+
+
+function getTrasactionView(transactionId, transactionStatus, creationDate, sendPaymentResultOutcome) {
     return {
         "_id": transactionId,
         "clientId": "CHECKOUT",
@@ -1012,13 +973,3 @@ function getEventStore(transactionId, eventId, eventCode, creationDate, response
         creationDate
     }
 }
-
-db.getCollection('transactions-view').insertMany(transactionsView);
-print("Inserted " + transactionsView.length + " transactions into transactions-view collection");
-
-db.getCollection('eventstore').insertMany(eventsStore);
-print("Inserted " + eventsStore.length + " events into eventstore collection");
-
-print("Data seeding completed.");
-
-print("MongoDB initialization script finished successfully!");
