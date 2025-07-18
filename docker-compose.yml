@@ -12,11 +12,10 @@ services:
       - pagopa-ecommerce-net
     healthcheck:
       test: |
-        mongosh --host localhost --port 27017 --eval "db.adminCommand('ping')"
-      interval: 5s
-      timeout: 10s
+        test: echo "db.stats().ok" | mongo --quiet
+      interval: 10s
       retries: 10
-      start_period: 5s
+      start_period: 10s
     entrypoint:
       - bash
       - -c
