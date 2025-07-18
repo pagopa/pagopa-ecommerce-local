@@ -11,8 +11,11 @@ services:
     networks:
       - pagopa-ecommerce-net
     healthcheck:
-      test: echo "db.stats().ok" | mongo --quiet
-      interval: 10s
+      test: echo 'db.runCommand({serverStatus:1}).ok' | mongosh admin --username admin --password password --quiet | grep 1
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
     entrypoint:
       - bash
       - -c
