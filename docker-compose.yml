@@ -54,6 +54,7 @@ services:
   redis:
     container_name: pagopa-ecommerce-redis
     image: redis
+    env_file: redis/redis.env
     command: ["sh", "-c", 'exec redis-server --requirepass "$$REDIS_PASSWORD"']
     ports:
       - "${REDIS_PORT}:6379"
