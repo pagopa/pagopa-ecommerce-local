@@ -20,8 +20,7 @@ COPY --from=clone /workspace/pagopa-ecommerce-cdc-service/ ./
 
 RUN chmod +x ./gradlew
 RUN chmod +x ./pagopa-ecommerce-commons-maven-install.sh
-RUN COMMONS_VERSION=$(./gradlew -q printCommonsVersion) && \
-    ./pagopa-ecommerce-commons-maven-install.sh $COMMONS_VERSION
+RUN ./gradlew install-commons -PbuildCommons
 
 ### 3. Application build stage
 FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16 AS build
