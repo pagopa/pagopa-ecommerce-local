@@ -1,0 +1,7 @@
+services:
+  pagopa-ecommerce-transactions-service:
+    environment:
+      - TRANSACTIONSVIEW_UPDATE_ENABLED=false
+  pagopa-ecommerce-event-dispatcher-service:
+    environment:
+      - TRANSACTIONSVIEW_UPDATE_ENABLED=false
