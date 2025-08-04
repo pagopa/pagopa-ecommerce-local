@@ -1,0 +1,155 @@
+{
+	"info": {
+		"_postman_id": "0a52b222-752b-46b0-b7d5-5f6d06f818e4",
+		"name": "Ecommerce CDC service tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22960470"
+	},
+	"item": [
+		{
+			"name": "1. Activate Transaction and Verify CDC View",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Get payment methods for transaction activation",
+							"const getPaymentMethodRequest = {",
+							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
+							"    method: 'GET',",
+							"    header: {",
+							"        'Content-Type': 'application/json',",
+							"        'x-client-id': 'CHECKOUT',",
+							"        'x-api-key': 'PRIMARY-KEY'",
+							"    }",
+							"};",
+							"",
+							"pm.sendRequest(getPaymentMethodRequest, (error, response) => {",
+							"    if (error) {",
+							"        console.log('Error getting payment methods:', error);",
+							"        return;",
+							"    }",
+							"    const paymentMethods = response.json().paymentMethods;",
+							"    const cardMethod = paymentMethods.find(method => method.name === 'CARDS');",
+							"    if (cardMethod) {",
+							"        pm.environment.set('PAYMENT_METHOD_ID', cardMethod.id);",
+							"        console.log('Payment method ID set:', cardMethod.id);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('[CDC-Service] Transaction activation returns 200', () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('[CDC-Service] Transaction activation creates view document', async () => {",
+							"    const responseJson = pm.response.json();",
+							"    const transactionId = responseJson.transactionId;",
+							"    pm.environment.set('TRANSACTION_ID', transactionId);",
+							"    ",
+							"    console.log(`Transaction created: ${transactionId}`);",
+							"    ",
+							"    await new Promise(r => setTimeout(r, 3000));",
+							"    ",
+							"    const getTransactionRequest = {",
+							"        url: `${pm.environment.get('TRANSACTION_SERVICE_HOST')}/v2/transactions/${transactionId}`,",
+							"        method: 'GET',",
+							"        header: {",
+							"            'Content-Type': 'application/json',",
+							"            'x-api-key': pm.environment.get('PRIMARY_API_KEY')",
+							"        }",
+							"    };",
+							"    ",
+							"    let transactionFound = false;",
+							"    let attempts = 0;",
+							"    const maxAttempts = 10;",
+							"    ",
+							"    while (!transactionFound && attempts < maxAttempts) {",
+							"        await new Promise((resolve, reject) => {",
+							"            pm.sendRequest(getTransactionRequest, (error, response) => {",
+							"                if (error) {",
+							"                    console.log(`Attempt ${attempts + 1}: Error getting transaction:`, error);",
+							"                    resolve();",
+							"                    return;",
+							"                }",
+							"                ",
+							"                if (response.code === 200) {",
+							"                    const transaction = response.json();",
+							"                    console.log(`Transaction data:`, JSON.stringify(transaction, null, 2));",
+							"                    ",
+							"                    // TODO add status assertion",
+							"                    // pm.expect(transaction.status).to.equal('ACTIVATED');",
+							"                    pm.expect(transaction.lastProcessedEventAt).to.exist;",
+							"                    pm.expect(transaction.email).to.exist;",
+							"                    pm.expect(transaction.paymentNotices).to.exist;",
+							"                    pm.expect(transaction.clientId).to.equal('CHECKOUT');",
+							"                    ",
+							"                    console.log('CDC view verified - Basic transaction data found');",
+							"                    transactionFound = true;",
+							"                } else {",
+							"                    console.log(`Attempt ${attempts + 1}: Transaction not found, response code:`, response.code);",
+							"                }",
+							"                resolve();",
+							"            });",
+							"        });",
+							"        ",
+							"        if (!transactionFound) {",
+							"            attempts++;",
+							"            if (attempts < maxAttempts) {",
+							"                await new Promise(r => setTimeout(r, 2000));",
+							"            }",
+							"        }",
+							"    }",
+							"    ",
+							"    pm.expect(transactionFound, `Transaction view not found after ${maxAttempts} attempts`).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT"
+					},
+					{
+						"key": "x-api-key",
+						"value": "{{PRIMARY_API_KEY}}"
+					},
+					{
+						"key": "x-correlation-id",
+						"value": "{{CORRELATION_ID}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"77777777727302016723749670035\",\n      \"amount\": 1000\n    }\n  ],\n  \"email\": \"test@example.com\",\n  \"idCart\": \"test-cart-{{$randomUUID}}\",\n  \"orderId\": \"order-{{$randomUUID}}\"\n}"
+				},
+				"url": {
+					"raw": "{{TRANSACTION_SERVICE_HOST}}/v2/transactions",
+					"host": [
+						"{{TRANSACTION_SERVICE_HOST}}"
+					],
+					"path": [
+						"v2",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
