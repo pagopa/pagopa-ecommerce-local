@@ -14,9 +14,15 @@ WORKDIR /workspace/pagopa-ecommerce-transactions-scheduler-service/
 
 ARG REPO=/workspace/pagopa-ecommerce-transactions-scheduler-service
 
+RUN apt-get update && apt-get install -y gettext-base
+
 COPY --from=clone ${REPO}/ .
-RUN mvn -f ./pom.xml validate -DskipTests
-RUN mvn -f ./pom.xml package -DskipTests
+RUN --mount=type=secret,id=GITHUB_TOKEN,env=GITHUB_TOKEN \
+    apt-get update && apt-get install -y gettext-base && \
+    mkdir -p ~/.m2 && \
+    envsubst < ./settings.xml.template > ~/.m2/settings.xml && \
+    mvn -f ./pom.xml validate -DskipTests -U && \
+    mvn -f ./pom.xml package -DskipTests -U
 
 ### 3. Run stage
 FROM eclipse-temurin:21-jre-alpine@sha256:8728e354e012e18310faa7f364d00185277dec741f4f6d593af6c61fc0eb15fd

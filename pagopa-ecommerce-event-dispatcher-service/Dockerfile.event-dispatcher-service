@@ -12,14 +12,18 @@ RUN rm -rf * && \
 FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16 AS build
 WORKDIR /workspace/pagopa-ecommerce-event-dispatcher-service/
 
-RUN apk add --no-cache git curl ca-certificates
+RUN apk add --no-cache git curl ca-certificates gettext
 
 ARG REPO=/workspace/pagopa-ecommerce-event-dispatcher-service
 
 COPY --from=clone ${REPO}/ .
 RUN chmod +x ./mvnw
-RUN ./mvnw -f ./pom.xml validate -DskipTests -Dmaven.javadoc.skip=true -Dadditionalparam=-Xdoclint:none
-RUN ./mvnw -f ./pom.xml clean package -DskipTests -Dmaven.javadoc.skip=true -Dadditionalparam=-Xdoclint:none
+RUN --mount=type=secret,id=GITHUB_TOKEN,env=GITHUB_TOKEN \
+    apt-get update && apt-get install -y gettext-base && \
+    mkdir -p ~/.m2 && \
+    envsubst < ./settings.xml.template > ~/.m2/settings.xml && \
+    ./mvnw -f ./pom.xml validate -DskipTests -Dmaven.javadoc.skip=true -Dadditionalparam=-Xdoclint:none -U && \
+    ./mvnw -f ./pom.xml clean package -DskipTests -Dmaven.javadoc.skip=true -Dadditionalparam=-Xdoclint:none
 
 ### 3. Run stage
 FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16
