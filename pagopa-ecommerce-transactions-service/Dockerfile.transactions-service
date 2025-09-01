@@ -21,7 +21,7 @@ COPY --from=clone ${REPO}/ .
 RUN --mount=type=secret,id=GITHUB_TOKEN,env=GITHUB_TOKEN \
     apt-get update && apt-get install -y gettext-base && \
     mkdir -p ~/.m2 && \
-    envsubst < ./settings.xml.template > ~/.m2/settings.xml && \
+    envsubst < ../settings.xml.template > ~/.m2/settings.xml && \
     mvn -f ./pom.xml validate -DskipTests -U && \
     mvn -f ./pom.xml package -DskipTests -U
 

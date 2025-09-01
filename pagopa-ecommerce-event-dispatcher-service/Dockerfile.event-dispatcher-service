@@ -20,7 +20,7 @@ COPY --from=clone ${REPO}/ .
 RUN chmod +x ./mvnw
 RUN --mount=type=secret,id=GITHUB_TOKEN,env=GITHUB_TOKEN \
     mkdir -p ~/.m2 && \
-    envsubst < ./settings.xml.template > ~/.m2/settings.xml && \
+    envsubst < ../settings.xml.template > ~/.m2/settings.xml && \
     ./mvnw -f ./pom.xml validate -DskipTests -Dmaven.javadoc.skip=true -Dadditionalparam=-Xdoclint:none -U && \
     ./mvnw -f ./pom.xml clean package -DskipTests -Dmaven.javadoc.skip=true -Dadditionalparam=-Xdoclint:none
 
