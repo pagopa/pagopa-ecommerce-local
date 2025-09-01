@@ -19,7 +19,6 @@ ARG REPO=/workspace/pagopa-ecommerce-event-dispatcher-service
 COPY --from=clone ${REPO}/ .
 RUN chmod +x ./mvnw
 RUN --mount=type=secret,id=GITHUB_TOKEN,env=GITHUB_TOKEN \
-    apt-get update && apt-get install -y gettext-base && \
     mkdir -p ~/.m2 && \
     envsubst < ./settings.xml.template > ~/.m2/settings.xml && \
     ./mvnw -f ./pom.xml validate -DskipTests -Dmaven.javadoc.skip=true -Dadditionalparam=-Xdoclint:none -U && \
