@@ -250,6 +250,8 @@ services:
     env_file: pagopa-ecommerce-payment-requests-service/payment-requests-service.env
     build:
       context: .
+      secrets:
+        - GITHUB_TOKEN
       args:
         ECOMMERCE_PAYMENT_REQUESTS_COMMIT_SHA: ${ECOMMERCE_PAYMENT_REQUESTS_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-payment-requests-service/Dockerfile.payment-requests-service
