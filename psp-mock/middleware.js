@@ -40,8 +40,8 @@ module.exports = function (req, res, next) {
 }
 
 function redirectUrlHandler(requestBody) {
-  const requiredKeys = new Set(["idTransaction", "idPsp", "amount", "urlBack", "description", "paymentMethod", "touchpoint"]);
-  const optionalKeys = new Set(["paName", "idPaymentMethod"]);
+  const requiredKeys = new Set(["idTransaction", "idPsp", "amount", "urlBack", "description", "idPaymentMethod", "touchpoint"]);
+  const optionalKeys = new Set(["paName", "paymentMethod"]);
 
   const inputKeys = new Set(Object.keys(requestBody));
 
