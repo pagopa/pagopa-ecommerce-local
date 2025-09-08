@@ -87,6 +87,8 @@ services:
     env_file: pagopa-ecommerce-transactions-service/transactions-service.env
     build:
       context: .
+      secrets:
+        - GITHUB_TOKEN
       args:
         ECOMMERCE_TRANSACTIONS_COMMIT_SHA: ${ECOMMERCE_TRANSACTIONS_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-transactions-service/Dockerfile.transactions-service
@@ -103,6 +105,8 @@ services:
     env_file: pagopa-ecommerce-payment-methods-service/payment-methods-service.env
     build:
       context: .
+      secrets:
+        - GITHUB_TOKEN
       args:
         ECOMMERCE_PAYMENT_METHODS_COMMIT_SHA: ${ECOMMERCE_PAYMENT_METHODS_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-payment-methods-service/Dockerfile.payment-methods-service
@@ -119,6 +123,8 @@ services:
     env_file: pagopa-ecommerce-event-dispatcher-service/event-dispatcher-service.env
     build:
       context: .
+      secrets:
+        - GITHUB_TOKEN
       args:
         ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA: ${ECOMMERCE_EVENT_DISPATCHER_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-event-dispatcher-service/Dockerfile.event-dispatcher-service
@@ -135,6 +141,8 @@ services:
     env_file: pagopa-ecommerce-helpdesk-commands-service/helpdesk-commands-service.env
     build:
       context: .
+      secrets:
+        - GITHUB_TOKEN
       args:
         ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA: ${ECOMMERCE_HELPDESK_COMMANDS_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-helpdesk-commands-service/Dockerfile.helpdesk-commands-service
@@ -242,6 +250,8 @@ services:
     env_file: pagopa-ecommerce-payment-requests-service/payment-requests-service.env
     build:
       context: .
+      secrets:
+        - GITHUB_TOKEN
       args:
         ECOMMERCE_PAYMENT_REQUESTS_COMMIT_SHA: ${ECOMMERCE_PAYMENT_REQUESTS_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-payment-requests-service/Dockerfile.payment-requests-service
@@ -255,6 +265,8 @@ services:
     env_file: pagopa-ecommerce-transactions-scheduler-service/transactions-scheduler-service.env
     build:
       context: .
+      secrets:
+        - GITHUB_TOKEN
       args:
         ECOMMERCE_TRANSACTIONS_SCHEDULER_COMMIT_SHA: ${ECOMMERCE_TRANSACTIONS_SCHEDULER_COMMIT_SHA}
       dockerfile: pagopa-ecommerce-transactions-scheduler-service/Dockerfile.transactions-scheduler-service
@@ -271,6 +283,8 @@ services:
     env_file: pagopa-ecommerce-cdc-service/ecommerce-cdc-service.env
     build:
       context: .
+      secrets:
+        - GITHUB_TOKEN
       dockerfile: pagopa-ecommerce-cdc-service/Dockerfile.ecommerce-cdc-service
       args:
         ECOMMERCE_CDC_COMMIT_SHA: ${ECOMMERCE_CDC_COMMIT_SHA}
@@ -353,3 +367,7 @@ networks:
     driver: bridge
     driver_opts:
       com.docker.network.driver.mtu: 1450
+
+secrets:
+  GITHUB_TOKEN:
+    environment: GITHUB_TOKEN
