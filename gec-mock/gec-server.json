@@ -153,7 +153,7 @@
     "status": "ENABLED",
     "target": null,
     "metadata": {},
-    "payment_method_id": "f25399bf-c56f-4bd2-adc9-7aef87410609",
+    "payment_method_id": "paymentMethodId1",
     "user_touchpoint": [
       "IO"
     ],
