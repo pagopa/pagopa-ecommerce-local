@@ -107,5 +107,79 @@
         "fees": []
       }
     ]
+  },
+  "payment_methods": {
+    "paymentMethods": [
+      {
+        "paymentMethodId": "paymentMethodId1",
+        "name": {
+          "IT": "Carte",
+          "EN": "Cards"
+        },
+        "description": {
+          "IT": "Carte di credito o debito",
+          "EN": "Credit or debit cards"
+        },
+        "status": "ENABLED",
+        "validityDateFrom": "2020-01-01",
+        "group": "CP",
+        "paymentMethodTypes": [
+          "CARTE"
+        ],
+        "feeRange": {
+          "min": 0,
+          "max": 1000000
+        },
+        "paymentMethodAsset": "http://cardAsset",
+        "methodManagement": "ONBOARDABLE",
+        "paymentMethodsBrandAssets": {
+          "MC": "http://mcAsset",
+          "VISA": "http://mcAsset"
+        }
+      }
+    ]
+  },
+  "methodById": {
+    "id": "2",
+    "group": "CP",
+    "name": {
+      "IT": "Carte",
+      "EN": "Cards"
+    },
+    "description": {
+      "IT": "Carta di credito o debito",
+      "EN": "Credit or debit card"
+    },
+    "status": "ENABLED",
+    "target": null,
+    "metadata": {},
+    "payment_method_id": "paymentMethodId1",
+    "user_touchpoint": [
+      "IO"
+    ],
+    "user_device": [
+      "IOS",
+      "ANDROID",
+      "WEB",
+      "SAFARI"
+    ],
+    "payment_method_types": [
+      "CARTE"
+    ],
+    "validity_date_from": "2000-01-01",
+    "range_amount": {
+      "min": 0,
+      "max": 100000
+    },
+    "payment_method_asset": "https://assets.cdn.platform.pagopa.it/creditcard/generic.png",
+    "method_management": "ONBOARDABLE_ONLY",
+    "payment_methods_brand_assets": {
+      "VISA": "https://assets.cdn.platform.pagopa.it/creditcard/visa.png",
+      "MC": "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
+      "DINERS": "https://assets.cdn.platform.pagopa.it/creditcard/diners.png",
+      "AMEX": "https://assets.cdn.platform.pagopa.it/creditcard/amex.png",
+      "MAESTRO": "https://assets.cdn.platform.pagopa.it/creditcard/maestro.png",
+      "MASTERCARD": "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png"
+    }
   }
 }
