@@ -20,6 +20,13 @@ http:
         - payment-methods-headers
         - payment-methods-prefix
 
+    payment-methods-handler-router:
+      service: "pagopa-ecommerce-payment-methods-handler"
+      rule: "PathPrefix(`/payment-methods-handler`)"
+      middlewares:
+        - payment-methods-handler-headers
+        - payment-methods-handler-prefix
+
   middlewares:
 
     notifications-headers:
@@ -42,6 +49,16 @@ http:
         prefixes:
           - "/payment-methods-service"
     payment-methods-headers:
+      headers:
+        customRequestHeaders:
+          X-Client-ID: "CHECKOUT"
+          x-api-key: "PRIMARY-KEY"
+
+    payment-methods-handler-prefix:
+      stripPrefix:
+        prefixes:
+          - "/payment-methods-handler-service"
+    payment-methods-handler-headers:
       headers:
         customRequestHeaders:
           X-Client-ID: "CHECKOUT"
