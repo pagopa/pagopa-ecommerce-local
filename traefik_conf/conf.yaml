@@ -57,7 +57,7 @@ http:
     payment-methods-handler-prefix:
       stripPrefix:
         prefixes:
-          - "/payment-methods-handler-service"
+          - "/payment-methods-handler"
     payment-methods-handler-headers:
       headers:
         customRequestHeaders:
@@ -79,3 +79,8 @@ http:
           loadBalancer:
             servers:
               - url: "http://pagopa-ecommerce-payment-methods-service:8080"
+
+    pagopa-ecommerce-payment-methods-handler:
+          loadBalancer:
+            servers:
+              - url: "http://pagopa-ecommerce-payment-methods-handler:8080"
