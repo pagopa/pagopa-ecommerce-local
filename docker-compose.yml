@@ -4,7 +4,7 @@ services:
 
   mongo:
     container_name: pagopa-ecommerce-mongo
-    image: mongo
+    image: mongo@sha256:3031bfad5692e3fa1defcd054d4794370889c93b2049e0c323f2b7571e495413
     env_file: mongodb/mongodb.env
     ports:
       - "${MONGO_PORT}:27017"
@@ -27,7 +27,7 @@ services:
 
   mongo-init:
     container_name: mongo-init
-    image: alpine/mongosh
+    image: alpine/mongosh@sha256:2d7a9cb13f433ae72c13019db935e74831359a022f0a89282e5294cf578db3bc
     # connects to the mongo service and runs the script.
     # it run once and then exit
     command: mongosh --host pagopa-ecommerce-mongo --port 27017 --username admin --password password --file /scripts/mongo-init.js
@@ -41,7 +41,7 @@ services:
 
   mongo-express:
     container_name: pagopa-ecommerce-mongo-express
-    image: mongo-express
+    image: mongo-express@sha256:1b23d7976f0210dbec74045c209e52fbb26d29b2e873d6c6fa3d3f0ae32c2a64
     env_file: mongodb/mongo-express.env
     ports:
       - "${MONGO_EXPRESS_PORT}:8081"
@@ -53,7 +53,7 @@ services:
 
   redis:
     container_name: pagopa-ecommerce-redis
-    image: redis
+    image: redis@sha256:acb90ced0bd769b7c04cb4c32c4494ba7b3e0ee068bdbfff0eeb0d31c2a21078
     env_file: redis/redis.env
     command: ["sh", "-c", 'exec redis-server --requirepass "$$REDIS_PASSWORD"']
     ports:
@@ -63,7 +63,7 @@ services:
 
   redis-insight:
     container_name: pagopa-ecommerce-redis-insight
-    image: redislabs/redisinsight
+    image: redislabs/redisinsight@sha256:b7aa18e73329ebb2e3d9e949b8d35193bf5415ef35c16fd9a50e6f832922b296
     ports:
       - "${REDIS_INSIGHT_PORT}:5540"
     networks:
@@ -318,7 +318,7 @@ services:
 
   traefik:
     container_name: pagopa-ecommerce-traefik
-    image: traefik:v2.7
+    image: traefik:v2.7@sha256:41bfa070b43184314a1fd86d5b68d367d3f744e972ca3fe44a8875f69935c2d7
     ports:
       - "8000:80"
       - "8090:8080"
@@ -330,7 +330,7 @@ services:
       - pagopa-ecommerce-net
 
   storage:
-    image: mcr.microsoft.com/azure-storage/azurite:3.34.0
+    image: mcr.microsoft.com/azure-storage/azurite:3.34.0@sha256:0a47e12e3693483cef5c71f35468b91d751611f172d2f97414e9c69113b106d9
     container_name: azurite
     ports:
       - "10000:10000"
