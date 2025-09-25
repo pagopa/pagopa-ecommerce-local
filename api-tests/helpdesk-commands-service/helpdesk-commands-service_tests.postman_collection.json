@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "22ade53c-cfac-4c1d-8ae4-8b77b42ab920",
+		"_postman_id": "cbac735e-2bb8-478f-9a3b-689f39076336",
 		"name": "Ecommerce helpdesk-commands-service tests",
 		"description": "Integration tests with transaction lifecycle polling - requires docker-compose environment",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23963988"
+		"_exporter_id": "40908537"
 	},
 	"item": [
 		{
@@ -26,7 +26,8 @@
 							"    url: `${pm.environment.get(\"TRANSACTION_SERVICE_HOST\")}/transactions/${transactionId}`,\r",
 							"    method: 'GET',\r",
 							"    header: {\r",
-							"        'Content-Type': 'application/json'\r",
+							"        'Content-Type': 'application/json',\r",
+							"        'X-Api-Key': pm.environment.get('SERVICE_API_KEY')\r",
 							"    }\r",
 							"};\r",
 							"\r",
@@ -47,18 +48,20 @@
 							"                    resolve(transactionStatus);\r",
 							"                }\r",
 							"            }));\r",
-							"        counter++;\r",
-							"    }\r",
-							"    return transactionStatus;\r",
+							"            counter++;\r",
+							"        }\r",
+							"        return transactionStatus;\r",
 							"}\r",
 							"\r",
 							"pm.test(`[pagopa-ecommerce-helpdesk-commands-service] Check transaction status from ${initialStatus} to ${expectedTransactionStatus}`, async () => {\r",
 							"    const transactionStatus = await executeGetTransactionRequest();\r",
 							"    pm.expect(expectedTransactionStatus).to.be.eq(transactionStatus);\r",
-							"});"
+							"});\r",
+							""
 						],
 						"type": "text/javascript",
-						"packages": {}
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -110,7 +113,8 @@
 							"    url: `${pm.environment.get(\"TRANSACTION_SERVICE_HOST\")}/transactions/${transactionId}`,\r",
 							"    method: 'GET',\r",
 							"    header: {\r",
-							"        'Content-Type': 'application/json'\r",
+							"        'Content-Type': 'application/json',\r",
+							"        'X-Api-Key': pm.environment.get('SERVICE_API_KEY')\r",
 							"    }\r",
 							"};\r",
 							"\r",
@@ -142,7 +146,8 @@
 							"});"
 						],
 						"type": "text/javascript",
-						"packages": {}
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
