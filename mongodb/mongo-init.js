@@ -1,4 +1,4 @@
-print("Populating ecommerce DB with event data");
+print("Starting replica set initialization and data seeding...");
 
 try {
     let status = rs.status();
@@ -19,7 +19,31 @@ try {
     }
 }
 
-const db = connect("mongodb://admin:password@pagopa-ecommerce-mongo:27017/?retryWrites=true&replicaSet=rs0&readPreference=primary&maxIdleTimeMS=10000&connectTimeoutMS=10000&socketTimeoutMS=10000&serverSelectionTimeoutMS=60000&waitQueueTimeoutMS=10000");
+print("Waiting for a PRIMARY member to be elected...");
+let primaryReady = false;
+for (let i = 0; i < 30; i++) { // polling
+    try {
+        let status = rs.status();
+        // look for a member with state 1 (primary)
+        let primary = status.members.find(member => member.state === 1);
+        if (primary) {
+            primaryReady = true;
+            print("Primary is ready at: " + primary.name);
+            break;
+        }
+    } catch (e) {
+        print("Waiting... (current error: " + e.codeName + ")");
+    }
+    sleep(1000);
+}
+
+if (!primaryReady) {
+    print("ERROR: Timed out waiting for replica set primary to become available.");
+    quit(1);
+}
+
+print("Connecting to 'ecommerce' database for seeding...");
+db = db.getSiblingDB("ecommerce");
 
 print("Seeding data into collections...");
 const transactions = [
@@ -747,6 +771,7 @@ const transactionsView = [];
 const eventsStore = [];
 
 transactions.forEach(transaction => {
+    transactionsView.push(getTrasactionView(
     transactionsView.push(getTransactionView(
         transaction.transactionId,
         transaction.status,
@@ -764,6 +789,16 @@ transactions.forEach(transaction => {
     })
 });
 
+conn = new Mongo();
+db = conn.getDB("ecommerce");
+
+db.getCollection('transactions-view').insertMany(transactionsView);
+db.getCollection('eventstore').insertMany(eventsStore);
+
+
+
+
+function getTrasactionView(transactionId, transactionStatus, creationDate, sendPaymentResultOutcome) {
 function getTransactionView(transactionId, transactionStatus, creationDate, sendPaymentResultOutcome) {
     return {
         "_id": transactionId,
@@ -989,14 +1024,9 @@ function getEventStore(transactionId, eventId, eventCode, creationDate, response
     }
 }
 
-const transactionViewCollection = db.getCollection('transactions-view');
-const eventStoreCollection = db.getCollection('eventstore');
-transactionsView.forEach(transactionView =>{
-    transactionViewCollection.deleteOne({_id: transactionView._id});
-    eventStoreCollection.deleteMany({transactionId: transactionView._id});
-    transactionViewCollection.insertOne(transactionView);
-});
-print("Inserted " + transactionsView.length + " transaction in ecommerce view");
+db.getCollection('transactions-view').insertMany(transactionsView);
+print("Inserted " + transactionsView.length + " transactions into transactions-view collection");
+
 db.getCollection('eventstore').insertMany(eventsStore);
 print("Inserted " + eventsStore.length + " events into eventstore collection");
 
