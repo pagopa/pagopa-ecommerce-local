@@ -3,6 +3,18 @@
     "walletId": "cd13a04d-fd32-44db-acaa-349df7b9324f",
     "contractId": "contractId",
     "bin": "42424242",
-    "brand": "VISA"  
+    "brand": "VISA"
+  },
+  "authDataContextualOnboarding": {
+    "walletId": "00000000-0000-0000-0000-000000000000",
+    "contractId": "contractId",
+    "bin": "42424242",
+    "brand": "VISA",
+    "contextualOnboardDetails": {
+      "transactionId": "3fa85f64-57174562b3fc2c963f66afa6",
+      "amount": 0,
+      "orderId": "string",
+      "sessionId": "string"
+    }
   }
 }
