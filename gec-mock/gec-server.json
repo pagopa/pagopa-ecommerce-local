@@ -107,5 +107,84 @@
         "fees": []
       }
     ]
+  },
+  "payment_methods": {
+    "paymentMethods": [
+      {
+        "paymentMethodId": "378d0b4f-8b69-46b0-8215-07785fe1aad4",
+        "name": {
+          "IT": "Carte",
+          "EN": "Cards"
+        },
+        "description": {
+          "IT": "Carta di credito o debito",
+          "EN": "Credit or debit card"
+        },
+        "status": "ENABLED",
+        "validityDateFrom": "2000-01-01",
+        "group": "CP",
+        "paymentMethodTypes": [
+          "CARTE"
+        ],
+        "feeRange": {
+          "min": 0,
+          "max": 999999999
+        },
+        "paymentMethodAsset": "https://assets.cdn.platform.pagopa.it/creditcard/generic.png",
+        "methodManagement": "ONBOARDABLE",
+        "paymentMethodsBrandAssets": {
+          "VISA": "https://assets.cdn.platform.pagopa.it/creditcard/visa.png",
+          "MC": "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
+          "DINERS": "https://assets.cdn.platform.pagopa.it/creditcard/diners.png",
+          "AMEX": "https://assets.cdn.platform.pagopa.it/creditcard/amex.png",
+          "MAESTRO": "https://assets.cdn.platform.pagopa.it/creditcard/maestro.png",
+          "MASTERCARD": "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png"
+        },
+        "metadata": {}
+      }
+    ]
+  },
+  "methodById": {
+    "id": "378d0b4f-8b69-46b0-8215-07785fe1aad4",
+    "paymentMethodId": "378d0b4f-8b69-46b0-8215-07785fe1aad4",
+    "group": "CP",
+    "name": {
+      "IT": "Carte",
+      "EN": "Cards"
+    },
+    "description": {
+      "IT": "Carta di credito o debito",
+      "EN": "Credit or debit card"
+    },
+    "userTouchpoint": [
+      "CHECKOUT"
+    ],
+    "userDevice": [
+      "IOS",
+      "ANDROID",
+      "WEB",
+      "SAFARI"
+    ],
+    "status": "ENABLED",
+    "paymentMethodTypes": [
+      "CARTE"
+    ],
+    "validityDateFrom": "2000-01-01",
+    "target": null,
+    "rangeAmount": {
+      "min": 0,
+      "max": 999999999
+    },
+    "metadata": {},
+    "paymentMethodAsset": "https://assets.cdn.platform.pagopa.it/creditcard/generic.png",
+    "methodManagement": "ONBOARDABLE",
+    "paymentMethodsBrandAssets": {
+      "AMEX": "https://assets.cdn.platform.pagopa.it/creditcard/amex.png",
+      "MAESTRO": "https://assets.cdn.platform.pagopa.it/creditcard/maestro.png",
+      "MC": "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
+      "MASTERCARD": "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
+      "VISA": "https://assets.cdn.platform.pagopa.it/creditcard/visa.png",
+      "DINERS": "https://assets.cdn.platform.pagopa.it/creditcard/diners.png"
+    }
   }
 }

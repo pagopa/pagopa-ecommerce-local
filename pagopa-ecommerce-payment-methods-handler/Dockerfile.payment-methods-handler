@@ -1,0 +1,32 @@
+### 1. Cloning stage
+FROM alpine/git:latest AS clone
+WORKDIR /workspace/pagopa-ecommerce-payment-methods-handler
+
+ARG ECOMMERCE_PAYMENT_METHODS_HANDLER_COMMIT_SHA
+
+RUN rm -rf * && \
+    git clone https://github.com/pagopa/pagopa-ecommerce-payment-methods-handler.git /workspace/pagopa-ecommerce-payment-methods-handler && \
+    git checkout ${ECOMMERCE_PAYMENT_METHODS_HANDLER_COMMIT_SHA} 
+
+### 2. Commons build stage
+FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16 AS build
+WORKDIR /workspace/app
+RUN apk add --no-cache findutils git gettext
+
+COPY --from=clone /workspace/pagopa-ecommerce-payment-methods-handler/ ./
+RUN chmod +x ./gradlew
+RUN --mount=type=secret,id=GITHUB_TOKEN,env=GITHUB_TOKEN \
+    ./gradlew build -x test
+
+### 4. Run stage
+FROM amazoncorretto:21-alpine@sha256:6a98c4402708fe8d16e946b4b5bac396379ec5104c1661e2a27b2b45cf9e2d16
+
+ARG QUARKUS_APP_FOLDER=/workspace/app/build/quarkus-app
+WORKDIR /workspace/run
+RUN addgroup --system user && adduser --ingroup user --system user
+USER user:user
+
+COPY --from=build --chown=user ${QUARKUS_APP_FOLDER}/ .
+
+ENTRYPOINT ["java"]
+CMD ["-jar", "quarkus-run.jar"]
