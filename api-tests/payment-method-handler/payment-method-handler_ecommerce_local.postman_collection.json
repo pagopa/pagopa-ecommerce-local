@@ -300,7 +300,7 @@
 							"",
 							"pm.test(\"ID in response matches requested ID\", function () {",
 							"    const responseJson = pm.response.json();",
-							"    pm.expect(responseJson.id).to.eql(pm.variables.get(\"paymentMethodId\"));",
+							"    pm.expect(responseJson.id).to.eql(pm.variables.get(\"paymentMethodIdForIo\"));",
 							"});"
 						],
 						"type": "text/javascript",
