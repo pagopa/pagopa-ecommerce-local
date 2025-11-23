@@ -1,0 +1,437 @@
+{
+	"info": {
+		"_postman_id": "ad12817b-d22d-4ec1-b9a2-3b44a1682315",
+		"name": "Pagopa eCommerce payment methods handler local",
+		"description": "This microservice handles payment methods.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12957952"
+	},
+	"item": [
+		{
+			"name": "Retrieve all Payment Methods (by filter) for checkout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is a valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const responseJson = pm.response.json();",
+							"",
+							"pm.test(\"Response contains 'paymentMethods' array\", function () {",
+							"    pm.expect(responseJson).to.have.property('paymentMethods');",
+							"    pm.expect(responseJson.paymentMethods).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"Payment methods array is not empty\", function () {",
+							"    pm.expect(responseJson.paymentMethods).to.not.be.empty;",
+							"});",
+							"",
+							"pm.test(\"Each payment method has correct structure and data types\", function () {",
+							"    if (responseJson.paymentMethods.length > 0) {",
+							"        responseJson.paymentMethods.forEach(function(method) {",
+							"            pm.expect(method).to.have.property('id').and.is.a('string');",
+							"            pm.expect(method).to.have.property('name').and.is.an('object');",
+							"            pm.expect(method).to.have.property('description').and.is.an('object');",
+							"            pm.expect(method).to.have.property('status').and.is.a('string');",
+							"            pm.expect(method).to.have.property('paymentTypeCode').and.is.a('string');",
+							"            pm.expect(method).to.have.property('paymentMethodTypes').and.is.an('array');",
+							"            pm.expect(method).to.have.property('paymentMethodAsset').and.is.a('string');",
+							"            pm.expect(method).to.have.property('methodManagement').and.is.a('string');",
+							"            ",
+							"            pm.expect(method.paymentMethodAsset).to.match(/^https?:\\/\\//);",
+							"            pm.collectionVariables.set(\"paymentMethodId\", method.id);",
+							"        });",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Disabled methods must have a valid 'disabledReason'\", function () {",
+							"    responseJson.paymentMethods.forEach(function(method) {",
+							"        if (method.status === \"DISABLED\") {",
+							"            pm.expect(method.disabledReason, `Method ${method.id} is DISABLED but disabledReason is null or missing`).to.not.be.null;",
+							"            pm.expect(method.disabledReason).to.be.a('string');",
+							"        }",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"If 'feeRange' exists, it must contain min and max numbers\", function() {",
+							"    responseJson.paymentMethods.forEach(function(method) {",
+							"        if (method.feeRange) {",
+							"            pm.expect(method.feeRange).to.be.an('object');",
+							"            pm.expect(method.feeRange).to.have.property('min').and.is.a('number');",
+							"            pm.expect(method.feeRange).to.have.property('max').and.is.a('number');",
+							"            ",
+							"            pm.expect(method.feeRange.min).to.be.at.most(method.feeRange.max, `For method ${method.id}, min fee cannot be greater than max fee`);",
+							"        }",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"The 'validityDateFrom' property should be in YYYY-MM-DD format\", function() {",
+							"    const dateRegex = /^\\d{4}-\\d{2}-\\d{2}$/;  ",
+							"    responseJson.paymentMethods.forEach(function(method) {",
+							"        if (method.validityDateFrom) { ",
+							"           pm.expect(method.validityDateFrom).to.match(dateRegex, `Method ${method.id} has an invalid date format`);",
+							"        }",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userTouchpoint\": \"CHECKOUT\",\n    \"userDevice\": \"WEB\",\n    \"totalAmount\": 15050,\n    \"paymentNotice\": [\n        {\n            \"paymentAmount\": 15050,\n            \"primaryCreditorInstitution\": \"PA_FISCAL_CODE_1\",\n            \"transferList\": [\n                {\n                    \"creditorInstitution\": \"PA_FISCAL_CODE_1\",\n                    \"transferCategory\": \"TAX\",\n                    \"digitalStamp\": false\n                }\n            ]\n        }\n    ],\n    \"allCCp\": false\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/payment-methods",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods"
+					]
+				},
+				"description": "GET with request body, no resource will be created: API for retrieve payment method using the request query parameter filters"
+			},
+			"response": []
+		},
+		{
+			"name": "Get payment method by ID for CHECKOUT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is a valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response has required properties\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson).to.have.property('id');",
+							"    pm.expect(responseJson).to.have.property('name');",
+							"    pm.expect(responseJson).to.have.property('status');",
+							"    pm.expect(responseJson).to.have.property('paymentTypeCode');",
+							"});",
+							"",
+							"pm.test(\"ID in response matches requested ID\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.id).to.eql(pm.variables.get(\"paymentMethodId\"));",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{paymentMethodId}}"
+					]
+				},
+				"description": "API for retrieve payment method information for a given payment method ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve all Payment Methods (by filter) for IO",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is a valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const responseJson = pm.response.json();",
+							"",
+							"pm.test(\"Response contains 'paymentMethods' array\", function () {",
+							"    pm.expect(responseJson).to.have.property('paymentMethods');",
+							"    pm.expect(responseJson.paymentMethods).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"Payment methods array is not empty\", function () {",
+							"    pm.expect(responseJson.paymentMethods).to.not.be.empty;",
+							"});",
+							"",
+							"pm.test(\"Each payment method has correct structure and data types\", function () {",
+							"    if (responseJson.paymentMethods.length > 0) {",
+							"        responseJson.paymentMethods.forEach(function(method) {",
+							"            pm.expect(method).to.have.property('id').and.is.a('string');",
+							"            pm.expect(method).to.have.property('name').and.is.an('object');",
+							"            pm.expect(method).to.have.property('description').and.is.an('object');",
+							"            pm.expect(method).to.have.property('status').and.is.a('string');",
+							"            pm.expect(method).to.have.property('paymentTypeCode').and.is.a('string');",
+							"            pm.expect(method).to.have.property('paymentMethodTypes').and.is.an('array');",
+							"            pm.expect(method).to.have.property('paymentMethodAsset').and.is.a('string');",
+							"            pm.expect(method).to.have.property('methodManagement').and.is.a('string');",
+							"            ",
+							"            pm.expect(method.paymentMethodAsset).to.match(/^https?:\\/\\//);",
+							"            // to review after autorization discussion ",
+							"            pm.collectionVariables.set(\"paymentMethodIdForIo\", \"77cb0c8d-5aec-4b68-835f-eef824e83c4e\");",
+							"        });",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Disabled methods must have a valid 'disabledReason'\", function () {",
+							"    responseJson.paymentMethods.forEach(function(method) {",
+							"        if (method.status === \"DISABLED\") {",
+							"            pm.expect(method.disabledReason, `Method ${method.id} is DISABLED but disabledReason is null or missing`).to.not.be.null;",
+							"            pm.expect(method.disabledReason).to.be.a('string');",
+							"        }",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"If 'feeRange' exists, it must contain min and max numbers\", function() {",
+							"    responseJson.paymentMethods.forEach(function(method) {",
+							"        if (method.feeRange) {",
+							"            pm.expect(method.feeRange).to.be.an('object');",
+							"            pm.expect(method.feeRange).to.have.property('min').and.is.a('number');",
+							"            pm.expect(method.feeRange).to.have.property('max').and.is.a('number');",
+							"            ",
+							"            pm.expect(method.feeRange.min).to.be.at.most(method.feeRange.max, `For method ${method.id}, min fee cannot be greater than max fee`);",
+							"        }",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"The 'validityDateFrom' property should be in YYYY-MM-DD format\", function() {",
+							"    const dateRegex = /^\\d{4}-\\d{2}-\\d{2}$/;  ",
+							"    responseJson.paymentMethods.forEach(function(method) {",
+							"        if (method.validityDateFrom) { ",
+							"           pm.expect(method.validityDateFrom).to.match(dateRegex, `Method ${method.id} has an invalid date format`);",
+							"        }",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userTouchpoint\": \"IO\",\n    \"userDevice\": \"WEB\",\n    \"totalAmount\": 15050,\n    \"paymentNotice\": [\n        {\n            \"paymentAmount\": 15050,\n            \"primaryCreditorInstitution\": \"PA_FISCAL_CODE_1\",\n            \"transferList\": [\n                {\n                    \"creditorInstitution\": \"PA_FISCAL_CODE_1\",\n                    \"transferCategory\": \"TAX\",\n                    \"digitalStamp\": false\n                }\n            ]\n        }\n    ],\n    \"allCCp\": false\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/payment-methods",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods"
+					]
+				},
+				"description": "GET with request body, no resource will be created: API for retrieve payment method using the request query parameter filters"
+			},
+			"response": []
+		},
+		{
+			"name": "Get payment method by ID for IO",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is a valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response has required properties\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson).to.have.property('id');",
+							"    pm.expect(responseJson).to.have.property('name');",
+							"    pm.expect(responseJson).to.have.property('status');",
+							"    pm.expect(responseJson).to.have.property('paymentTypeCode');",
+							"});",
+							"",
+							"pm.test(\"ID in response matches requested ID\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.id).to.eql(pm.variables.get(\"paymentMethodId\"));",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "IO",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/payment-methods/{{paymentMethodIdForIo}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{paymentMethodIdForIo}}"
+					]
+				},
+				"description": "API for retrieve payment method information for a given payment method ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Get payment method by ID - Not Found (404)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404 Not Found\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "IO",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/payment-methods/non-existent-id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods",
+						"non-existent-id"
+					]
+				},
+				"description": "Tests the 404 Not Found response for a non-existent payment method ID."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "PRIMARY-KEY",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "{{PROTOCOL}}{{HOST}}{{BASE_PATH}}"
+		},
+		{
+			"key": "ocp-apim-subscription-key",
+			"value": "{{API_KEY}}"
+		},
+		{
+			"key": "paymentMethodId",
+			"value": "ID_METODO"
+		},
+		{
+			"key": "ocp-apim-subscription-key",
+			"value": "{{API_KEY}}"
+		},
+		{
+			"key": "paymentMethodIdForIo",
+			"value": ""
+		}
+	]
+}

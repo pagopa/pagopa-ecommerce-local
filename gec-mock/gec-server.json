@@ -144,7 +144,7 @@
       }
     ]
   },
-  "methodById": {
+  "methodByIdForCheckout": {
     "id": "378d0b4f-8b69-46b0-8215-07785fe1aad4",
     "paymentMethodId": "378d0b4f-8b69-46b0-8215-07785fe1aad4",
     "group": "CP",
@@ -158,6 +158,49 @@
     },
     "userTouchpoint": [
       "CHECKOUT"
+    ],
+    "userDevice": [
+      "IOS",
+      "ANDROID",
+      "WEB",
+      "SAFARI"
+    ],
+    "status": "ENABLED",
+    "paymentMethodTypes": [
+      "CARTE"
+    ],
+    "validityDateFrom": "2000-01-01",
+    "target": null,
+    "rangeAmount": {
+      "min": 0,
+      "max": 999999999
+    },
+    "metadata": {},
+    "paymentMethodAsset": "https://assets.cdn.platform.pagopa.it/creditcard/generic.png",
+    "methodManagement": "ONBOARDABLE",
+    "paymentMethodsBrandAssets": {
+      "AMEX": "https://assets.cdn.platform.pagopa.it/creditcard/amex.png",
+      "MAESTRO": "https://assets.cdn.platform.pagopa.it/creditcard/maestro.png",
+      "MC": "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
+      "MASTERCARD": "https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png",
+      "VISA": "https://assets.cdn.platform.pagopa.it/creditcard/visa.png",
+      "DINERS": "https://assets.cdn.platform.pagopa.it/creditcard/diners.png"
+    }
+  },
+   "methodByIdForIO": {
+    "id": "77cb0c8d-5aec-4b68-835f-eef824e83c4e",
+    "paymentMethodId": "77cb0c8d-5aec-4b68-835f-eef824e83c4e",
+    "group": "CP",
+    "name": {
+      "IT": "Carte",
+      "EN": "Cards"
+    },
+    "description": {
+      "IT": "Carta di credito o debito",
+      "EN": "Credit or debit card"
+    },
+    "userTouchpoint": [
+      "IO"
     ],
     "userDevice": [
       "IOS",

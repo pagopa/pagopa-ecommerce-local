@@ -1,6 +1,5 @@
 {
     "/afm/calculator-service/v1/*": "/fees",
     "/afm/calculator-service/v2/*": "/fees_v2",
-    "/payment-methods/search": "/payment_methods",
-    "/payment-methods/:id": "/methodById"
+    "/payment-methods/search": "/payment_methods"
   }
