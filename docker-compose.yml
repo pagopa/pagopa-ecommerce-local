@@ -329,6 +329,21 @@ services:
     networks:
       - pagopa-ecommerce-net
 
+  signoz:
+    container_name: pagopa-ecommerce-signoz
+    image: signoz/signoz:latest
+    restart: unless-stopped
+    ports:
+      - "${SIGNOZ_PORT}:3301"
+      - "4318:4318"
+    environment:
+      - FRONTEND_PORT=3301
+      - AUTH_ENABLED=false
+    volumes:
+      - signoz_data:/var/lib/signoz
+    networks:
+      - pagopa-ecommerce-net
+
   storage:
     image: mcr.microsoft.com/azure-storage/azurite:3.34.0
     container_name: azurite
@@ -388,3 +403,6 @@ networks:
 secrets:
   GITHUB_TOKEN:
     environment: GITHUB_TOKEN
+
+volumes:
+  signoz_data:
