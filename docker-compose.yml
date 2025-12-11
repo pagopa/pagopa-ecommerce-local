@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
 
   mongo:
@@ -329,20 +327,122 @@ services:
     networks:
       - pagopa-ecommerce-net
 
-  signoz:
-    container_name: pagopa-ecommerce-signoz
-    image: signoz/signoz:latest
-    restart: unless-stopped
-    ports:
-      - "${SIGNOZ_PORT}:3301"
-      - "4318:4318"
-    environment:
-      - FRONTEND_PORT=3301
-      - AUTH_ENABLED=false
-    volumes:
-      - signoz_data:/var/lib/signoz
+  # SigNoz - Complete observability stack (SigNoz + ClickHouse + Zookeeper)
+  # Init container to prepare ClickHouse
+  signoz-init-clickhouse:
+    container_name: pagopa-signoz-init-clickhouse
+    image: clickhouse/clickhouse-server:25.5.6
+    tty: true
     networks:
       - pagopa-ecommerce-net
+    volumes:
+      - ./signoz-data/clickhouse/user_scripts:/var/lib/clickhouse/user_scripts/
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        ARCH=$$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
+        wget -nv -O /var/lib/clickhouse/user_scripts/histogram-quantile "https://github.com/SigNoz/signoz/releases/download/v0.104.0/histogram-quantile-linux-$${ARCH}"
+        chmod +x /var/lib/clickhouse/user_scripts/histogram-quantile
+
+  # Zookeeper for ClickHouse coordination
+  signoz-zookeeper:
+    container_name: pagopa-signoz-zookeeper
+    image: signoz/zookeeper:3.7.1
+    networks:
+      - pagopa-ecommerce-net
+    volumes:
+      - signoz-zookeeper-data:/bitnami/zookeeper
+    environment:
+      - ZOO_SERVER_ID=1
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOO_AUTOPURGE_INTERVAL=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/commands/ruok"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ClickHouse - Data storage backend
+  signoz-clickhouse:
+    container_name: pagopa-signoz-clickhouse
+    image: clickhouse/clickhouse-server:25.5.6
+    tty: true
+    depends_on:
+      signoz-init-clickhouse:
+        condition: service_completed_successfully
+      signoz-zookeeper:
+        condition: service_healthy
+    networks:
+      - pagopa-ecommerce-net
+    ports:
+      - "9000:9000"
+      - "8123:8123"
+    volumes:
+      - signoz-clickhouse-data:/var/lib/clickhouse/
+      - ./signoz-data/clickhouse/user_scripts:/var/lib/clickhouse/user_scripts/
+      - ./signoz-data/clickhouse-config/config.xml:/etc/clickhouse-server/config.d/cluster.xml:ro
+    environment:
+      - CLICKHOUSE_SKIP_USER_SETUP=1
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "localhost:8123/ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # schema migrator - creates ClickHouse databases
+  signoz-schema-migrator:
+    container_name: pagopa-signoz-schema-migrator
+    image: signoz/signoz-schema-migrator:v0.129.12
+    command: ["sync", "--dsn=tcp://signoz-clickhouse:9000", "--dev"]
+    depends_on:
+      signoz-clickhouse:
+        condition: service_healthy
+    networks:
+      - pagopa-ecommerce-net
+
+  # SigNoz UI and query service
+  signoz:
+    container_name: pagopa-ecommerce-signoz
+    image: signoz/signoz:v0.104.0
+    depends_on:
+      signoz-schema-migrator:
+        condition: service_completed_successfully
+    networks:
+      - pagopa-ecommerce-net
+    ports:
+      - "${SIGNOZ_PORT}:8080"
+    environment:
+      - ClickHouseUrl=tcp://signoz-clickhouse:9000
+      - STORAGE=clickhouse
+      - GODEBUG=netdns=go
+      - TELEMETRY_ENABLED=false
+      - SIGNOZ_LOCAL_DB_PATH=/var/lib/signoz/signoz.db
+    volumes:
+      - signoz-data:/var/lib/signoz
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "localhost:8080/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # OpenTelemetry Collector - receives telemetry data
+  signoz-otel-collector:
+    container_name: pagopa-signoz-otel-collector
+    image: signoz/signoz-otel-collector:v0.129.12
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    depends_on:
+      signoz:
+        condition: service_healthy
+    networks:
+      - pagopa-ecommerce-net
+    ports:
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP HTTP receiver
+    volumes:
+      - ./signoz-data/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=host.name=signoz-host,os.type=linux
+      - CLICKHOUSE_DSN=tcp://signoz-clickhouse:9000
 
   storage:
     image: mcr.microsoft.com/azure-storage/azurite:3.34.0
@@ -405,4 +505,6 @@ secrets:
     environment: GITHUB_TOKEN
 
 volumes:
-  signoz_data:
+  signoz-data:
+  signoz-zookeeper-data:
+  signoz-clickhouse-data:
