@@ -1,3 +1,5 @@
+# defines how telemetry data is received, processed and exposed
+# contains receivers (OTLP), processors (batch, span metrics) and exporters (ClickHouse)
 connectors:
   signozmeter:
     metrics_flush_interval: 1h

@@ -338,7 +338,7 @@ services:
     volumes:
       - ./signoz-data/clickhouse/user_scripts:/var/lib/clickhouse/user_scripts/
     entrypoint: ["/bin/bash", "-c"]
-    command:
+    command: # auto-downloaded, this is used to calculate metrics like percentiles, latency etc.
       - |
         ARCH=$$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
         wget -nv -O /var/lib/clickhouse/user_scripts/histogram-quantile "https://github.com/SigNoz/signoz/releases/download/v0.104.0/histogram-quantile-linux-$${ARCH}"
