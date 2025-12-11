@@ -375,7 +375,7 @@ services:
     networks:
       - pagopa-ecommerce-net
     ports:
-      - "9000:9000"
+      - "9001:9000"
       - "8123:8123"
     volumes:
       - signoz-clickhouse-data:/var/lib/clickhouse/
