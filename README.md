@@ -124,6 +124,10 @@ Navigate to **http://localhost:3301** to access the SigNoz UI where you can:
 - Query and analyze application logs
 - Visualize service dependencies and performance
 
+**First-time Setup**: On initial startup, SigNoz will prompt you to create an account. This is a **local account** stored in the Docker volume, not an online account. You can use any credentials (e.g., `test@example.com` with any password).
+
+To keep your account between container restarts, use `docker-compose down` (without the `-v` flag) to preserve volumes. Using `docker-compose down -v` will delete volumes and require recreating the account.
+
 #### OpenTelemetry Configuration
 
 All services are instrumented with OpenTelemetry Java agent and send telemetry data to the OTEL collector at:
