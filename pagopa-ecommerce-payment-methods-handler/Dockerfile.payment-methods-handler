@@ -27,6 +27,7 @@ RUN addgroup --system user && adduser --ingroup user --system user
 USER user:user
 
 COPY --from=build --chown=user ${QUARKUS_APP_FOLDER}/ .
+ADD --chown=user https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.1.0/opentelemetry-javaagent.jar .
 
 ENTRYPOINT ["java"]
-CMD ["-jar", "quarkus-run.jar"]
+CMD ["-javaagent:opentelemetry-javaagent.jar", "-jar", "quarkus-run.jar"]
