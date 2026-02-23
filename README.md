@@ -4,6 +4,7 @@ All you need to start the whole pagopa eCommerce platform locally for developmen
 
 ![image arch](arch-ecommerce.png)
 
+
 for more details you can read [eCommerce pagoPA Design Review](https://pagopa.atlassian.net/wiki/spaces/I/pages/492339720/eCommerce+pagoPA+Design+Review+draft "eCommerce pagoPA Design Review") 
 
 ### Configure
@@ -64,9 +65,27 @@ In addiction, the parameters of the individual microservices can also be customi
 
 ### Run eCommerce pagoPA
 
-```sh
-docker-compose up
+#### GitHub Token Setup
+
+eCommerce microservices use the `pagopa-ecommerce-commons` library, downloaded at build time from GitHub Packages.
+
+Since GitHub packages does not support anonymous artifact download you need to set up authentication:
+
+1. Create a GitHub personal access token with `packages:read` permission
+2. Set the token as an environment variable with key `GITHUB_TOKEN`:
+
+```shell
+export GITHUB_TOKEN=your_github_token_with_packages_read_permission
 ```
+
+after that you can build and startup all services with command
+
+```sh
+docker compose up
+```
+
+Watch out: there are many services that will be build and run parallel, consider giving proper resources to any virtual machine used to build in order to
+reduce build time or reduce build parallelism in order to build services sequentially and reduce concurrency
 
 If you use the default configurations, we will have the following services exposed:
 
