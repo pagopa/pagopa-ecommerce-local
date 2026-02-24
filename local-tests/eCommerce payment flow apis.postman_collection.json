@@ -1,0 +1,881 @@
+{
+  "info": {
+    "_postman_id": "df84fd5b-66de-4e4b-bc6c-dbf0849af5cd",
+    "name": "eCommerce for Checkout locale",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23963988"
+  },
+  "item": [
+    {
+      "name": "Post carts",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 302 with one payment notice\", () => {",
+              "  pm.expect(pm.response.code).to.eql(302);",
+              "  pm.expect(pm.response.to.have.header(\"Location\"))",
+              "  pm.environment.set(\"CART_ID\", pm.response.headers.get(\"Location\").split(\"/\")[7]);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const noticeCodePrefix = \"3020\";",
+              "let min = Number(noticeCodePrefix.concat(\"01000000000000\"));",
+              "let max = Number(noticeCodePrefix.concat(\"01999999999999\"));",
+              "",
+              "pm.environment.set(\"NOTICE_CODE_1\", \"\"+_.random(min, max));",
+              "pm.environment.set(\"NOTICE_CODE_2\", \"\"+_.random(min, max));",
+              "pm.environment.set(\"NOTICE_CODE_3\", \"\"+_.random(min, max));",
+              "pm.environment.set(\"NOTICE_CODE_4\", \"\"+_.random(min, max));",
+              "pm.environment.set(\"NOTICE_CODE_5\", \"\"+_.random(min, max));",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-client-id",
+            "value": "CHECKOUT",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"emailNotice\": \"pietro.tota@pagopa.it\",\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"{{NOTICE_CODE_1}}\",\n            \"fiscalCode\": \"77777777777\",\n            \"amount\": 1000,\n            \"companyName\": \"companyName\",\n            \"description\": \"description\"\n        },\n       {\n            \"noticeNumber\": \"{{NOTICE_CODE_2}}\",\n            \"fiscalCode\": \"77777777777\",\n            \"amount\": 2000,\n            \"companyName\": \"companyName\",\n            \"description\": \"description\"\n        },\n       {\n            \"noticeNumber\": \"{{NOTICE_CODE_3}}\",\n            \"fiscalCode\": \"77777777777\",\n            \"amount\": 3000,\n            \"companyName\": \"companyName\",\n            \"description\": \"description\"\n        },\n       {\n            \"noticeNumber\": \"{{NOTICE_CODE_4}}\",\n            \"fiscalCode\": \"77777777777\",\n            \"amount\": 4000,\n            \"companyName\": \"companyName\",\n            \"description\": \"description\"\n        },\n       {\n            \"noticeNumber\": \"{{NOTICE_CODE_5}}\",\n            \"fiscalCode\": \"77777777777\",\n            \"amount\": 5000,\n            \"companyName\": \"companyName\",\n            \"description\": \"description\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://www.comune.di.prova.it/pagopa/success.html\",\n        \"returnCancelUrl\": \"https://www.comune.di.prova.it/pagopa/cancel.html\",\n        \"returnErrorUrl\": \"https://www.comune.di.prova.it/pagopa/error.html\"\n    },\n    \"idCart\": \"id_cart\",\n    \"allCCP\": \"false\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8089/carts/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8089",
+          "path": [
+            "carts",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new payment method",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-payment-instruments-service] Status code is 200 with valid response json\", () => {",
+              "",
+              "  pm.expect(pm.response.code).to.eql(200);  ",
+              "  const responseJson = pm.response.json();",
+              "  pm.expect(responseJson.id).to.be.a('string');",
+              "  pm.expect(responseJson.id).to.have.length.greaterThan(0);",
+              "  pm.environment.set(\"PAYMENT_INSTRUMENT_ID\", responseJson.id);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "",
+            "value": "1000",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"CARDS\",\n    \"description\": \"description2\",\n    \"asset\": \"asset\",\n    \"status\": \"ENABLED\",\n    \"paymentTypeCode\": \"CP\",\n    \"ranges\": [\n        {\n            \"min\": 0,\n            \"max\": 9999999999\n        }\n    ],\n    \"clientId\": \"CHECKOUT\",\n    \"methodManagement\": \"ONBOARDABLE\",\n    \"brandAsset\": {\n        \"VISA\": \"https://assets.cdn.platform.pagopa.it/creditcard/visa.png\",\n        \"MC\": \"https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png\",\n        \"DINERS\": \"https://assets.cdn.platform.pagopa.it/creditcard/diners.png\",\n        \"AMEX\": \"https://assets.cdn.platform.pagopa.it/creditcard/amex.png\",\n        \"MAESTRO\": \"https://assets.cdn.platform.pagopa.it/creditcard/maestro.png\",\n        \"MASTERCARD\": \"https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png\"\n    }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8083/payment-methods",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "payment-methods"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get payment methods",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"\", () => {",
+              "",
+              "  const responseJson = pm.response.json();",
+              "  const paymentMethods = responseJson.paymentMethods!=null?responseJson.paymentMethods:responseJson;",
+              "  pm.environment.set(\"PAYMENT_METHOD_ID\", paymentMethods[0].id);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "packages": {},
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-client-id",
+            "value": "CHECKOUT",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8083/payment-methods",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "payment-methods"
+          ],
+          "query": [
+            {
+              "key": "amount",
+              "value": "1000",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Payment Request Info",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let noticeCodePrefix = \"3020\";",
+              "let min = Number(noticeCodePrefix.concat(\"01000000000000\"));",
+              "let max = Number(noticeCodePrefix.concat(\"01999999999999\"));",
+              "",
+              "pm.environment.set(\"RPTID_NM3\", \"77777777777\"+_.random(min, max));",
+              "pm.environment.set(\"RPTID_NM3_1\", \"77777777777\"+_.random(min, max));",
+              "pm.environment.set(\"RPTID_NM3_2\", \"77777777777\"+_.random(min, max));",
+              "pm.environment.set(\"RPTID_NM3_3\", \"77777777777\"+_.random(min, max));",
+              "pm.environment.set(\"RPTID_NM3_4\", \"77777777777\"+_.random(min, max));",
+              "pm.environment.set(\"RPTID_NM3_5\", \"77777777777\"+_.random(min, max));",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"\", () => {",
+              "",
+              "  const responseJson = pm.response.json();",
+              "  pm.environment.set(\"PAYMENT_TOKEN\", responseJson.paymentToken);",
+              "  pm.environment.set(\"RPT_ID\", responseJson.rptId);",
+              "  pm.environment.set(\"PAYMENT_CONTEXT_CODE\", responseJson.paymentContextCode);",
+              "  pm.environment.set(\"AMOUNT\", responseJson.amount);",
+              "  ",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8089/payment-requests/{{RPTID_NM3}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8089",
+          "path": [
+            "payment-requests",
+            "{{RPTID_NM3}}"
+          ]
+        },
+        "description": "1. recupero info relativi alla request payment con verificaRPT se non presente in cache dato rptId\n2. cache info su redis dato rptId"
+      },
+      "response": []
+    },
+    {
+      "name": "Create session",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"\", () => {",
+              "  const responseJson = pm.response.json();",
+              "  pm.environment.set(\"ORDER_ID\", responseJson.orderId);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8083/payment-methods/{{PAYMENT_METHOD_ID}}/sessions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "payment-methods",
+            "{{PAYMENT_METHOD_ID}}",
+            "sessions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Nuova transaction",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"\", () => {",
+              "    const responseJson = pm.response.json();",
+              "    pm.environment.set(\"TRANSACTION_ID\", responseJson.transactionId);",
+              "    pm.environment.set(\"AUTH_TOKEN\", responseJson.authToken);",
+              "    pm.environment.set(\"AMOUNT\", responseJson.payments.reduce((partialSum, a) => partialSum + Number(a.amount), 0));",
+              "    const transactionId = responseJson.transactionId;",
+              "     const encodedTransactionId = Buffer.from(transactionId, 'hex').toString('base64').replace(/\\+/g, \"-\").replace(/\\//g, \"_\");",
+              "    console.log(`Transaction id: [${transactionId}] encoded to [${encodedTransactionId}]`);",
+              "    pm.environment.set(\"REQUEST_AUTH_ID\", encodedTransactionId);",
+              "    const paymentTokens = responseJson.payments.map(p=>p.paymentToken).join(\",\");",
+              "    pm.environment.set(\"PAYMENT_TOKENS\", paymentTokens);",
+              "});",
+              "",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-Client-Id",
+            "value": "CHECKOUT"
+          },
+          {
+            "key": "x-rpt-id",
+            "value": "test"
+          },
+          {
+            "key": "traceparent",
+            "value": "00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01"
+          },
+          {
+            "key": "x-correlation-id",
+            "value": "{{$guid}}"
+          },
+          {
+            "key": "x-user-id",
+            "value": "00000000-0000-0000-0000-000000000000",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"paymentNotices\": [\n        {\n            \"rptId\": \"{{RPTID_NM3_1}}\",\n            \"amount\": 111\n        },\n        {\n            \"rptId\": \"{{RPTID_NM3_2}}\",\n            \"amount\": 222\n        },\n        {\n            \"rptId\": \"{{RPTID_NM3_3}}\",\n            \"amount\": 333\n        },\n        {\n            \"rptId\": \"{{RPTID_NM3_4}}\",\n            \"amount\": 444\n        },\n        {\n            \"rptId\": \"{{RPTID_NM3_5}}\",\n            \"amount\": 555\n        }\n\n    ],\n    \"emailToken\": \"{{$guid}}\",\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v2.1/transactions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v2.1",
+            "transactions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Calculate Fee",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-pgs-id",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"bin\": \"511111\",\n  \"paymentAmount\": 222,\n  \"primaryCreditorInstitution\": \"77777777777\",\n  \"transferList\": [\n    {\n      \"creditorInstitution\": \"77777777777\",\n      \"digitalStamp\": false,\n      \"transferCategory\": null\n    }\n  ],\n  \"touchpoint\" : \"CHECKOUT\",\n  \"idPspList\": [\"s\"],\n  \"isAllCCP\": \"true\"\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8083/payment-methods/{{PAYMENT_METHOD_ID}}/fees",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "payment-methods",
+            "{{PAYMENT_METHOD_ID}}",
+            "fees"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request authorization - NPG - cards",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"\", () => {",
+              "",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-pgs-id",
+            "value": "NPG"
+          },
+          {
+            "key": "x-user-id",
+            "value": "00000000-0000-0000-0000-000000000000",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": 0,\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"CIPBITMM\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"cards\",\n        \"orderId\": \"{{ORDER_ID}}\"\n    },\n    \"isAllCCP\": false\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}/auth-requests",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "transactions",
+            "{{TRANSACTION_ID}}",
+            "auth-requests"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request authorization - NPG wallet",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"\", () => {",
+              "",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-pgs-id",
+            "value": "NPG"
+          },
+          {
+            "key": "x-user-id",
+            "value": "00000000-0000-0000-0000-000000000000",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": 0,\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"CIPBITMM\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"wallet\",\n        \"walletId\": \"00000000-0000-0000-0000-000000000000\"\n    },\n    \"isAllCCP\": false\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}/auth-requests",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "transactions",
+            "{{TRANSACTION_ID}}",
+            "auth-requests"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request authorization - REDIRECT",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"\", () => {",
+              "  const responseJson = pm.response.json();",
+              "  const authorizationRequestId = responseJson.authorizationRequestId;",
+              "  pm.environment.set(\"AUTHORIZATION_REQUEST_ID\", authorizationRequestId);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-pgs-id",
+            "value": "REDIRECT"
+          },
+          {
+            "key": "x-user-id",
+            "value": "00000000-0000-0000-0000-000000000000",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"amount\": 50000,\n    \"fee\": 0,\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"REDIRECT\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"redirect\"\n    },\n    \"isAllCCP\": false\n}\n/*{\n    \"amount\": {{AMOUNT}},\n    \"fee\": 0,\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"CIPBITMM\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"cards\",\n        \"orderId\": \"{{ORDER_ID}}\"\n    },\n    \"isAllCCP\": false\n}*/\n/*\n{\n    \"amount\": 10000,\n    \"fee\": 0,\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"CIPBITMM\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"card\",\n        \"accountEmail\": \"vi@vi.it\",\n        \"cvv\": \"123\",\n        \"pan\": \"5111114000023477\",\n        \"expiryDate\": \"203012\",\n        \"holderName\": \"dsa dsa\",\n        \"threeDsData\": \"3dsdata\",\n        \"brand\":\"VISA\"\n    },\n    \"isAllCCP\": false\n}*/\n/*\n{\n    \"amount\": {{AMOUNT}},\n    \"fee\": 0,\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"CIPBITMM\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"wallet\",\n        \"walletId\": \"00000000-0000-0000-0000-000000000000\"\n    },\n    \"isAllCCP\": false\n}*/",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}/auth-requests",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "transactions",
+            "{{TRANSACTION_ID}}",
+            "auth-requests"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Authorization completed - NPG",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "x-pgs-id",
+            "value": "NPG",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"timestampOperation\": \"2023-10-10T18:16:01.6880000+00:00\",\n    \"outcomeGateway\": {\n        \"paymentGatewayType\": \"NPG\",\n        \"operationResult\": \"EXECUTED\",\n        \"orderId\": \"bb9c5e82e7c34a9\",\n        \"operationId\": \"611157519759532839\",\n        \"authorizationCode\": \"000\",\n        \"paymentEndToEndId\": \"611157519759532839\",\n        \"rrn\": \"914280154542\",\n        \"validationServiceId\": \"validationServiceId\",\n        \"errorCode\": \"errorCode\"\n    }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v2/transactions/{{TRANSACTION_ID}}/auth-requests",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v2",
+            "transactions",
+            "{{TRANSACTION_ID}}",
+            "auth-requests"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Authorization completed - REDIRECT",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "x-pgs-id",
+            "value": "NPG",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"timestampOperation\": \"2023-10-10T18:16:01.6880000+00:00\",\n    \"outcomeGateway\": {\n        \"paymentGatewayType\": \"REDIRECT\",\n        \"pspTransactionId\": \"{{AUTHORIZATION_REQUEST_ID}}\",\n        \"pspId\": \"REDIRECT\",\n        \"outcome\": \"OK\",\n        \"authorizationCode\": \"000\",\n        \"errorCode\": \"errorCode\"\n    }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v2/transactions/{{TRANSACTION_ID}}/auth-requests",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v2",
+            "transactions",
+            "{{TRANSACTION_ID}}",
+            "auth-requests"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add user receipt",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const paymentTokens = pm.environment.get(\"PAYMENT_TOKENS\").split(\",\");",
+              "const payments = paymentTokens.map(",
+              "    (paymentToken, idx) =>({",
+              "            paymentToken: paymentToken,",
+              "            description: `description_${idx}`,",
+              "            creditorReferenceId: `creditorReferenceId_${idx}`,",
+              "            fiscalCode: `fiscalCode_${idx}`,",
+              "            companyName: `companyName_${idx}`,",
+              "            officeName: `officeName_${idx}`,",
+              "            debtor: `debtor_${idx}`",
+              "        })",
+              ")",
+              "const sendPaymentResultRequest = {",
+              "    \"outcome\": \"OK\",",
+              "    \"paymentDate\": \"1991-05-22T06:00:00.000Z\",",
+              "    \"payments\": payments",
+              "}",
+              "pm.environment.set(\"SEND_PAYMERNT_RESULT_REQUEST\",JSON.stringify(sendPaymentResultRequest))",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-pgs-id",
+            "value": "XPAY"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{SEND_PAYMERNT_RESULT_REQUEST}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}/user-receipts",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "transactions",
+            "{{TRANSACTION_ID}}",
+            "user-receipts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get transaction",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"\", () => {",
+              "",
+              "  const responseJson = pm.response.json();",
+              "  pm.environment.set(\"PAYMENT_TOKEN\", responseJson.paymentToken);",
+              "",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-user-id",
+            "value": "00000000-0000-0000-0000-000000000000",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "transactions",
+            "{{TRANSACTION_ID}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete transaction",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"\", () => {",
+              "",
+              "  const responseJson = pm.response.json();",
+              "  pm.environment.set(\"PAYMENT_TOKEN\", responseJson.paymentToken);",
+              "",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "x-user-id",
+            "value": "00000000-0000-0000-0000-000000000000",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/transactions/{{TRANSACTION_ID}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "transactions",
+            "{{TRANSACTION_ID}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "value",
+        "value": "PRIMARY-KEY",
+        "type": "string"
+      },
+      {
+        "key": "key",
+        "value": "X-API-KEY",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
