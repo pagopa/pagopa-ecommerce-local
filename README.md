@@ -85,7 +85,12 @@ docker compose up
 ```
 
 Watch out: there are many services that will be build and run parallel, consider giving proper resources to any virtual machine used to build in order to
-reduce build time or reduce build parallelism in order to build services sequentially and reduce concurrency
+reduce build time or reduce build parallelism in order to build services sequentially and reduce concurrency.
+
+#### Perform some test locally
+
+Under the `api-tests` folder you can find collections used in CR pipelines and cam be used to test each service (and to add new api tests too)
+Under the `local-tests` folder, instead, you can find a postman collection that can be used to perform some payment flow tests, all in one collection (useful for local tests)
 
 If you use the default configurations, we will have the following services exposed:
 
@@ -259,3 +264,4 @@ Alternatively, to disable the entire SigNoz stack, comment out these services in
 - `signoz-zookeeper`
 - `signoz-init-clickhouse`
 - `signoz-schema-migrator`
+
