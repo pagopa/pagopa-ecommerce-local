@@ -2,7 +2,7 @@ services:
 
   mongo:
     container_name: pagopa-ecommerce-mongo
-    image: mongo
+    image: mongo@sha256:474f5c3bf0e355bb97dafda730e725169a4d51c5578abf7be9ec7ad3fdee4481
     env_file: mongodb/mongodb.env
     ports:
       - "${MONGO_PORT}:27017"
@@ -25,7 +25,7 @@ services:
 
   mongo-init:
     container_name: mongo-init
-    image: alpine/mongosh
+    image: alpine/mongosh@sha256:2d7a9cb13f433ae72c13019db935e74831359a022f0a89282e5294cf578db3bc
     # connects to the mongo service and runs the script.
     # it run once and then exit
     command: mongosh --host pagopa-ecommerce-mongo --port 27017 --username admin --password password --file /scripts/mongo-init.js
@@ -39,7 +39,7 @@ services:
 
   mongo-express:
     container_name: pagopa-ecommerce-mongo-express
-    image: mongo-express
+    image: mongo-express@sha256:1b23d7976f0210dbec74045c209e52fbb26d29b2e873d6c6fa3d3f0ae32c2a64
     env_file: mongodb/mongo-express.env
     ports:
       - "${MONGO_EXPRESS_PORT}:8081"
@@ -51,7 +51,7 @@ services:
 
   redis:
     container_name: pagopa-ecommerce-redis
-    image: redis
+    image: redis@sha256:5cb00b0f236e286254ce9f3eea989b00bb69d04fb9b6c9a9d0b07e588e49f44e
     env_file: redis/redis.env
     command: ["sh", "-c", 'exec redis-server --requirepass "$$REDIS_PASSWORD"']
     ports:
@@ -61,7 +61,7 @@ services:
 
   redis-insight:
     container_name: pagopa-ecommerce-redis-insight
-    image: redislabs/redisinsight
+    image: redislabs/redisinsight@sha256:55542a762210bb1cd681410282642bac0970f780f39bc134565394a81b1f1fd9
     ports:
       - "${REDIS_INSIGHT_PORT}:5540"
     networks:
@@ -316,7 +316,7 @@ services:
 
   traefik:
     container_name: pagopa-ecommerce-traefik
-    image: traefik:v2.7
+    image: traefik:v2.7@sha256:41bfa070b43184314a1fd86d5b68d367d3f744e972ca3fe44a8875f69935c2d7
     ports:
       - "8000:80"
       - "8090:8080"
@@ -331,7 +331,7 @@ services:
   # Init container to prepare ClickHouse
   signoz-init-clickhouse:
     container_name: pagopa-signoz-init-clickhouse
-    image: clickhouse/clickhouse-server:25.5.6
+    image: clickhouse/clickhouse-server:25.5.6@sha256:4536143e22dc9bddb217c7e610f6b7ed5e6efd8fefdbc61acdeadb5d8022213a
     tty: true
     networks:
       - pagopa-ecommerce-net
@@ -347,7 +347,7 @@ services:
   # Zookeeper for ClickHouse coordination
   signoz-zookeeper:
     container_name: pagopa-signoz-zookeeper
-    image: signoz/zookeeper:3.7.1
+    image: signoz/zookeeper:3.7.1@sha256:fcc4a3288154ccaa3bdb5ae6dc10180c084d29a8a6a26b62ac8e30a8940dc2e6
     networks:
       - pagopa-ecommerce-net
     volumes:
@@ -365,7 +365,7 @@ services:
   # ClickHouse - Data storage backend
   signoz-clickhouse:
     container_name: pagopa-signoz-clickhouse
-    image: clickhouse/clickhouse-server:25.5.6
+    image: clickhouse/clickhouse-server:25.5.6@sha256:4536143e22dc9bddb217c7e610f6b7ed5e6efd8fefdbc61acdeadb5d8022213a
     tty: true
     depends_on:
       signoz-init-clickhouse:
@@ -392,7 +392,7 @@ services:
   # schema migrator - creates ClickHouse databases
   signoz-schema-migrator:
     container_name: pagopa-signoz-schema-migrator
-    image: signoz/signoz-schema-migrator:v0.129.12
+    image: signoz/signoz-schema-migrator:v0.129.12@sha256:43044b0666c60ad9c0e8c1240d478f846d0c2b7fccfea142fa043f327c8be279
     command: ["sync", "--dsn=tcp://signoz-clickhouse:9000", "--dev"]
     depends_on:
       signoz-clickhouse:
@@ -403,7 +403,7 @@ services:
   # SigNoz UI and query service
   signoz:
     container_name: pagopa-ecommerce-signoz
-    image: signoz/signoz:v0.104.0
+    image: signoz/signoz:v0.104.0@sha256:11bc581c5cb8cb003d5d822b611c427c57ce53eba8b44c00ceedc963bc4c0b26
     depends_on:
       signoz-schema-migrator:
         condition: service_completed_successfully
@@ -428,7 +428,7 @@ services:
   # OpenTelemetry Collector - receives telemetry data
   signoz-otel-collector:
     container_name: pagopa-signoz-otel-collector
-    image: signoz/signoz-otel-collector:v0.129.12
+    image: signoz/signoz-otel-collector:v0.129.12@sha256:84df7d9786ce12ee5983fc8460225371a204bca6320c85717801bf110b84ed65
     command: ["--config=/etc/otel-collector-config.yaml"]
     depends_on:
       signoz:
@@ -445,7 +445,7 @@ services:
       - CLICKHOUSE_DSN=tcp://signoz-clickhouse:9000
 
   storage:
-    image: mcr.microsoft.com/azure-storage/azurite:3.34.0
+    image: mcr.microsoft.com/azure-storage/azurite:3.34.0@sha256:0a47e12e3693483cef5c71f35468b91d751611f172d2f97414e9c69113b106d9
     container_name: azurite
     command: ["azurite", "--blobHost", "0.0.0.0", "--queueHost", "0.0.0.0", "--tableHost", "0.0.0.0", "--skipApiVersionCheck"]
     ports:
