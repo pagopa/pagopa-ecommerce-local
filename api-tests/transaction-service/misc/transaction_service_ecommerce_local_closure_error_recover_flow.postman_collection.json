@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "b0de8ff0-7115-4085-92ec-d07803c2f91a",
+    "_postman_id": "d26365fd-ecb1-495d-8579-f0b7acabbc78",
     "name": "Transaction service for local eCommerce - recover from error during close payment",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "23963988"
@@ -370,12 +370,13 @@
               "executeGetTransactionRequest()",
               "",
               "",
+              "",
               "async function executeGetTransactionRequest (){",
               "        const maxAttempts = 10;",
               "        var counter = 0;",
               "        var transactionStatus = null;",
-              "        const statuses = new Set([\"CLOSURE_ERROR\", \"CLOSURE_REQUESTED\"]);",
-              "        while (counter < maxAttempts && !statuses.has(transactionStatus)) {",
+              "        const waitForStatus = pm.environment.get(\"STATUS_TO_WAIT_FOR_TRIGGER_ADD_USER_RECEIPT\");",
+              "        while (counter < maxAttempts && waitForStatus !==transactionStatus) {",
               "            await new Promise(r => setTimeout(r, 1000));",
               "            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {",
               "                if (error) {",
