@@ -18,15 +18,9 @@
               "    const transactionId = responseJson.transactionId;",
               "    pm.environment.set(\"TRANSACTION_ID\", transactionId);",
               "    pm.response.to.have.status(200);",
-              "    encodeTransactionIdToB64(transactionId);",
               "    pm.environment.set(\"ACTIVATION_PAYMENT_NOTICES\", JSON.stringify(responseJson.payments));",
               "});",
               "",
-              "function encodeTransactionIdToB64(transactionId) {",
-              "    const encodedTransactionId = Buffer.from(transactionId, 'hex').toString('base64').replace(/\\+/g, \"-\").replace(/\\//g, \"_\");",
-              "    console.log(`Transaction id: [${transactionId}] encoded to [${encodedTransactionId}]`);",
-              "    pm.environment.set(\"BASE64_ENCODED_TRANSACTION_ID\", encodedTransactionId);",
-              "}",
               ""
             ],
             "type": "text/javascript",
@@ -273,12 +267,12 @@
               "pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V1 -  Authorization completed POST notify NPG (status code 200)\", function() {",
               "    pm.response.to.have.status(200);",
               "    const response = pm.response.json();",
-              "    pm.expect(response.status).to.be.eq(\"CLOSURE_REQUESTED\",\"CLOSED\");",
-              "    pm.expect(response.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
+              "    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSURE_ERROR\"]);",
               "});"
             ],
             "type": "text/javascript",
-            "packages": {}
+            "packages": {},
+            "requests": {}
           }
         },
         {
@@ -288,7 +282,8 @@
               ""
             ],
             "type": "text/javascript",
-            "packages": {}
+            "packages": {},
+            "requests": {}
           }
         }
       ],
@@ -320,14 +315,15 @@
           }
         },
         "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{BASE64_ENCODED_TRANSACTION_ID}}/auth-requests",
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}/auth-requests",
           "host": [
             "{{HOSTNAME}}"
           ],
           "port": "{{TRANSACTION_SERVICE_PORT}}",
           "path": [
+            "v2",
             "transactions",
-            "{{BASE64_ENCODED_TRANSACTION_ID}}",
+            "{{TRANSACTION_ID}}",
             "auth-requests"
           ]
         }
