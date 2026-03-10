@@ -127,7 +127,7 @@
 				"header": [
 					{
 						"key": "x-client-id",
-						"value": "CHECKOUT"
+						"value": "CHECKOUT_CART"
 					},
 					{
 						"key": "x-correlation-id",
@@ -809,6 +809,75 @@
 						"transactions",
 						"{{TRANSACTION_ID}}",
 						"auth-requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Digital stamp + CHECKOUT client - expect 422",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-transaction-service] Digital stamp payment rejected for CHECKOUT client (status code 422)\", () => {",
+							"    pm.response.to.have.status(422);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.title).to.eql(\"Payment activation not allowed for digital stamp\");",
+							"    pm.expect(responseJson.status).to.eql(422);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT"
+					},
+					{
+						"key": "x-correlation-id",
+						"value": "{{CORRELATION_ID}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"test-order-digital-stamp\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"port": "{{TRANSACTION_SERVICE_PORT}}",
+					"path": [
+						"v2",
+						"transactions"
 					]
 				}
 			},
