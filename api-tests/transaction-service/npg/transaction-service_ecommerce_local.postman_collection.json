@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "5fd2e6a8-0ed0-43c0-9325-327c7b50cb69",
+		"_postman_id": "81b1a878-9416-4141-b546-910794468567",
 		"name": "Transaction service for local eCommerce NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "36392360"
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -667,7 +667,8 @@
 							"        const maxAttempts = 10;",
 							"        var counter = 0;",
 							"        var transactionStatus = null;",
-							"        while (counter < maxAttempts && transactionStatus != \"CLOSED\") {",
+							"        const waitForStatus = \"CLOSED\";",
+							"        while (counter < maxAttempts && transactionStatus != waitForStatus) {",
 							"            await new Promise(r => setTimeout(r, 1000));",
 							"            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {",
 							"                if (error) {",
@@ -682,13 +683,17 @@
 							"            }));",
 							"        counter++;",
 							"    }",
+							"    if(waitForStatus !== transactionStatus){",
+							"        throw new Error(`Wanted transaction in status: ${waitForStatus} but was: ${transactionStatus}`);",
+							"    }",
 							"",
 							"}",
 							"",
 							""
 						],
 						"type": "text/javascript",
-						"packages": {}
+						"packages": {},
+						"requests": {}
 					}
 				},
 				{
@@ -702,7 +707,8 @@
 							"});"
 						],
 						"type": "text/javascript",
-						"packages": {}
+						"packages": {},
+						"requests": {}
 					}
 				},
 				{
