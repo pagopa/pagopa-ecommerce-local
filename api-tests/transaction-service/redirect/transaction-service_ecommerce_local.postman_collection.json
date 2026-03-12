@@ -1,838 +1,850 @@
 {
-	"info": {
-		"_postman_id": "2e41c6b9-ab5f-4c95-920f-3c9da4a14a32",
-		"name": "Transaction service for local eCommerce REDIRECT",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "36392360"
-	},
-	"item": [
-		{
-			"name": "Nuova transaction NM3",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Activate new transaction V2 (status code 200)\", () => {",
-							"    const responseJson = pm.response.json();",
-							"    const transactionId = responseJson.transactionId;",
-							"    pm.environment.set(\"TRANSACTION_ID\", transactionId);",
-							"    pm.response.to.have.status(200);",
-							"    encodeTransactionIdToB64(transactionId);",
-							"    pm.environment.set(\"ACTIVATION_PAYMENT_NOTICES\", JSON.stringify(responseJson.payments));",
-							"});",
-							"",
-							"function encodeTransactionIdToB64(transactionId) {",
-							"    const encodedTransactionId = Buffer.from(transactionId, 'hex').toString('base64').replace(/\\+/g, \"-\").replace(/\\//g, \"_\");",
-							"    console.log(`Transaction id: [${transactionId}] encoded to [${encodedTransactionId}]`);",
-							"    pm.environment.set(\"BASE64_ENCODED_TRANSACTION_ID\", encodedTransactionId);",
-							"}",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"const getPaymentMethodRequest = {",
-							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
-							"    method: 'GET',",
-							"    header: {",
-							"        'Content-Type': 'application/json',",
-							"        'x-client-id': 'CHECKOUT',",
-							"        'x-api-key': 'PRIMARY-KEY'",
-							"    }",
-							"};",
-							"",
-							"pm.sendRequest(getPaymentMethodRequest, (error, response) => {",
-							"    const responseBody = response.json();",
-							"    const redirectPaymentMethods = responseBody.paymentMethods.filter(function (paymentMethod) {",
-							"        return paymentMethod.methodManagement === \"REDIRECT\";",
-							"    });;",
-							"",
-							"    if (redirectPaymentMethods.length == 0) {",
-							"        createPaymentMethod();",
-							"    } else {",
-							"        pm.environment.set(\"PAYMENT_METHOD_ID\", redirectPaymentMethods[0].id);",
-							"    }",
-							"});",
-							"",
-							"function createPaymentMethod() {",
-							"    const createPaymentMethodRequestBody = {",
-							"        \"name\": \"Paga in conto\",",
-							"        \"description\": \"Paga in conto\",",
-							"        \"asset\": \"asset\",",
-							"        \"status\": \"ENABLED\",",
-							"        \"paymentTypeCode\": \"RBPR\",",
-							"        \"ranges\": [",
-							"            {",
-							"                \"min\": 0,",
-							"                \"max\": 10000",
-							"            }",
-							"        ],",
-							"        \"clientId\": \"CHECKOUT\",",
-							"        \"methodManagement\": \"REDIRECT\"",
-							"    };",
-							"",
-							"    const createPaymentMethodRequest = {",
-							"        url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
-							"        method: 'POST',",
-							"        header: {",
-							"            'Content-Type': 'application/json',",
-							"            'x-api-key': 'PRIMARY-KEY'",
-							"        },",
-							"        body: {",
-							"            mode: 'raw',",
-							"            raw: JSON.stringify(createPaymentMethodRequestBody)",
-							"        }",
-							"    };",
-							"    pm.sendRequest(createPaymentMethodRequest, (error, response) => {",
-							"        if (error) {",
-							"            console.log(`Create payment method error: ${error}`);",
-							"        } else {",
-							"            const responseBody = response.json();",
-							"            const paymentMethodId = responseBody.id;",
-							"            pm.environment.set(\"PAYMENT_METHOD_ID\", paymentMethodId);",
-							"        }",
-							"    });",
-							"}",
-							"",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{PRIMARY_API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "x-client-id",
-						"value": "CHECKOUT"
-					},
-					{
-						"key": "x-correlation-id",
-						"value": "{{CORRELATION_ID}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"port": "{{TRANSACTION_SERVICE_PORT}}",
-					"path": [
-						"v2",
-						"transactions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Request authorization for payment",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Request authorization from REDIRECT (status code 200)\", function() {",
-							"    pm.response.to.have.status(200);",
-							"    const response = pm.response.json();",
-							"    pm.expect(response.authorizationUrl).to.be.a(\"string\");",
-							"    pm.environment.set(\"PSP_TRANSACTION_ID\", response.authorizationRequestId);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{PRIMARY_API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "x-pgs-id",
-						"value": "REDIRECT"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"REDIRECT\",\n    \"isAllCCP\": false,\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"redirect\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/auth-requests",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"port": "{{TRANSACTION_SERVICE_PORT}}",
-					"path": [
-						"transactions",
-						"{{TRANSACTION_ID}}",
-						"auth-requests"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Authorization completed",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V1 -  Authorization completed POST notify REDIRECT (status code 200)\", function() {",
-							"    pm.response.to.have.status(200);",
-							"    const response = pm.response.json();",
-							"    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\"]);",
-							"    pm.expect(response.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{PRIMARY_API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PATCH",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"timestampOperation\": \"2023-10-10T18:16:01.6880000+00:00\",\n  \"outcomeGateway\": {\n    \"paymentGatewayType\": \"REDIRECT\",\n    \"pspTransactionId\": \"{{PSP_TRANSACTION_ID}}\",\n    \"pspId\": \"REDIRECT\",\n    \"outcome\": \"OK\",\n    \"authorizationCode\": \"000\"\n  }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{BASE64_ENCODED_TRANSACTION_ID}}/auth-requests",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"port": "{{TRANSACTION_SERVICE_PORT}}",
-					"path": [
-						"transactions",
-						"{{BASE64_ENCODED_TRANSACTION_ID}}",
-						"auth-requests"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add user receipt - KO mismatched payment tokens",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 422) for mismatch in payment token\", function() {",
-							"    pm.response.to.have.status(422);",
-							"    const response = pm.response.json();",
-							"    pm.expect(response.detail.toString().split(\"\\n\")[0]).to.be.eq(\"eCommerce and Nodo payment tokens mismatch detected!\");",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"const getTransaction = {",
-							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
-							"    method: 'GET',",
-							"    header: {",
-							"        'Content-Type': 'application/json',",
-							"        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
-							"    }",
-							"};",
-							"",
-							"const maxIteration = 10;",
-							"const timeoutBetweenAttemptsMillis = 1000;",
-							"",
-							"let lastTransactionStatus;",
-							"",
-							"pm.sendRequest(getTransaction, (error, response) => {",
-							"    if (error) {",
-							"        console.log(`Error while retrieving transaction status: ${error.code}`);",
-							"        endPolling = true;",
-							"    } else {",
-							"        const responseBody = response.json();",
-							"        lastTransactionStatus = responseBody.status;",
-							"        console.log(`Transaction status: ${lastTransactionStatus}`);",
-							"        if (lastTransactionStatus != \"CLOSED\") {",
-							"            pollTransactionStatus();",
-							"        }",
-							"    }",
-							"});",
-							"async function pollTransactionStatus() {",
-							"    let endPolling = false;",
-							"    let currentIteration = 0;",
-							"    console.log(\"Start polling transaction service to wait for transaction status to become CLOSED\");",
-							"    while (!endPolling) {",
-							"        getTransactionStatus();",
-							"        currentIteration++;",
-							"        endPolling = lastTransactionStatus == \"CLOSED\" || currentIteration == maxIteration;",
-							"        console.log(`Transaction status: ${lastTransactionStatus}, current iteration: ${currentIteration}, max iteration: ${maxIteration}, end polling: ${endPolling}`);",
-							"        if (!endPolling) {",
-							"            await new Promise(r => setTimeout(r, timeoutBetweenAttemptsMillis));",
-							"        }",
-							"",
-							"    }",
-							"",
-							"    function getTransactionStatus() {",
-							"        pm.sendRequest(getTransaction, (error, response) => {",
-							"            if (error) {",
-							"                console.log(`Error while retrieving transaction status: ${error.code}`);",
-							"                throw error;",
-							"            } else {",
-							"                const responseBody = response.json();",
-							"                lastTransactionStatus = responseBody.status",
-							"            }",
-							"        }",
-							"        );",
-							"    }",
-							"}",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{PRIMARY_API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"outcome\": \"OK\",\n    \"paymentDate\": \"2023-01-01T00:00:00.000Z\",\n    \"payments\": [\n        {\n            \"paymentToken\": \"mismatchedPaymentToken\",\n            \"description\": \"description\",\n            \"creditorReferenceId\": \"creditorReferenceId\",\n            \"fiscalCode\": \"fiscalCode\",\n            \"companyName\": \"companyName\",\n            \"officeName\": \"officeName\",\n            \"debtor\": \"debtor\"\n        }\n    ]\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/user-receipts",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"port": "{{TRANSACTION_SERVICE_PORT}}",
-					"path": [
-						"transactions",
-						"{{TRANSACTION_ID}}",
-						"user-receipts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add user receipt",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 200)\", function() {",
-							"    pm.response.to.have.status(200);",
-							"    const response = pm.response.json();",
-							"    pm.expect(response.outcome).to.be.eq(\"OK\");",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));",
-							"",
-							"const addUserReceiptRequest = {",
-							"    outcome: \"OK\",",
-							"    paymentDate: \"2023-01-01T00:00:00.000Z\",",
-							"    payments: Array.from(activationPaymentNotices).map(p =>({",
-							"      paymentToken: p.paymentToken,",
-							"      description: p.reason,",
-							"      creditorReferenceId: \"creditorReferenceId\",",
-							"      fiscalCode: \"fiscalCode\",",
-							"      companyName: \"companyName\",",
-							"      officeName: \"officeName\",",
-							"      debtor: \"debtor\"",
-							"    }))",
-							"}",
-							"",
-							"pm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));",
-							"",
-							"const getTransaction = {",
-							"    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
-							"    method: 'GET',",
-							"    header: {",
-							"        'Content-Type': 'application/json',",
-							"        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
-							"    }",
-							"};",
-							"",
-							"const maxIteration = 10;",
-							"const timeoutBetweenAttemptsMillis = 1000;",
-							"",
-							"let lastTransactionStatus;",
-							"",
-							"pm.sendRequest(getTransaction, (error, response) => {",
-							"    if (error) {",
-							"        console.log(`Error while retrieving transaction status: ${error.code}`);",
-							"        endPolling = true;",
-							"    } else {",
-							"        const responseBody = response.json();",
-							"        lastTransactionStatus = responseBody.status;",
-							"        console.log(`Transaction status: ${lastTransactionStatus}`);",
-							"        if (lastTransactionStatus != \"CLOSED\") {",
-							"            pollTransactionStatus();",
-							"        }",
-							"    }",
-							"});",
-							"async function pollTransactionStatus() {",
-							"    let endPolling = false;",
-							"    let currentIteration = 0;",
-							"    console.log(\"Start polling transaction service to wait for transaction status to become CLOSED\");",
-							"    while (!endPolling) {",
-							"        getTransactionStatus();",
-							"        currentIteration++;",
-							"        endPolling = lastTransactionStatus == \"CLOSED\" || currentIteration == maxIteration;",
-							"        console.log(`Transaction status: ${lastTransactionStatus}, current iteration: ${currentIteration}, max iteration: ${maxIteration}, end polling: ${endPolling}`);",
-							"        if (!endPolling) {",
-							"            await new Promise(r => setTimeout(r, timeoutBetweenAttemptsMillis));",
-							"        }",
-							"",
-							"    }",
-							"",
-							"    function getTransactionStatus() {",
-							"        pm.sendRequest(getTransaction, (error, response) => {",
-							"            if (error) {",
-							"                console.log(`Error while retrieving transaction status: ${error.code}`);",
-							"                throw error;",
-							"            } else {",
-							"                const responseBody = response.json();",
-							"                lastTransactionStatus = responseBody.status",
-							"            }",
-							"        }",
-							"        );",
-							"    }",
-							"}",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{PRIMARY_API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{{ADD_USER_RECEIPT_REQUEST}}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/user-receipts",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"port": "{{TRANSACTION_SERVICE_PORT}}",
-					"path": [
-						"transactions",
-						"{{TRANSACTION_ID}}",
-						"user-receipts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get transaction by id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id (status code 200) for REDIRECT transaction\", () => {",
-							"  const responseJson = pm.response.json();",
-							"  pm.expect(responseJson.transactionId).to.be.a('string');",
-							"  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
-							"  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\"]);",
-							"  pm.expect(responseJson.gateway).to.be.eq(\"REDIRECT\");",
-							"  pm.expect(responseJson.sendPaymentResultOutcome).to.be.eq(\"OK\");",
-							"  pm.response.to.have.status(200);",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{PRIMARY_API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"port": "{{TRANSACTION_SERVICE_PORT}}",
-					"path": [
-						"transactions",
-						"{{TRANSACTION_ID}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get transaction outcomes by id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for REDIRECT transaction\", () => {",
-							"  const responseJson = pm.response.json();",
-							"  pm.expect(responseJson.outcome).to.be.a('number');",
-							"  pm.expect(responseJson.outcome).to.be.oneOf([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18, 25, 99, 116, 117, 121]);",
-							"  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');",
-							"  if (responseJson.totalAmount !== undefined) {",
-							"    pm.expect(responseJson.totalAmount).to.be.a('number');",
-							"  }",
-							"  if (responseJson.fees !== undefined) {",
-							"    pm.expect(responseJson.fees).to.be.a('number');",
-							"  }",
-							"  pm.response.to.have.status(200);",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{PRIMARY_API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/outcomes",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"port": "{{TRANSACTION_SERVICE_PORT}}",
-					"path": [
-						"transactions",
-						"{{TRANSACTION_ID}}",
-						"outcomes"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get transaction by id V2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id V2 (status code 200) for REDIRECT transaction\", () => {",
-							"  const responseJson = pm.response.json();",
-							"  pm.expect(responseJson.transactionId).to.be.a('string');",
-							"  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
-							"  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\",\"NOTIFICATION_ERROR\"]);",
-							"  pm.expect(responseJson.gatewayInfo.gateway).to.be.eq(\"REDIRECT\");",
-							"  pm.expect(responseJson.nodeInfo.sendPaymentResultOutcome).to.be.eq(\"OK\");",
-							"  pm.response.to.have.status(200);",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{PRIMARY_API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"port": "{{TRANSACTION_SERVICE_PORT}}",
-					"path": [
-						"v2",
-						"transactions",
-						"{{TRANSACTION_ID}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Authorization completed V2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V2 -  Authorization completed POST notify REDIRECT (status code 200)\", function() {",
-							"    pm.response.to.have.status(200);",
-							"    const response = pm.response.json();",
-							"    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\",\"NOTIFICATION_REQUESTED\",\"NOTIFICATION_ERROR\",\"NOTIFIED_OK\"]);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{PRIMARY_API_KEY}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-api-key",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PATCH",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"timestampOperation\": \"2023-10-10T18:16:01.6880000+00:00\",\n  \"outcomeGateway\": {\n    \"paymentGatewayType\": \"REDIRECT\",\n    \"pspTransactionId\": \"{{PSP_TRANSACTION_ID}}\",\n    \"pspId\": \"REDIRECT\",\n    \"outcome\": \"OK\",\n    \"authorizationCode\": \"000\"\n  }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}/auth-requests",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"port": "{{TRANSACTION_SERVICE_PORT}}",
-					"path": [
-						"v2",
-						"transactions",
-						"{{TRANSACTION_ID}}",
-						"auth-requests"
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	]
+  "info": {
+    "_postman_id": "02d55483-9457-4720-999b-fb11611bf3b8",
+    "name": "Transaction service for local eCommerce REDIRECT",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23963988"
+  },
+  "item": [
+    {
+      "name": "Nuova transaction NM3",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Activate new transaction V2 (status code 200)\", () => {",
+              "    const responseJson = pm.response.json();",
+              "    const transactionId = responseJson.transactionId;",
+              "    pm.environment.set(\"TRANSACTION_ID\", transactionId);",
+              "    pm.response.to.have.status(200);",
+              "    encodeTransactionIdToB64(transactionId);",
+              "    pm.environment.set(\"ACTIVATION_PAYMENT_NOTICES\", JSON.stringify(responseJson.payments));",
+              "});",
+              "",
+              "function encodeTransactionIdToB64(transactionId) {",
+              "    const encodedTransactionId = Buffer.from(transactionId, 'hex').toString('base64').replace(/\\+/g, \"-\").replace(/\\//g, \"_\");",
+              "    console.log(`Transaction id: [${transactionId}] encoded to [${encodedTransactionId}]`);",
+              "    pm.environment.set(\"BASE64_ENCODED_TRANSACTION_ID\", encodedTransactionId);",
+              "}",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const getPaymentMethodRequest = {",
+              "    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
+              "    method: 'GET',",
+              "    header: {",
+              "        'Content-Type': 'application/json',",
+              "        'x-client-id': 'CHECKOUT',",
+              "        'x-api-key': 'PRIMARY-KEY'",
+              "    }",
+              "};",
+              "",
+              "pm.sendRequest(getPaymentMethodRequest, (error, response) => {",
+              "    const responseBody = response.json();",
+              "    const redirectPaymentMethods = responseBody.paymentMethods.filter(function (paymentMethod) {",
+              "        return paymentMethod.methodManagement === \"REDIRECT\";",
+              "    });;",
+              "",
+              "    if (redirectPaymentMethods.length == 0) {",
+              "        createPaymentMethod();",
+              "    } else {",
+              "        pm.environment.set(\"PAYMENT_METHOD_ID\", redirectPaymentMethods[0].id);",
+              "    }",
+              "});",
+              "",
+              "function createPaymentMethod() {",
+              "    const createPaymentMethodRequestBody = {",
+              "        \"name\": \"Paga in conto\",",
+              "        \"description\": \"Paga in conto\",",
+              "        \"asset\": \"asset\",",
+              "        \"status\": \"ENABLED\",",
+              "        \"paymentTypeCode\": \"RBPR\",",
+              "        \"ranges\": [",
+              "            {",
+              "                \"min\": 0,",
+              "                \"max\": 10000",
+              "            }",
+              "        ],",
+              "        \"clientId\": \"CHECKOUT\",",
+              "        \"methodManagement\": \"REDIRECT\"",
+              "    };",
+              "",
+              "    const createPaymentMethodRequest = {",
+              "        url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
+              "        method: 'POST',",
+              "        header: {",
+              "            'Content-Type': 'application/json',",
+              "            'x-api-key': 'PRIMARY-KEY'",
+              "        },",
+              "        body: {",
+              "            mode: 'raw',",
+              "            raw: JSON.stringify(createPaymentMethodRequestBody)",
+              "        }",
+              "    };",
+              "    pm.sendRequest(createPaymentMethodRequest, (error, response) => {",
+              "        if (error) {",
+              "            console.log(`Create payment method error: ${error}`);",
+              "        } else {",
+              "            const responseBody = response.json();",
+              "            const paymentMethodId = responseBody.id;",
+              "            pm.environment.set(\"PAYMENT_METHOD_ID\", paymentMethodId);",
+              "        }",
+              "    });",
+              "}",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{PRIMARY_API_KEY}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-client-id",
+            "value": "CHECKOUT"
+          },
+          {
+            "key": "x-correlation-id",
+            "value": "{{CORRELATION_ID}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions",
+          "host": [
+            "{{HOSTNAME}}"
+          ],
+          "port": "{{TRANSACTION_SERVICE_PORT}}",
+          "path": [
+            "v2",
+            "transactions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Request authorization for payment",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Request authorization from REDIRECT (status code 200)\", function() {",
+              "    pm.response.to.have.status(200);",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.authorizationUrl).to.be.a(\"string\");",
+              "    pm.environment.set(\"PSP_TRANSACTION_ID\", response.authorizationRequestId);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{PRIMARY_API_KEY}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-pgs-id",
+            "value": "REDIRECT"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"REDIRECT\",\n    \"isAllCCP\": false,\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"redirect\"\n    }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/auth-requests",
+          "host": [
+            "{{HOSTNAME}}"
+          ],
+          "port": "{{TRANSACTION_SERVICE_PORT}}",
+          "path": [
+            "transactions",
+            "{{TRANSACTION_ID}}",
+            "auth-requests"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Authorization completed",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V1 -  Authorization completed POST notify REDIRECT (status code 200)\", function() {",
+              "    pm.response.to.have.status(200);",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\"]);",
+              "    pm.expect(response.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{PRIMARY_API_KEY}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"timestampOperation\": \"2023-10-10T18:16:01.6880000+00:00\",\n  \"outcomeGateway\": {\n    \"paymentGatewayType\": \"REDIRECT\",\n    \"pspTransactionId\": \"{{PSP_TRANSACTION_ID}}\",\n    \"pspId\": \"REDIRECT\",\n    \"outcome\": \"OK\",\n    \"authorizationCode\": \"000\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{BASE64_ENCODED_TRANSACTION_ID}}/auth-requests",
+          "host": [
+            "{{HOSTNAME}}"
+          ],
+          "port": "{{TRANSACTION_SERVICE_PORT}}",
+          "path": [
+            "transactions",
+            "{{BASE64_ENCODED_TRANSACTION_ID}}",
+            "auth-requests"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add user receipt - KO mismatched payment tokens",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 422) for mismatch in payment token\", function() {",
+              "    pm.response.to.have.status(422);",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.detail.toString().split(\"\\n\")[0]).to.be.eq(\"eCommerce and Nodo payment tokens mismatch detected!\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const getTransaction = {",
+              "    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
+              "    method: 'GET',",
+              "    header: {",
+              "        'Content-Type': 'application/json',",
+              "        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
+              "    }",
+              "};",
+              "",
+              "const maxIteration = 10;",
+              "const timeoutBetweenAttemptsMillis = 1000;",
+              "",
+              "let lastTransactionStatus;",
+              "",
+              "pm.sendRequest(getTransaction, (error, response) => {",
+              "    if (error) {",
+              "        console.log(`Error while retrieving transaction status: ${error.code}`);",
+              "        endPolling = true;",
+              "    } else {",
+              "        const responseBody = response.json();",
+              "        lastTransactionStatus = responseBody.status;",
+              "        console.log(`Transaction status: ${lastTransactionStatus}`);",
+              "        if (lastTransactionStatus != \"CLOSED\") {",
+              "            pollTransactionStatus();",
+              "        }",
+              "    }",
+              "});",
+              "async function pollTransactionStatus() {",
+              "    let endPolling = false;",
+              "    let currentIteration = 0;",
+              "    const waitForStatus = \"CLOSED\";",
+              "    console.log(\"Start polling transaction service to wait for transaction status to become CLOSED\");",
+              "    while (!endPolling) {",
+              "        getTransactionStatus();",
+              "        currentIteration++;",
+              "        endPolling = lastTransactionStatus == waitForStatus || currentIteration == maxIteration;",
+              "        console.log(`Transaction status: ${lastTransactionStatus}, current iteration: ${currentIteration}, max iteration: ${maxIteration}, end polling: ${endPolling}`);",
+              "        if (!endPolling) {",
+              "            await new Promise(r => setTimeout(r, timeoutBetweenAttemptsMillis));",
+              "        }",
+              "",
+              "    }",
+              "    if(waitForStatus !== lastTransactionStatus){",
+              "        throw new Error(`Wanted transaction in status: ${waitForStatus} but was: ${lastTransactionStatus}`);",
+              "    }",
+              "",
+              "    function getTransactionStatus() {",
+              "        pm.sendRequest(getTransaction, (error, response) => {",
+              "            if (error) {",
+              "                console.log(`Error while retrieving transaction status: ${error.code}`);",
+              "                throw error;",
+              "            } else {",
+              "                const responseBody = response.json();",
+              "                lastTransactionStatus = responseBody.status",
+              "            }",
+              "        }",
+              "        );",
+              "    }",
+              "}",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{PRIMARY_API_KEY}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"outcome\": \"OK\",\n    \"paymentDate\": \"2023-01-01T00:00:00.000Z\",\n    \"payments\": [\n        {\n            \"paymentToken\": \"mismatchedPaymentToken\",\n            \"description\": \"description\",\n            \"creditorReferenceId\": \"creditorReferenceId\",\n            \"fiscalCode\": \"fiscalCode\",\n            \"companyName\": \"companyName\",\n            \"officeName\": \"officeName\",\n            \"debtor\": \"debtor\"\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/user-receipts",
+          "host": [
+            "{{HOSTNAME}}"
+          ],
+          "port": "{{TRANSACTION_SERVICE_PORT}}",
+          "path": [
+            "transactions",
+            "{{TRANSACTION_ID}}",
+            "user-receipts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add user receipt",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 200)\", function() {",
+              "    pm.response.to.have.status(200);",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.outcome).to.be.eq(\"OK\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));",
+              "",
+              "const addUserReceiptRequest = {",
+              "    outcome: \"OK\",",
+              "    paymentDate: \"2023-01-01T00:00:00.000Z\",",
+              "    payments: Array.from(activationPaymentNotices).map(p =>({",
+              "      paymentToken: p.paymentToken,",
+              "      description: p.reason,",
+              "      creditorReferenceId: \"creditorReferenceId\",",
+              "      fiscalCode: \"fiscalCode\",",
+              "      companyName: \"companyName\",",
+              "      officeName: \"officeName\",",
+              "      debtor: \"debtor\"",
+              "    }))",
+              "}",
+              "",
+              "pm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));",
+              "",
+              "const getTransaction = {",
+              "    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
+              "    method: 'GET',",
+              "    header: {",
+              "        'Content-Type': 'application/json',",
+              "        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
+              "    }",
+              "};",
+              "",
+              "const maxIteration = 10;",
+              "const timeoutBetweenAttemptsMillis = 1000;",
+              "",
+              "let lastTransactionStatus;",
+              "",
+              "pm.sendRequest(getTransaction, (error, response) => {",
+              "    if (error) {",
+              "        console.log(`Error while retrieving transaction status: ${error.code}`);",
+              "        endPolling = true;",
+              "    } else {",
+              "        const responseBody = response.json();",
+              "        lastTransactionStatus = responseBody.status;",
+              "        console.log(`Transaction status: ${lastTransactionStatus}`);",
+              "        if (lastTransactionStatus != \"CLOSED\") {",
+              "            pollTransactionStatus();",
+              "        }",
+              "    }",
+              "});",
+              "async function pollTransactionStatus() {",
+              "    let endPolling = false;",
+              "    let currentIteration = 0;",
+              "    const waitForStatus = \"CLOSED\";",
+              "    console.log(\"Start polling transaction service to wait for transaction status to become CLOSED\");",
+              "    while (!endPolling) {",
+              "        getTransactionStatus();",
+              "        currentIteration++;",
+              "        endPolling = lastTransactionStatus == waitForStatus || currentIteration == maxIteration;",
+              "        console.log(`Transaction status: ${lastTransactionStatus}, current iteration: ${currentIteration}, max iteration: ${maxIteration}, end polling: ${endPolling}`);",
+              "        if (!endPolling) {",
+              "            await new Promise(r => setTimeout(r, timeoutBetweenAttemptsMillis));",
+              "        }",
+              "",
+              "    }",
+              "    if(waitForStatus !== lastTransactionStatus){",
+              "        throw new Error(`Wanted transaction in status: ${waitForStatus} but was: ${lastTransactionStatus}`);",
+              "    }",
+              "",
+              "    function getTransactionStatus() {",
+              "        pm.sendRequest(getTransaction, (error, response) => {",
+              "            if (error) {",
+              "                console.log(`Error while retrieving transaction status: ${error.code}`);",
+              "                throw error;",
+              "            } else {",
+              "                const responseBody = response.json();",
+              "                lastTransactionStatus = responseBody.status",
+              "            }",
+              "        }",
+              "        );",
+              "    }",
+              "}",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{PRIMARY_API_KEY}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{{ADD_USER_RECEIPT_REQUEST}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/user-receipts",
+          "host": [
+            "{{HOSTNAME}}"
+          ],
+          "port": "{{TRANSACTION_SERVICE_PORT}}",
+          "path": [
+            "transactions",
+            "{{TRANSACTION_ID}}",
+            "user-receipts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get transaction by id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id (status code 200) for REDIRECT transaction\", () => {",
+              "  const responseJson = pm.response.json();",
+              "  pm.expect(responseJson.transactionId).to.be.a('string');",
+              "  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
+              "  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\"]);",
+              "  pm.expect(responseJson.gateway).to.be.eq(\"REDIRECT\");",
+              "  pm.expect(responseJson.sendPaymentResultOutcome).to.be.eq(\"OK\");",
+              "  pm.response.to.have.status(200);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{PRIMARY_API_KEY}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}",
+          "host": [
+            "{{HOSTNAME}}"
+          ],
+          "port": "{{TRANSACTION_SERVICE_PORT}}",
+          "path": [
+            "transactions",
+            "{{TRANSACTION_ID}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get transaction outcomes by id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for REDIRECT transaction\", () => {",
+              "  const responseJson = pm.response.json();",
+              "  pm.expect(responseJson.outcome).to.be.a('number');",
+              "  pm.expect(responseJson.outcome).to.be.oneOf([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18, 25, 99, 116, 117, 121]);",
+              "  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');",
+              "  if (responseJson.totalAmount !== undefined) {",
+              "    pm.expect(responseJson.totalAmount).to.be.a('number');",
+              "  }",
+              "  if (responseJson.fees !== undefined) {",
+              "    pm.expect(responseJson.fees).to.be.a('number');",
+              "  }",
+              "  pm.response.to.have.status(200);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{PRIMARY_API_KEY}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/outcomes",
+          "host": [
+            "{{HOSTNAME}}"
+          ],
+          "port": "{{TRANSACTION_SERVICE_PORT}}",
+          "path": [
+            "transactions",
+            "{{TRANSACTION_ID}}",
+            "outcomes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get transaction by id V2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id V2 (status code 200) for REDIRECT transaction\", () => {",
+              "  const responseJson = pm.response.json();",
+              "  pm.expect(responseJson.transactionId).to.be.a('string');",
+              "  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
+              "  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\",\"NOTIFICATION_ERROR\"]);",
+              "  pm.expect(responseJson.gatewayInfo.gateway).to.be.eq(\"REDIRECT\");",
+              "  pm.expect(responseJson.nodeInfo.sendPaymentResultOutcome).to.be.eq(\"OK\");",
+              "  pm.response.to.have.status(200);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{PRIMARY_API_KEY}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}",
+          "host": [
+            "{{HOSTNAME}}"
+          ],
+          "port": "{{TRANSACTION_SERVICE_PORT}}",
+          "path": [
+            "v2",
+            "transactions",
+            "{{TRANSACTION_ID}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Authorization completed V2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V2 -  Authorization completed POST notify REDIRECT (status code 200)\", function() {",
+              "    pm.response.to.have.status(200);",
+              "    const response = pm.response.json();",
+              "    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\",\"NOTIFICATION_REQUESTED\",\"NOTIFICATION_ERROR\",\"NOTIFIED_OK\"]);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{PRIMARY_API_KEY}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"timestampOperation\": \"2023-10-10T18:16:01.6880000+00:00\",\n  \"outcomeGateway\": {\n    \"paymentGatewayType\": \"REDIRECT\",\n    \"pspTransactionId\": \"{{PSP_TRANSACTION_ID}}\",\n    \"pspId\": \"REDIRECT\",\n    \"outcome\": \"OK\",\n    \"authorizationCode\": \"000\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}/auth-requests",
+          "host": [
+            "{{HOSTNAME}}"
+          ],
+          "port": "{{TRANSACTION_SERVICE_PORT}}",
+          "path": [
+            "v2",
+            "transactions",
+            "{{TRANSACTION_ID}}",
+            "auth-requests"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
 }
