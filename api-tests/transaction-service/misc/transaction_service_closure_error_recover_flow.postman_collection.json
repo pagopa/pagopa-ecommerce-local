@@ -387,6 +387,9 @@
               "            }));",
               "        counter++;",
               "    }",
+              "    if(waitForStatus !== transactionStatus){",
+              "        throw new Error(`Wanted transaction in status: ${waitForStatus} but was: ${transactionStatus}`);",
+              "    }",
               "",
               "}",
               "",
@@ -410,15 +413,6 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {}
-          }
-        },
-        {
-          "listen": "prerequest",
-          "script": {
-            "exec": [
-              ""
-            ],
-            "type": "text/javascript"
           }
         }
       ],
