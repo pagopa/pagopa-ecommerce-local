@@ -318,7 +318,8 @@
               "});"
             ],
             "type": "text/javascript",
-            "packages": {}
+            "packages": {},
+            "requests": {}
           }
         },
         {
@@ -355,16 +356,20 @@
               "async function pollTransactionStatus() {",
               "    let endPolling = false;",
               "    let currentIteration = 0;",
+              "    const waitForStatus = \"CLOSED\";",
               "    console.log(\"Start polling transaction service to wait for transaction status to become CLOSED\");",
               "    while (!endPolling) {",
               "        getTransactionStatus();",
               "        currentIteration++;",
-              "        endPolling = lastTransactionStatus == \"CLOSED\" || currentIteration == maxIteration;",
+              "        endPolling = lastTransactionStatus == waitForStatus || currentIteration == maxIteration;",
               "        console.log(`Transaction status: ${lastTransactionStatus}, current iteration: ${currentIteration}, max iteration: ${maxIteration}, end polling: ${endPolling}`);",
               "        if (!endPolling) {",
               "            await new Promise(r => setTimeout(r, timeoutBetweenAttemptsMillis));",
               "        }",
               "",
+              "    }",
+              "    if(waitForStatus !== lastTransactionStatus){",
+              "        throw new Error(`Wanted transaction in status: ${waitForStatus} but was: ${lastTransactionStatus}`);",
               "    }",
               "",
               "    function getTransactionStatus() {",
@@ -383,7 +388,8 @@
               ""
             ],
             "type": "text/javascript",
-            "packages": {}
+            "packages": {},
+            "requests": {}
           }
         }
       ],
