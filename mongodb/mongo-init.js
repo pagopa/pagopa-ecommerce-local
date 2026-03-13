@@ -19,8 +19,6 @@ try {
     }
 }
 
-const db = connect("mongodb://admin:password@pagopa-ecommerce-mongo:27017/?retryWrites=true&replicaSet=rs0&readPreference=primary&maxIdleTimeMS=10000&connectTimeoutMS=10000&socketTimeoutMS=10000&serverSelectionTimeoutMS=60000&waitQueueTimeoutMS=10000");
-
 print("Seeding data into collections...");
 const transactions = [
     // 1 - TransactionAuthorizationOutcomeWaitingQueueConsumerV2 - AUTHORIZATION_REQUESTED
@@ -988,7 +986,10 @@ function getEventStore(transactionId, eventId, eventCode, creationDate, response
         creationDate
     }
 }
+const db = connect("mongodb://admin:password@pagopa-ecommerce-mongo:27017/?retryWrites=true&replicaSet=rs0&readPreference=primary&maxIdleTimeMS=10000&connectTimeoutMS=10000&socketTimeoutMS=10000&serverSelectionTimeoutMS=60000&waitQueueTimeoutMS=10000");
 
+db = db.getSiblingDB("ecommerce");
+console.log("Currently using DB:", db.getName());
 const transactionViewCollection = db.getCollection('transactions-view');
 const eventStoreCollection = db.getCollection('eventstore');
 transactionsView.forEach(transactionView =>{
