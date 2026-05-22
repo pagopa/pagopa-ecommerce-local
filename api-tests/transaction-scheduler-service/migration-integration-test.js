@@ -3,19 +3,12 @@
  *  the integration test executed in the code-review-pipelines.
  *  To test it in local use this bash script:
  *     #!/bin/bash
- *     #sleep 15
- *     echo "Starting integration testing of the migration job..."
+ * echo "Starting integration testing of the migration process..."
  *
- *     docker cp migration-integration-test.js mongodb:/tmp/migration-integration-test.js
+ * docker cp migration-integration-test.js pagopa-ecommerce-mongo:/tmp/migration-integration-test.js
  *
- *     # Executing the script and check the result
- *     docker exec mongodb mongosh -u admin -p password --authenticationDatabase admin /tmp/migration-integration-test.js
- *
- *     # Check of the exit code of the script
- *     if [ $? -ne 0 ]; then
- *       echo "Integration test of migration job failed! Check the logs for more details ..."
- *       exit 1
- *     fi
+ * docker exec pagopa-ecommerce-mongo mongosh -u admin -p password --authenticationDatabase admin \
+ * --quiet /tmp/migration-integration-test.js
  */
 console.log("Insert testing event data in the ecommerce.event-store collection and ecommerce-history.event-store ...")
 
