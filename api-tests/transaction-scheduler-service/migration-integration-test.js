@@ -84,7 +84,6 @@ let eventList = [
   }
 ]
 
-
 // The service will find only wallet older than 9 months to move in the history db
 let notValidDateString = new Date().toISOString();
 
@@ -125,7 +124,7 @@ db.getCollection('eventstore').insertMany(eventList.slice(1))
 
 // Wait until the scheduler do the job and then check the result
 console.log("Wait until the migration job is executed...")
-sleep(20000);
+sleep(process.env.TIMEOUT);
 
 if(!assertMigration(eventList, db, dbHistory)){
     console.log("Integration test failed!");
@@ -136,23 +135,38 @@ if(!assertMigration(eventList, db, dbHistory)){
 
 // Check that the inserted data are moved from ecommerce.eventstore to ecommerce-history.eventstore
 function assertMigration(eventList, dbCollection, dbHistoryCollection){
-    let docsIdDbArray = dbCollection.getCollection('eventstore').find().toArray().map(e => e._id);
-    let docsIdDbHistoryArray = dbHistoryCollection.getCollection('eventstore').find().toArray().map(e => e._id);
+    let allId = eventList.map(e => e._id)
+
+    let docsDbHistoryArray = dbHistoryCollection.getCollection('eventstore')
+        .find({ _id: {$in: allId}})
+        .toArray();
+
+    let docsIdDbHistoryArray = docsDbHistoryArray.map(e => e._id);
 
     // Check the transaction that were not in the ecommerce-history now are migrated by the script
     // Excluding the last element that is too recent
-    let documentAreMigrated = eventList.slice(0,eventList.length-1).map(e => e._id).reduce(
+    let idListValideElements = allId.slice(0,eventList.length-1)
+    let documentAreMigrated = idListValideElements.reduce(
         (accumulator, currentIdValue) => accumulator && docsIdDbHistoryArray.includes(currentIdValue),
         true,
     );
 
     // Check that the recent event was not migrated
-    let recentEvent = eventList[eventList.length-1]
-    let tooRecentDocumentNotMigrated = !docsIdDbHistoryArray.includes(recentEvent._id)
+    let idNotValidElement = allId[allId.lenght-1]
+    let tooRecentDocumentNotMigrated = !docsIdDbHistoryArray.includes(idNotValidElement)
 
-    console.log("Test assert: ",documentAreMigrated && tooRecentDocumentNotMigrated)
+    // Check if the valid events has the ttl set
+    let docsHasTtl = dbCollection.getCollection('eventstore')
+        .find({ _id: {$in: docsIdDbHistoryArray}})
+        .toArray()
+        .reduce(
+            (accumulator, currentDocument) => accumulator && (currentDocument.ttl > 0),
+            true,
+        );
 
-    return documentAreMigrated && tooRecentDocumentNotMigrated;
+    console.log("Test assertion: ",documentAreMigrated && tooRecentDocumentNotMigrated && docsHasTtl)
+
+    return documentAreMigrated && tooRecentDocumentNotMigrated && docsHasTtl;
 }
 
 
