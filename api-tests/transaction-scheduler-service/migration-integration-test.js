@@ -17,15 +17,122 @@
  *       exit 1
  *     fi
  */
+console.log("Insert testing event data in the ecommerce.event-store collection and ecommerce-history.event-store ...")
+
+let eventList = [
+  {
+    "_id": "a5ded083-5d8d-4771-8215-d01c1346fzz1",
+    "transactionId": "075f6031-005c-4927-9a3d-e613d60cafba",
+    "creationDate": "2023-03-29T16:44:14.959647218Z[Etc/UTC]",
+    "data": {
+      "email": {
+        "data": "b282accf-995f-4211-939c-1ba0b4f3f255"
+      },
+      "paymentNotices": [
+        {
+          "paymentToken": "3d82a804063f46ed99dfa9e4a235774d",
+          "rptId": "77777777777302001241098804227",
+          "description": "TARI/TEFA 2021",
+          "amount": 1000,
+          "isAllCCP": false
+        }
+      ],
+      "clientId": "CHECKOUT",
+      "paymentTokenValiditySeconds": 0
+    },
+    "eventCode": "TRANSACTION_ACTIVATED_EVENT",
+    "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionActivatedEvent"
+  },
+  {
+    "_id": "a5ded083-5d8d-4771-8215-d01c1346fzz2",
+    "transactionId": "522ab4f9-8d96-4bc7-a028-f0699d1baea2",
+    "creationDate": "2023-03-29T16:44:15.020618605Z[Etc/UTC]",
+    "data": {
+      "email": {
+        "data": "b282accf-995f-4211-939c-1ba0b4f3f255"
+      },
+      "paymentNotices": [
+        {
+          "paymentToken": "3d82a804063f46ed99dfa9e4a235774d",
+          "rptId": "77777777777302001210146638735",
+          "description": "TARI/TEFA 2021",
+          "amount": 1000,
+          "isAllCCP": false
+        }
+      ],
+      "clientId": "CHECKOUT",
+      "paymentTokenValiditySeconds": 0
+    },
+    "eventCode": "TRANSACTION_ACTIVATED_EVENT",
+    "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionActivatedEvent"
+  },
+  {
+    "_id": "a5ded083-5d8d-4771-8215-d01c1346fzz3",
+    "transactionId": "da487724-1078-4f20-b095-ff45793e758b",
+    "creationDate": "2023-03-29T16:44:15.119048976Z[Etc/UTC]",
+    "data": {
+      "email": {
+        "data": "b282accf-995f-4211-939c-1ba0b4f3f255"
+      },
+      "paymentNotices": [
+        {
+          "paymentToken": "3d82a804063f46ed99dfa9e4a235774d",
+          "rptId": "77777777777302001250013262570",
+          "description": "TARI/TEFA 2021",
+          "amount": 1000,
+          "isAllCCP": false
+        }
+      ],
+      "clientId": "CHECKOUT",
+      "paymentTokenValiditySeconds": 0
+    },
+    "eventCode": "TRANSACTION_ACTIVATED_EVENT",
+    "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionActivatedEvent"
+  }
+]
+
+
+// The service will find only wallet older than 9 months to move in the history db
+let notValidDateString = new Date().toISOString();
+
+// Add an event that will not be migrated for testing
+let notSelectableEvent = {
+    "_id": "a5ded083-5d8d-4771-8215-d01c1346fzz4",
+    "transactionId": "zz587724-1078-4f20-b095-ff45793e758b",
+    "creationDate": notValidDateString,
+    "data": {
+      "email": {
+        "data": "b282accf-995f-4211-939c-1ba0b4f3f255"
+      },
+      "paymentNotices": [
+        {
+          "paymentToken": "3d82a804063f46ed99dfa9e4a235774d",
+          "rptId": "77777777777302001250013262570",
+          "description": "TARI/TEFA 2021",
+          "amount": 1000,
+          "isAllCCP": false
+        }
+      ],
+      "clientId": "CHECKOUT",
+      "paymentTokenValiditySeconds": 0
+    },
+    "eventCode": "TRANSACTION_ACTIVATED_EVENT",
+    "_class": "it.pagopa.ecommerce.commons.documents.v1.TransactionActivatedEvent"
+  }
+
+eventList.push(notSelectableEvent);
+
+// Connect to Mongo DB and insert the new events
+let dbHistory = db.getSiblingDB("ecommerce-history");
+// Copy only the element in position 0 and 1
+dbHistory.getCollection('eventstore').insertMany(eventList.slice(0,2))
+let db = db.getSiblingDB("ecommerce")
+// Copy all the event from the position number 1
+db.getCollection('eventstore').insertMany(eventList.slice(1))
 
 // Wait until the scheduler do the job and then check the result
 console.log("Wait until the migration job is executed...")
 sleep(20000);
-
-if(!process.env.EVENT_LIST){
-    console.log("ERROR: no testing data in the env variable EVENT_LIST ...");
-    quit(1);
-}
 
 if(!assertMigration(eventList, db, dbHistory)){
     console.log("Integration test failed!");
@@ -33,8 +140,6 @@ if(!assertMigration(eventList, db, dbHistory)){
 }else{
     console.log("Integration test completed SUCCESSFULLY!");
 }
-
-
 
 // Check that the inserted data are moved from ecommerce.eventstore to ecommerce-history.eventstore
 function assertMigration(eventList, dbCollection, dbHistoryCollection){
