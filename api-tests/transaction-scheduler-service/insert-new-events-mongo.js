@@ -12,12 +12,11 @@
 console.log("Insert testing event data in the ecommerce.event-store collection and ecommerce-history.event-store ...")
 
 // Read the testing data as argument of the script
-if(!arguments[0]){
-    console.log("ERROR: no testing data pass as argument ...");
+if(!process.env.EVENT_LIST){
+    console.log("ERROR: no testing data in the env variable EVENT_LIST ...");
     quit(1);
 }
-
-let eventList = JSON.parse(arguments[0]);
+let eventList = JSON.parse(process.env.EVENT_LIST);
 
 if(eventList.length < 4){
     console.log("ERROR: the lenght of the events list must be equal or greater of 4 ...");
@@ -55,10 +54,10 @@ let notSelectableEvent = {
 eventList.push(notSelectableEvent);
 
 // Connect to Mongo DB and insert the new events
-dbHistory = db.getSiblingDB("ecommerce-history");
+let dbHistory = db.getSiblingDB("ecommerce-history");
 // Copy only the element in position 0 and 1
 dbHistory.getCollection('eventstore').insertMany(eventList.slice(0,2))
-db = db.getSiblingDB("ecommerce")
+let db = db.getSiblingDB("ecommerce")
 // Copy all the event from the position number 1
 db.getCollection('eventstore').insertMany(eventList.slice(1))
 

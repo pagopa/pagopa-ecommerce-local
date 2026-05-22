@@ -22,6 +22,11 @@
 console.log("Wait until the migration job is executed...")
 sleep(20000);
 
+if(!process.env.EVENT_LIST){
+    console.log("ERROR: no testing data in the env variable EVENT_LIST ...");
+    quit(1);
+}
+
 if(!assertMigration(eventList, db, dbHistory)){
     console.log("Integration test failed!");
     quit(1);
