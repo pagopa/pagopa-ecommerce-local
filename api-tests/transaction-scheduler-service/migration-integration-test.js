@@ -122,11 +122,189 @@ let db = db.getSiblingDB("ecommerce")
 // Copy all the event from the position number 1
 db.getCollection('eventstore').insertMany(eventList.slice(1))
 
+// Create new transaction view for test the migration
+console.log("Insert new transaction-view testing data ...");
+
+let transactionViewList =
+[
+    {
+     "_id": "00000000000000000000000000000771",
+     "clientId": "CHECKOUT",
+     "email": {
+       "data": "a4bc4c87-c111-45ca-8b6b-a40a800b4840"
+     },
+     "status": "AUTHORIZATION_REQUESTED",
+     "creationDate": "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+     "paymentNotices": [
+       {
+         "paymentToken": "b72411c6597140b3946b879ad4c3da2d",
+         "rptId": "77777777777302010000655612322",
+         "description": "TARI/TEFA 2021",
+         "amount": 12000,
+         "transferList": [
+           {
+             "paFiscalCode": "77777777777",
+             "digitalStamp": false,
+             "transferAmount": 10000,
+             "transferCategory": "0101101IM"
+           },
+           {
+             "paFiscalCode": "01199250158",
+             "digitalStamp": false,
+             "transferAmount": 2000,
+             "transferCategory": "0201102IM"
+           }
+         ],
+         "isAllCCP": false,
+         "companyName": "company PA",
+         "creditorReferenceId": "02010000655612322"
+       }
+     ],
+     "rrn": "250139026637",
+     "paymentGateway": "NPG",
+     "sendPaymentResultOutcome": "OK",
+     "authorizationCode": "105197",
+     "authorizationErrorCode": "000",
+     "gatewayAuthorizationStatus": "EXECUTED",
+     "_class": "it.pagopa.ecommerce.commons.documents.v2.Transaction"
+   },
+    {
+        "_id": "00000000000000000000000000000772",
+        "clientId": "CHECKOUT",
+        "email": {
+          "data": "a4bc4c87-c111-45ca-8b6b-a40a800b4840"
+        },
+        "status": "AUTHORIZATION_REQUESTED",
+        "creationDate": "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+        "paymentNotices": [
+          {
+            "paymentToken": "b72411c6597140b3946b879ad4c3da2d",
+            "rptId": "77777777777302010000655612322",
+            "description": "TARI/TEFA 2021",
+            "amount": 12000,
+            "transferList": [
+              {
+                "paFiscalCode": "77777777777",
+                "digitalStamp": false,
+                "transferAmount": 10000,
+                "transferCategory": "0101101IM"
+              },
+              {
+                "paFiscalCode": "01199250158",
+                "digitalStamp": false,
+                "transferAmount": 2000,
+                "transferCategory": "0201102IM"
+              }
+            ],
+            "isAllCCP": false,
+            "companyName": "company PA",
+            "creditorReferenceId": "02010000655612322"
+          }
+        ],
+        "rrn": "250139026637",
+        "paymentGateway": "NPG",
+        "sendPaymentResultOutcome": "OK",
+        "authorizationCode": "105197",
+        "authorizationErrorCode": "000",
+        "gatewayAuthorizationStatus": "EXECUTED",
+        "_class": "it.pagopa.ecommerce.commons.documents.v2.Transaction"
+      },
+    {
+           "_id": "00000000000000000000000000000773",
+           "clientId": "CHECKOUT",
+           "email": {
+             "data": "a4bc4c87-c111-45ca-8b6b-a40a800b4840"
+           },
+           "status": "AUTHORIZATION_REQUESTED",
+           "creationDate": "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+           "paymentNotices": [
+             {
+               "paymentToken": "b72411c6597140b3946b879ad4c3da2d",
+               "rptId": "77777777777302010000655612322",
+               "description": "TARI/TEFA 2021",
+               "amount": 12000,
+               "transferList": [
+                 {
+                   "paFiscalCode": "77777777777",
+                   "digitalStamp": false,
+                   "transferAmount": 10000,
+                   "transferCategory": "0101101IM"
+                 },
+                 {
+                   "paFiscalCode": "01199250158",
+                   "digitalStamp": false,
+                   "transferAmount": 2000,
+                   "transferCategory": "0201102IM"
+                 }
+               ],
+               "isAllCCP": false,
+               "companyName": "company PA",
+               "creditorReferenceId": "02010000655612322"
+             }
+           ],
+           "rrn": "250139026637",
+           "paymentGateway": "NPG",
+           "sendPaymentResultOutcome": "OK",
+           "authorizationCode": "105197",
+           "authorizationErrorCode": "000",
+           "gatewayAuthorizationStatus": "EXECUTED",
+           "_class": "it.pagopa.ecommerce.commons.documents.v2.Transaction"
+         },
+    // This view can not be migrate
+    {
+      "_id": "00000000000000000000000000000774",
+      "clientId": "CHECKOUT",
+      "email": {
+        "data": "a4bc4c87-c111-45ca-8b6b-a40a800b4840"
+      },
+      "status": "AUTHORIZATION_REQUESTED",
+      "creationDate": notValidDateString,
+      "paymentNotices": [
+        {
+          "paymentToken": "b72411c6597140b3946b879ad4c3da2d",
+          "rptId": "77777777777302010000655612322",
+          "description": "TARI/TEFA 2021",
+          "amount": 12000,
+          "transferList": [
+            {
+              "paFiscalCode": "77777777777",
+              "digitalStamp": false,
+              "transferAmount": 10000,
+              "transferCategory": "0101101IM"
+            },
+            {
+              "paFiscalCode": "01199250158",
+              "digitalStamp": false,
+              "transferAmount": 2000,
+              "transferCategory": "0201102IM"
+            }
+          ],
+          "isAllCCP": false,
+          "companyName": "company PA",
+          "creditorReferenceId": "02010000655612322"
+        }
+      ],
+      "rrn": "250139026637",
+      "paymentGateway": "NPG",
+      "sendPaymentResultOutcome": "OK",
+      "authorizationCode": "105197",
+      "authorizationErrorCode": "000",
+      "gatewayAuthorizationStatus": "EXECUTED",
+      "_class": "it.pagopa.ecommerce.commons.documents.v2.Transaction"
+    }
+]
+
+// Insert only the view in position 1,2,3
+db.getCollection('transactions-view').insertMany(transactionViewList.slice(1))
+// insert the view in position 0 and 1
+dbHistory.getCollection('transactions-view').insertMany(transactionViewList.slice(0,2))
+
 // Wait until the scheduler do the job and then check the result
 console.log("Wait until the migration job is executed...")
 sleep(process.env.TIMEOUT);
 
-if(!assertMigration(eventList, db, dbHistory)){
+if(!assertMigration(eventList, db.getCollection('eventstore'), dbHistory.getCollection('eventstore'))
+    || !assertMigration(transactionViewList, db.getCollection('transactions-view'), dbHistory.getCollection('transactions-view'))){
     console.log("Integration test failed!");
     quit(1);
 }else{
@@ -134,10 +312,11 @@ if(!assertMigration(eventList, db, dbHistory)){
 }
 
 // Check that the inserted data are moved from ecommerce.eventstore to ecommerce-history.eventstore
-function assertMigration(eventList, dbCollection, dbHistoryCollection){
-    let allId = eventList.map(e => e._id)
+// and from the ecommerce.transactions-view to ecommerce-history.transactions-view
+function assertMigration(documentList, dbCollection, dbHistoryCollection){
+    let allId = documentList.map(e => e._id)
 
-    let docsDbHistoryArray = dbHistoryCollection.getCollection('eventstore')
+    let docsDbHistoryArray = dbHistoryCollection
         .find({ _id: {$in: allId}})
         .toArray();
 
@@ -145,7 +324,7 @@ function assertMigration(eventList, dbCollection, dbHistoryCollection){
 
     // Check the transaction that were not in the ecommerce-history now are migrated by the script
     // Excluding the last element that is too recent
-    let idListValideElements = allId.slice(0,eventList.length-1)
+    let idListValideElements = allId.slice(0,documentList.length-1)
     let documentAreMigrated = idListValideElements.reduce(
         (accumulator, currentIdValue) => accumulator && docsIdDbHistoryArray.includes(currentIdValue),
         true,
@@ -156,7 +335,7 @@ function assertMigration(eventList, dbCollection, dbHistoryCollection){
     let tooRecentDocumentNotMigrated = !docsIdDbHistoryArray.includes(idNotValidElement)
 
     // Check if the valid events has the ttl set
-    let docsHasTtl = dbCollection.getCollection('eventstore')
+    let docsHasTtl = dbCollection
         .find({ _id: {$in: docsIdDbHistoryArray}})
         .toArray()
         .reduce(
@@ -168,5 +347,3 @@ function assertMigration(eventList, dbCollection, dbHistoryCollection){
 
     return documentAreMigrated && tooRecentDocumentNotMigrated && docsHasTtl;
 }
-
-
