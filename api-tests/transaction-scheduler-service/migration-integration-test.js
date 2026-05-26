@@ -134,7 +134,7 @@ let transactionViewList =
        "data": "a4bc4c87-c111-45ca-8b6b-a40a800b4840"
      },
      "status": "AUTHORIZATION_REQUESTED",
-     "creationDate": "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+     "creationDate": "2019-01-13T09:18:16.500000000Z[Etc/UTC]",
      "paymentNotices": [
        {
          "paymentToken": "b72411c6597140b3946b879ad4c3da2d",
@@ -175,7 +175,7 @@ let transactionViewList =
           "data": "a4bc4c87-c111-45ca-8b6b-a40a800b4840"
         },
         "status": "AUTHORIZATION_REQUESTED",
-        "creationDate": "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+        "creationDate": "2019-01-13T09:18:16.500000000Z[Etc/UTC]",
         "paymentNotices": [
           {
             "paymentToken": "b72411c6597140b3946b879ad4c3da2d",
@@ -216,7 +216,7 @@ let transactionViewList =
              "data": "a4bc4c87-c111-45ca-8b6b-a40a800b4840"
            },
            "status": "AUTHORIZATION_REQUESTED",
-           "creationDate": "2025-01-13T09:18:16.500000000Z[Etc/UTC]",
+           "creationDate": "2019-01-13T09:18:16.500000000Z[Etc/UTC]",
            "paymentNotices": [
              {
                "paymentToken": "b72411c6597140b3946b879ad4c3da2d",
