@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Pagopa eCommerce payment methods handler local" tests="23" time="0.299">
+  <testsuite name="Retrieve all Payment Methods (by filter) for checkout" id="fd4b689f-3387-40e3-b2f3-db56ad752b67" timestamp="2026-06-05T15:57:36.379Z" tests="8" failures="0" errors="0" time="0.050">
+    <testcase name="Status code is 200 OK" time="0.050" classname="RetrieveAllPaymentMethodsByFilterForCheckout"/>
+    <testcase name="Response is a valid JSON" time="0.050" classname="RetrieveAllPaymentMethodsByFilterForCheckout"/>
+    <testcase name="Response contains 'paymentMethods' array" time="0.050" classname="RetrieveAllPaymentMethodsByFilterForCheckout"/>
+    <testcase name="Payment methods array is not empty" time="0.050" classname="RetrieveAllPaymentMethodsByFilterForCheckout"/>
+    <testcase name="Each payment method has correct structure and data types" time="0.050" classname="RetrieveAllPaymentMethodsByFilterForCheckout"/>
+    <testcase name="Disabled methods must have a valid 'disabledReason'" time="0.050" classname="RetrieveAllPaymentMethodsByFilterForCheckout"/>
+    <testcase name="If 'feeRange' exists, it must contain min and max numbers" time="0.050" classname="RetrieveAllPaymentMethodsByFilterForCheckout"/>
+    <testcase name="The 'validityDateFrom' property should be in YYYY-MM-DD format" time="0.050" classname="RetrieveAllPaymentMethodsByFilterForCheckout"/>
+  </testsuite>
+  <testsuite name="Get payment method by ID for CHECKOUT" id="7ebc4abe-ddc3-4847-9cca-6e2574900b59" timestamp="2026-06-05T15:57:36.379Z" tests="4" failures="0" errors="0" time="0.023">
+    <testcase name="Status code is 200 OK" time="0.023" classname="GetPaymentMethodByIdForCheckout"/>
+    <testcase name="Response is a valid JSON" time="0.023" classname="GetPaymentMethodByIdForCheckout"/>
+    <testcase name="Response has required properties" time="0.023" classname="GetPaymentMethodByIdForCheckout"/>
+    <testcase name="ID in response matches requested ID" time="0.023" classname="GetPaymentMethodByIdForCheckout"/>
+  </testsuite>
+  <testsuite name="Retrieve all Payment Methods (by filter) for IO" id="0cb30592-7bcd-4540-8220-68699405bebb" timestamp="2026-06-05T15:57:36.379Z" tests="8" failures="0" errors="0" time="0.021">
+    <testcase name="Status code is 200 OK" time="0.021" classname="RetrieveAllPaymentMethodsByFilterForIo"/>
+    <testcase name="Response is a valid JSON" time="0.021" classname="RetrieveAllPaymentMethodsByFilterForIo"/>
+    <testcase name="Response contains 'paymentMethods' array" time="0.021" classname="RetrieveAllPaymentMethodsByFilterForIo"/>
+    <testcase name="Payment methods array is not empty" time="0.021" classname="RetrieveAllPaymentMethodsByFilterForIo"/>
+    <testcase name="Each payment method has correct structure and data types" time="0.021" classname="RetrieveAllPaymentMethodsByFilterForIo"/>
+    <testcase name="Disabled methods must have a valid 'disabledReason'" time="0.021" classname="RetrieveAllPaymentMethodsByFilterForIo"/>
+    <testcase name="If 'feeRange' exists, it must contain min and max numbers" time="0.021" classname="RetrieveAllPaymentMethodsByFilterForIo"/>
+    <testcase name="The 'validityDateFrom' property should be in YYYY-MM-DD format" time="0.021" classname="RetrieveAllPaymentMethodsByFilterForIo"/>
+  </testsuite>
+  <testsuite name="Get payment method by ID for IO" id="15cf59ad-d48a-41a0-b641-c04d5195c704" timestamp="2026-06-05T15:57:36.379Z" tests="4" failures="3" errors="0" time="0.009">
+    <testcase name="Status code is 200 OK" time="0.009" classname="GetPaymentMethodByIdForIo">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 404">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Get payment method by ID for IO.]]>
+        <![CDATA[Test description: Status code is 200 OK.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 404.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 404
+   at Object.eval sandbox-script.js:1:4).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response is a valid JSON" time="0.009" classname="GetPaymentMethodByIdForIo"/>
+    <testcase name="Response has required properties" time="0.009" classname="GetPaymentMethodByIdForIo">
+      <failure type="AssertionFailure" message="expected { …(3) } to have property 'id'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Get payment method by ID for IO.]]>
+        <![CDATA[Test description: Response has required properties.]]>
+        <![CDATA[Error message: expected { …(3) } to have property 'id'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected { …(3) } to have property 'id'
+   at Object.eval sandbox-script.js:3:4).]]>
+      </failure>
+    </testcase>
+    <testcase name="ID in response matches requested ID" time="0.009" classname="GetPaymentMethodByIdForIo">
+      <failure type="AssertionFailure" message="expected undefined to deeply equal '378d0b4f-8b69-46b0-8215-07785fe1aad4'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Get payment method by ID for IO.]]>
+        <![CDATA[Test description: ID in response matches requested ID.]]>
+        <![CDATA[Error message: expected undefined to deeply equal '378d0b4f-8b69-46b0-8215-07785fe1aad4'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected undefined to deeply equal '378d0b4f-8b69-46b0-8215-07785fe1aad4'
+   at Object.eval sandbox-script.js:4:4).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Get payment method by ID - Not Found (404)" id="b75010cd-05cd-4821-ab37-7fe428eb47db" timestamp="2026-06-05T15:57:36.379Z" tests="1" failures="0" errors="0" time="0.011">
+    <testcase name="Status code is 404 Not Found" time="0.011" classname="GetPaymentMethodByIdNotFound404"/>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for CHECKOUT [200]" id="48f6a6e4-dca2-4361-8d04-48997bee16f6" timestamp="2026-06-05T15:57:36.379Z" tests="8" failures="5" errors="0" time="0.018">
+    <testcase name="Status code is 200 OK" time="0.018" classname="CalculateFeesForPaymentMethodForCheckout200">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 500">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT [200].]]>
+        <![CDATA[Test description: Status code is 200 OK.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 500.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 500
+   at Object.eval sandbox-script.js:1:6).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response is valid JSON" time="0.018" classname="CalculateFeesForPaymentMethodForCheckout200"/>
+    <testcase name="Response has all required fields with correct types" time="0.018" classname="CalculateFeesForPaymentMethodForCheckout200">
+      <failure type="AssertionFailure" message="expected { detail: 'Generic Error', …(2) } to have property 'paymentMethodName'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT [200].]]>
+        <![CDATA[Test description: Response has all required fields with correct types.]]>
+        <![CDATA[Error message: expected { detail: 'Generic Error', …(2) } to have property 'paymentMethodName'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected { detail: 'Generic Error', …(2) } to have property 'paymentMethodName'
+   at Object.eval sandbox-script.js:3:6).]]>
+      </failure>
+    </testcase>
+    <testcase name="Bundles array is not empty" time="0.018" classname="CalculateFeesForPaymentMethodForCheckout200">
+      <failure type="AssertionFailure" message=".empty was passed non-string primitive undefined">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT [200].]]>
+        <![CDATA[Test description: Bundles array is not empty.]]>
+        <![CDATA[Error message: .empty was passed non-string primitive undefined.]]>
+        <![CDATA[Stacktrace: AssertionError: .empty was passed non-string primitive undefined
+   at Object.eval sandbox-script.js:4:6).]]>
+      </failure>
+    </testcase>
+    <testcase name="Each bundle has required fields with correct types" time="0.018" classname="CalculateFeesForPaymentMethodForCheckout200">
+      <failure type="AssertionFailure" message="Cannot read properties of undefined (reading 'forEach')">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT [200].]]>
+        <![CDATA[Test description: Each bundle has required fields with correct types.]]>
+        <![CDATA[Error message: Cannot read properties of undefined (reading 'forEach').]]>
+        <![CDATA[Stacktrace: TypeError: Cannot read properties of undefined (reading 'forEach')
+   at Object.eval sandbox-script.js:5:6).]]>
+      </failure>
+    </testcase>
+    <testcase name="belowThreshold is boolean if present" time="0.018" classname="CalculateFeesForPaymentMethodForCheckout200"/>
+    <testcase name="brandAssets values are strings if present" time="0.018" classname="CalculateFeesForPaymentMethodForCheckout200"/>
+    <testcase name="pspBusinessName is a string when present (bundleName is deprecated)" time="0.018" classname="CalculateFeesForPaymentMethodForCheckout200">
+      <failure type="AssertionFailure" message="Cannot read properties of undefined (reading 'forEach')">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT [200].]]>
+        <![CDATA[Test description: pspBusinessName is a string when present (bundleName is deprecated).]]>
+        <![CDATA[Error message: Cannot read properties of undefined (reading 'forEach').]]>
+        <![CDATA[Stacktrace: TypeError: Cannot read properties of undefined (reading 'forEach')
+   at Object.eval sandbox-script.js:8:6).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for CHECKOUT (Max Occurrences) [200]" id="be4da1f2-b6de-4f93-ac38-05a7fd7b0452" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="2" errors="0" time="0.017">
+    <testcase name="Status code is 200 OK" time="0.017" classname="CalculateFeesForPaymentMethodForCheckoutMaxOccurrences200">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 500">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT (Max Occurrences) [200].]]>
+        <![CDATA[Test description: Status code is 200 OK.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 500.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 500
+   at Object.eval sandbox-script.js:1:7).]]>
+      </failure>
+    </testcase>
+    <testcase name="Bundles do not exceed maxOccurrences" time="0.017" classname="CalculateFeesForPaymentMethodForCheckoutMaxOccurrences200">
+      <failure type="AssertionFailure" message="Cannot read properties of undefined (reading 'length')">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT (Max Occurrences) [200].]]>
+        <![CDATA[Test description: Bundles do not exceed maxOccurrences.]]>
+        <![CDATA[Error message: Cannot read properties of undefined (reading 'length').]]>
+        <![CDATA[Stacktrace: TypeError: Cannot read properties of undefined (reading 'length')
+   at Object.eval sandbox-script.js:2:7).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for CHECKOUT (Multi Notice) [200]" id="51e422e2-4074-4c60-b455-b78710b6314c" timestamp="2026-06-05T15:57:36.379Z" tests="3" failures="3" errors="0" time="0.018">
+    <testcase name="Status code is 200 OK" time="0.018" classname="CalculateFeesForPaymentMethodForCheckoutMultiNotice200">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 500">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT (Multi Notice) [200].]]>
+        <![CDATA[Test description: Status code is 200 OK.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 500.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 500
+   at Object.eval sandbox-script.js:1:8).]]>
+      </failure>
+    </testcase>
+    <testcase name="Bundles array is not empty" time="0.018" classname="CalculateFeesForPaymentMethodForCheckoutMultiNotice200">
+      <failure type="AssertionFailure" message="expected undefined to be an array">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT (Multi Notice) [200].]]>
+        <![CDATA[Test description: Bundles array is not empty.]]>
+        <![CDATA[Error message: expected undefined to be an array.]]>
+        <![CDATA[Stacktrace: AssertionError: expected undefined to be an array
+   at Object.eval sandbox-script.js:2:8).]]>
+      </failure>
+    </testcase>
+    <testcase name="Each bundle taxPayerFee is non-negative" time="0.018" classname="CalculateFeesForPaymentMethodForCheckoutMultiNotice200">
+      <failure type="AssertionFailure" message="Cannot read properties of undefined (reading 'forEach')">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT (Multi Notice) [200].]]>
+        <![CDATA[Test description: Each bundle taxPayerFee is non-negative.]]>
+        <![CDATA[Error message: Cannot read properties of undefined (reading 'forEach').]]>
+        <![CDATA[Stacktrace: TypeError: Cannot read properties of undefined (reading 'forEach')
+   at Object.eval sandbox-script.js:3:8).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for CHECKOUT (Missing Touchpoint) [500]" id="48026173-18b3-4e6b-9540-05087e00e413" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="0" errors="0" time="0.007">
+    <testcase name="Status code is 500 — Jackson MismatchedInputException on missing touchpoint" time="0.007" classname="CalculateFeesForPaymentMethodForCheckoutMissingTouchpoint500"/>
+    <testcase name="ProblemJson structure is valid" time="0.007" classname="CalculateFeesForPaymentMethodForCheckoutMissingTouchpoint500"/>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for CHECKOUT (Empty Payment Notices) [400]" id="d19d1aab-5fb0-4704-b1d5-3be4bc3d280e" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="Status code is 400 Bad Request" time="0.006" classname="CalculateFeesForPaymentMethodForCheckoutEmptyPaymentNotices400"/>
+    <testcase name="ProblemJson structure is valid" time="0.006" classname="CalculateFeesForPaymentMethodForCheckoutEmptyPaymentNotices400"/>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for CHECKOUT (Not Found) [404]" id="40f4022e-cda7-47a7-a367-46e095794940" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="0" errors="0" time="0.011">
+    <testcase name="Status code is 404 Not Found" time="0.011" classname="CalculateFeesForPaymentMethodForCheckoutNotFound404"/>
+    <testcase name="ProblemJson structure is valid" time="0.011" classname="CalculateFeesForPaymentMethodForCheckoutNotFound404"/>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for CHECKOUT (No Bundle Available) [404]" id="123fe48c-4ddf-4cac-a3ea-e37936036362" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="2" errors="0" time="0.017">
+    <testcase name="Status code is 404 Not Found" time="0.017" classname="CalculateFeesForPaymentMethodForCheckoutNoBundleAvailable404">
+      <failure type="AssertionFailure" message="expected response to have status code 404 but got 500">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT (No Bundle Available) [404].]]>
+        <![CDATA[Test description: Status code is 404 Not Found.]]>
+        <![CDATA[Error message: expected response to have status code 404 but got 500.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 404 but got 500
+   at Object.eval sandbox-script.js:1:12).]]>
+      </failure>
+    </testcase>
+    <testcase name="ProblemJson structure is valid" time="0.017" classname="CalculateFeesForPaymentMethodForCheckoutNoBundleAvailable404">
+      <failure type="AssertionFailure" message="expected 500 to deeply equal 404">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for CHECKOUT (No Bundle Available) [404].]]>
+        <![CDATA[Test description: ProblemJson structure is valid.]]>
+        <![CDATA[Error message: expected 500 to deeply equal 404.]]>
+        <![CDATA[Stacktrace: AssertionError: expected 500 to deeply equal 404
+   at Object.eval sandbox-script.js:2:12).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for CHECKOUT (Missing x-client-id) [400]" id="7bb0ad54-c4d8-4a7b-8911-7fa20f0bce53" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="Status code is 400 Bad Request when x-client-id is missing" time="0.006" classname="CalculateFeesForPaymentMethodForCheckoutMissingXClientId400"/>
+    <testcase name="ProblemJson structure is valid" time="0.006" classname="CalculateFeesForPaymentMethodForCheckoutMissingXClientId400"/>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for CHECKOUT (Missing x-language) [400]" id="b858dbc7-0bc2-405e-a0d9-27ebfc7b11d5" timestamp="2026-06-05T15:57:36.379Z" tests="1" failures="0" errors="0" time="0.005">
+    <testcase name="Status code is 400 Bad Request when x-language is missing" time="0.005" classname="CalculateFeesForPaymentMethodForCheckoutMissingXLanguage400"/>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for IO [200]" id="4fc8f702-8e67-4192-b387-2bb0a7bcd30d" timestamp="2026-06-05T15:57:36.379Z" tests="8" failures="5" errors="0" time="0.011">
+    <testcase name="Status code is 200 OK" time="0.011" classname="CalculateFeesForPaymentMethodForIo200">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 404">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for IO [200].]]>
+        <![CDATA[Test description: Status code is 200 OK.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 404.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 404
+   at Object.eval sandbox-script.js:1:15).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response is valid JSON" time="0.011" classname="CalculateFeesForPaymentMethodForIo200"/>
+    <testcase name="Response has all required fields with correct types" time="0.011" classname="CalculateFeesForPaymentMethodForIo200">
+      <failure type="AssertionFailure" message="expected { …(3) } to have property 'paymentMethodName'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for IO [200].]]>
+        <![CDATA[Test description: Response has all required fields with correct types.]]>
+        <![CDATA[Error message: expected { …(3) } to have property 'paymentMethodName'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected { …(3) } to have property 'paymentMethodName'
+   at Object.eval sandbox-script.js:3:15).]]>
+      </failure>
+    </testcase>
+    <testcase name="Bundles array is not empty" time="0.011" classname="CalculateFeesForPaymentMethodForIo200">
+      <failure type="AssertionFailure" message=".empty was passed non-string primitive undefined">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for IO [200].]]>
+        <![CDATA[Test description: Bundles array is not empty.]]>
+        <![CDATA[Error message: .empty was passed non-string primitive undefined.]]>
+        <![CDATA[Stacktrace: AssertionError: .empty was passed non-string primitive undefined
+   at Object.eval sandbox-script.js:4:15).]]>
+      </failure>
+    </testcase>
+    <testcase name="Each bundle has required fields with correct types" time="0.011" classname="CalculateFeesForPaymentMethodForIo200">
+      <failure type="AssertionFailure" message="Cannot read properties of undefined (reading 'forEach')">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for IO [200].]]>
+        <![CDATA[Test description: Each bundle has required fields with correct types.]]>
+        <![CDATA[Error message: Cannot read properties of undefined (reading 'forEach').]]>
+        <![CDATA[Stacktrace: TypeError: Cannot read properties of undefined (reading 'forEach')
+   at Object.eval sandbox-script.js:5:15).]]>
+      </failure>
+    </testcase>
+    <testcase name="belowThreshold is boolean if present" time="0.011" classname="CalculateFeesForPaymentMethodForIo200"/>
+    <testcase name="brandAssets values are strings if present" time="0.011" classname="CalculateFeesForPaymentMethodForIo200"/>
+    <testcase name="pspBusinessName is a string when present (bundleName is deprecated)" time="0.011" classname="CalculateFeesForPaymentMethodForIo200">
+      <failure type="AssertionFailure" message="Cannot read properties of undefined (reading 'forEach')">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for IO [200].]]>
+        <![CDATA[Test description: pspBusinessName is a string when present (bundleName is deprecated).]]>
+        <![CDATA[Error message: Cannot read properties of undefined (reading 'forEach').]]>
+        <![CDATA[Stacktrace: TypeError: Cannot read properties of undefined (reading 'forEach')
+   at Object.eval sandbox-script.js:8:15).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for IO (Max Occurrences) [200]" id="c2d8cfe7-7049-47fd-9e3c-511b0101c1e7" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="2" errors="0" time="0.012">
+    <testcase name="Status code is 200 OK" time="0.012" classname="CalculateFeesForPaymentMethodForIoMaxOccurrences200">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 404">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for IO (Max Occurrences) [200].]]>
+        <![CDATA[Test description: Status code is 200 OK.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 404.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 404
+   at Object.eval sandbox-script.js:1:16).]]>
+      </failure>
+    </testcase>
+    <testcase name="Bundles do not exceed maxOccurrences" time="0.012" classname="CalculateFeesForPaymentMethodForIoMaxOccurrences200">
+      <failure type="AssertionFailure" message="Cannot read properties of undefined (reading 'length')">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for IO (Max Occurrences) [200].]]>
+        <![CDATA[Test description: Bundles do not exceed maxOccurrences.]]>
+        <![CDATA[Error message: Cannot read properties of undefined (reading 'length').]]>
+        <![CDATA[Stacktrace: TypeError: Cannot read properties of undefined (reading 'length')
+   at Object.eval sandbox-script.js:2:16).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for IO (Multi Notice) [200]" id="c5e7adcb-d999-432b-afc2-c41a86eae810" timestamp="2026-06-05T15:57:36.379Z" tests="3" failures="3" errors="0" time="0.011">
+    <testcase name="Status code is 200 OK" time="0.011" classname="CalculateFeesForPaymentMethodForIoMultiNotice200">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 404">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for IO (Multi Notice) [200].]]>
+        <![CDATA[Test description: Status code is 200 OK.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 404.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 404
+   at Object.eval sandbox-script.js:1:17).]]>
+      </failure>
+    </testcase>
+    <testcase name="Bundles array is not empty" time="0.011" classname="CalculateFeesForPaymentMethodForIoMultiNotice200">
+      <failure type="AssertionFailure" message="expected undefined to be an array">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for IO (Multi Notice) [200].]]>
+        <![CDATA[Test description: Bundles array is not empty.]]>
+        <![CDATA[Error message: expected undefined to be an array.]]>
+        <![CDATA[Stacktrace: AssertionError: expected undefined to be an array
+   at Object.eval sandbox-script.js:2:17).]]>
+      </failure>
+    </testcase>
+    <testcase name="Each bundle taxPayerFee is non-negative" time="0.011" classname="CalculateFeesForPaymentMethodForIoMultiNotice200">
+      <failure type="AssertionFailure" message="Cannot read properties of undefined (reading 'forEach')">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: ad12817b-d22d-4ec1-b9a2-3b44a1682315.]]>
+        <![CDATA[Collection name: Pagopa eCommerce payment methods handler local.]]>
+        <![CDATA[Request name: Calculate Fees for Payment Method for IO (Multi Notice) [200].]]>
+        <![CDATA[Test description: Each bundle taxPayerFee is non-negative.]]>
+        <![CDATA[Error message: Cannot read properties of undefined (reading 'forEach').]]>
+        <![CDATA[Stacktrace: TypeError: Cannot read properties of undefined (reading 'forEach')
+   at Object.eval sandbox-script.js:3:17).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for IO (Missing Touchpoint) [500]" id="127a3b7b-f230-468e-90e5-550a072c2eeb" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="Status code is 500 — Jackson MismatchedInputException on missing touchpoint" time="0.004" classname="CalculateFeesForPaymentMethodForIoMissingTouchpoint500"/>
+    <testcase name="ProblemJson structure is valid" time="0.004" classname="CalculateFeesForPaymentMethodForIoMissingTouchpoint500"/>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for IO (Empty Payment Notices) [400]" id="46db0d31-ca05-4622-96d4-f43c72763e5f" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="Status code is 400 Bad Request" time="0.006" classname="CalculateFeesForPaymentMethodForIoEmptyPaymentNotices400"/>
+    <testcase name="ProblemJson structure is valid" time="0.006" classname="CalculateFeesForPaymentMethodForIoEmptyPaymentNotices400"/>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for IO (Not Found) [404]" id="ece8fc3e-d26f-4e0e-9899-f801d7052268" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="0" errors="0" time="0.012">
+    <testcase name="Status code is 404 Not Found" time="0.012" classname="CalculateFeesForPaymentMethodForIoNotFound404"/>
+    <testcase name="ProblemJson structure is valid" time="0.012" classname="CalculateFeesForPaymentMethodForIoNotFound404"/>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for IO (No Bundle Available) [404]" id="f86871c2-0ec2-4a30-8a56-3d1b2bbdb237" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="0" errors="0" time="0.013">
+    <testcase name="Status code is 404 Not Found" time="0.013" classname="CalculateFeesForPaymentMethodForIoNoBundleAvailable404"/>
+    <testcase name="ProblemJson structure is valid" time="0.013" classname="CalculateFeesForPaymentMethodForIoNoBundleAvailable404"/>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for IO (Missing x-client-id) [400]" id="27c80d21-89ad-44d9-afd6-89088873f34c" timestamp="2026-06-05T15:57:36.379Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="Status code is 400 Bad Request when x-client-id is missing" time="0.005" classname="CalculateFeesForPaymentMethodForIoMissingXClientId400"/>
+    <testcase name="ProblemJson structure is valid" time="0.005" classname="CalculateFeesForPaymentMethodForIoMissingXClientId400"/>
+  </testsuite>
+  <testsuite name="Calculate Fees for Payment Method for IO (Missing x-language) [400]" id="4a2bca61-b4bb-4afd-85af-ae4320e60420" timestamp="2026-06-05T15:57:36.379Z" tests="1" failures="0" errors="0" time="0.006">
+    <testcase name="Status code is 400 Bad Request when x-language is missing" time="0.006" classname="CalculateFeesForPaymentMethodForIoMissingXLanguage400"/>
+  </testsuite>
+</testsuites>

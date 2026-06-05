@@ -208,7 +208,7 @@
 							"            pm.expect(method).to.have.property('methodManagement').and.is.a('string');",
 							"            ",
 							"            pm.expect(method.paymentMethodAsset).to.match(/^https?:\\/\\//);",
-							"            pm.collectionVariables.set(\"paymentMethodIdForIo\", method.id);",
+							"            pm.collectionVariables.set('paymentMethodIdForIo', method.id);",
 							"        });",
 							"    }",
 							"});",
