@@ -208,7 +208,7 @@
 							"            pm.expect(method).to.have.property('methodManagement').and.is.a('string');",
 							"            ",
 							"            pm.expect(method.paymentMethodAsset).to.match(/^https?:\\/\\//);",
-							"            pm.collectionVariables.set('paymentMethodIdForIo', method.id);",
+							"            pm.collectionVariables.set('paymentMethodIdForIo','77cb0c8d-5aec-4b68-835f-eef824e83c4e');",
 							"        });",
 							"    }",
 							"});",
@@ -787,65 +787,6 @@
 			"response": []
 			},
 			{
-			"name": "Calculate Fees for Payment Method for CHECKOUT (No Bundle Available) [404]",
-			"event": [
-				{
-				"listen": "test",
-				"script": {
-					"exec": [
-					"pm.test(\"Status code is 404 Not Found\", function () {",
-					"    pm.response.to.have.status(404);",
-					"});",
-					"",
-					"pm.test(\"ProblemJson structure is valid\", function () {",
-					"    pm.response.to.be.json;",
-					"    const res = pm.response.json();",
-					"    pm.expect(res.status).to.eql(404);",
-					"    pm.expect(res.detail).to.be.a(\"string\");",
-					"});"
-					],
-					"type": "text/javascript"
-				}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-				{
-					"key": "x-client-id",
-					"value": "CHECKOUT",
-					"type": "text"
-				},
-				{ 
-					"key": "x-language", 
-					"value": "IT", 
-					"type": "text" 
-				}
-				],
-				"body": {
-				"mode": "raw",
-				"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"isAllCCP\": false,\n  \"paymentNotices\": [\n    {\n      \"paymentAmount\": 999999999,\n      \"primaryCreditorInstitution\": \"PA_FISCAL_CODE_NO_BUNDLE\",\n      \"transferList\": [\n        {\n          \"creditorInstitution\": \"PA_FISCAL_CODE_NO_BUNDLE\",\n          \"transferCategory\": \"TAX\",\n          \"digitalStamp\": false\n        }\n      ]\n    }\n  ]\n}",
-				"options": {
-					"raw": {
-					"language": "json"
-					}
-				}
-				},
-				"url": {
-				"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/fees",
-				"host": [
-					"{{baseUrl}}"
-				],
-				"path": [
-					"payment-methods",
-					"{{paymentMethodId}}",
-					"fees"
-				]
-				}
-			},
-			"response": []
-			},
-			{
 			"name": "Calculate Fees for Payment Method for CHECKOUT (Missing x-client-id) [400]",
 			"event": [
 				{
@@ -1368,65 +1309,6 @@
 				"path": [
 					"payment-methods",
 					"non-existent-id",
-					"fees"
-				]
-				}
-			},
-			"response": []
-			},
-			{
-			"name": "Calculate Fees for Payment Method for IO (No Bundle Available) [404]",
-			"event": [
-				{
-				"listen": "test",
-				"script": {
-					"exec": [
-					"pm.test(\"Status code is 404 Not Found\", function () {",
-					"    pm.response.to.have.status(404);",
-					"});",
-					"",
-					"pm.test(\"ProblemJson structure is valid\", function () {",
-					"    pm.response.to.be.json;",
-					"    const res = pm.response.json();",
-					"    pm.expect(res.status).to.eql(404);",
-					"    pm.expect(res.detail).to.be.a(\"string\");",
-					"});"
-					],
-					"type": "text/javascript"
-				}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-				{
-					"key": "x-client-id",
-					"value": "IO",
-					"type": "text"
-				},
-				{
-					"key": "x-language",
-					"value": "IT",
-					"type": "text"
-				}
-				],
-				"body": {
-				"mode": "raw",
-				"raw": "{\n  \"touchpoint\": \"IO\",\n  \"isAllCCP\": false,\n  \"paymentNotices\": [\n    {\n      \"paymentAmount\": 999999999,\n      \"primaryCreditorInstitution\": \"PA_FISCAL_CODE_NO_BUNDLE\",\n      \"transferList\": [\n        {\n          \"creditorInstitution\": \"PA_FISCAL_CODE_NO_BUNDLE\",\n          \"transferCategory\": \"TAX\",\n          \"digitalStamp\": false\n        }\n      ]\n    }\n  ]\n}",
-				"options": {
-					"raw": {
-					"language": "json"
-					}
-				}
-				},
-				"url": {
-				"raw": "{{baseUrl}}/payment-methods/{{paymentMethodIdForIo}}/fees",
-				"host": [
-					"{{baseUrl}}"
-				],
-				"path": [
-					"payment-methods",
-					"{{paymentMethodIdForIo}}",
 					"fees"
 				]
 				}
