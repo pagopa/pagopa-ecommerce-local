@@ -830,7 +830,13 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
 					"host": [
@@ -952,7 +958,13 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/invalidOrderId",
 					"host": [
@@ -1301,7 +1313,13 @@
 			],
 			"request": {
 				"method": "PATCH",
-				"header": [],
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"transactionId\": \"3d6fc69c949741e9af6cc5b7a05cbd0d\"\n}\n\n //b64 encoding -> PW_GnJSXQemvbMW3oFy9DQ",
@@ -1479,6 +1497,11 @@
 					{
 						"key": "x-api-key",
 						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
 						"type": "text"
 					}
 				],
@@ -1665,6 +1688,11 @@
 					{
 						"key": "x-api-key",
 						"value": "{{PRIMARY_API_KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
 						"type": "text"
 					}
 				],
