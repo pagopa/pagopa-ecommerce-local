@@ -1141,7 +1141,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{DIGITAL_STAMP_ORDER_ID}}\"\n}",
+          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{DIGITAL_STAMP_RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{DIGITAL_STAMP_ORDER_ID}}\"\n}",
           "options": {
             "raw": {
               "language": "json"

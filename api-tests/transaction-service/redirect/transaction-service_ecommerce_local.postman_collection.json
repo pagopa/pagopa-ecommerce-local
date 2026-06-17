@@ -874,7 +874,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"test-order-digital-stamp\"\n}",
+          "raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{DIGITAL_STAMP_RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"test-order-digital-stamp\"\n}",
           "options": {
             "raw": {
               "language": "json"
