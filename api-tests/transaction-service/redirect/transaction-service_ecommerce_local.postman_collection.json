@@ -127,7 +127,7 @@
         "header": [
           {
             "key": "x-client-id",
-            "value": "CHECKOUT_CART"
+            "value": "CHECKOUT"
           },
           {
             "key": "x-correlation-id",
