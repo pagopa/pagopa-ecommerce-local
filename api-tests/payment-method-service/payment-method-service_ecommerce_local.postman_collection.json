@@ -1021,13 +1021,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/fees",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"fees"
 					]
 				}
@@ -1177,14 +1177,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/fees",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"v2",
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"fees"
 					]
 				}
