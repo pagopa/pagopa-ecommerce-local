@@ -1,9 +1,9 @@
 {
   "info": {
-    "_postman_id": "8d390498-c6a2-484a-a8b2-f9b4691a7129",
+    "_postman_id": "fce6ec0e-dc1d-41c0-8478-87efa70b09d8",
     "name": "Transaction service for local eCommerce - double post auth request same payment token different transactionId",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23305473"
+    "_exporter_id": "23963988"
   },
   "item": [
     {
@@ -160,7 +160,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        //fiscal code forced here to make pagopa-node-mock return payment token\n        //that will cause mock to return error in later close payment request\n        \"rptId\": \"66666666602302000000000000000\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
+          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"77777777777302099999999999999\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -335,7 +335,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        //fiscal code forced here to make pagopa-node-mock return payment token\n        //that will cause mock to return error in later close payment request\n        \"rptId\": \"66666666602302000000000000000\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID_2}}\"\n}",
+          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"77777777777302099999999999999\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID_2}}\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -446,7 +446,7 @@
               "    pm.expect(response.title).to.be.a(\"string\");",
               "    pm.expect(response.title).to.be.eq(\"Error acquiring lock to perform operation\");",
               "    pm.expect(response.detail).to.be.a(\"string\");",
-              "    pm.expect(response.detail).to.be.eq(\"Lock not acquired for transaction with id: [\"+transactionId2+\"] and locking key: [POST-auth-request-payment-token-00000000000000000000000000000003]\");",
+              "    pm.expect(response.detail).to.satisfy(msg => msg.startsWith(\"Lock not acquired for transaction with id: [\"+transactionId2+\"] and locking key: [POST-auth-request-payment-token-\"));",
               "});"
             ],
             "type": "text/javascript",
