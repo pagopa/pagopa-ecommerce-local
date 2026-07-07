@@ -617,7 +617,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[pagopa-ecommerce-payment-method-service] Get payment method from handler (status code is 200)\", () => {",
+							"pm.test(\"[pagopa-ecommerce-payment-method-handler] Get payment method from handler (status code is 200)\", () => {",
 							"  pm.expect(pm.response.code).to.eql(200);",
 							"  const responseJson = pm.response.json();",
 							"  pm.expect(responseJson.paymentMethods).to.be.an('array').and.have.length.greaterThan(0);",
@@ -996,7 +996,7 @@
 							"        \"paymentMethodStatus\": \"ENABLED\",",
 							"        \"belowThreshold\": true",
 							"    };",
-							"    pm.expect(response.paymentMethodName).eql(\"Carte\");",
+							"    pm.expect(response.paymentMethodName).eql(\"CARDS\");",
 							"    pm.expect(response.paymentMethodDescription).eql(\"Carta di credito o debito\");",
 							"    pm.expect(response.paymentMethodStatus).eql(expectedWithoutBundles.paymentMethodStatus);",
 							"    pm.expect(response.belowThreshold).eql(expectedWithoutBundles.belowThreshold);",
@@ -1152,7 +1152,7 @@
 							"        \"paymentMethodStatus\": \"ENABLED\",",
 							"        \"belowThreshold\": true",
 							"    };",
-							"    pm.expect(response.paymentMethodName).eql(\"Carte\");",
+							"    pm.expect(response.paymentMethodName).eql(\"CARDS\");",
 							"    pm.expect(response.paymentMethodDescription).eql(\"Carta di credito o debito\");",
 							"    pm.expect(response.paymentMethodStatus).eql(expectedWithoutBundles.paymentMethodStatus);",
 							"    pm.expect(response.belowThreshold).eql(expectedWithoutBundles.belowThreshold);",
