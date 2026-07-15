@@ -1428,6 +1428,56 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get NPG SDK integrity hash",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is a valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response has 'integrityHash' property\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson).to.have.property('integrityHash');",
+							"    pm.expect(responseJson.integrityHash).to.be.a('string');",
+							"});",
+							"",
+							"pm.test(\"Integrity hash starts with 'sha384-'\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.integrityHash).to.match(/^sha384-.+$/);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/npg/sdk/integrity",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"npg",
+						"sdk",
+						"integrity"
+					]
+				},
+				"description": "Retrieves the NPG SDK integrity hash for Subresource Integrity (SRI) checks."
+			},
+			"response": []
 		}
 	],
 	"auth": {
