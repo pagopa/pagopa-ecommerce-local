@@ -611,6 +611,65 @@
 			"response": []
 		},
 		{
+			"name": "Get payment method id from handler",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[pagopa-ecommerce-payment-method-handler] Get payment method from handler (status code is 200)\", () => {",
+							"  pm.expect(pm.response.code).to.eql(200);",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.paymentMethods).to.be.an('array').and.have.length.greaterThan(0);",
+							"  const cpMethod = responseJson.paymentMethods.find(m => m.paymentTypeCode === 'CP');",
+							"  pm.expect(cpMethod).to.not.be.undefined;",
+							"  pm.environment.set(\"HANDLER_PAYMENT_METHOD_ID\", cpMethod.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{PRIMARY_API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userTouchpoint\": \"CHECKOUT\",\n    \"totalAmount\": 100,\n    \"paymentNotice\": [\n        {\n            \"paymentAmount\": 100,\n            \"primaryCreditorInstitution\": \"77777777777\",\n            \"transferList\": [\n                {\n                    \"creditorInstitution\": \"77777777777\"\n                }\n            ]\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HANDLER_HOSTNAME}}/payment-methods",
+					"host": [
+						"{{HANDLER_HOSTNAME}}"
+					],
+					"path": [
+						"payment-methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create session",
 			"event": [
 				{
@@ -632,19 +691,25 @@
 			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions"
 					]
 				}
@@ -691,13 +756,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions"
 					]
 				}
@@ -732,13 +797,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions"
 					]
 				}
@@ -765,15 +830,21 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}"
 					]
@@ -816,13 +887,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}"
 					]
@@ -853,13 +924,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}"
 					]
@@ -887,15 +958,21 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/invalidOrderId",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/invalidOrderId",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"invalidOrderId"
 					]
@@ -920,7 +997,7 @@
 							"        \"belowThreshold\": true",
 							"    };",
 							"    pm.expect(response.paymentMethodName).eql(\"CARDS\");",
-							"    pm.expect(response.paymentMethodDescription).eql(\"description\");",
+							"    pm.expect(response.paymentMethodDescription).eql(\"Carta di credito o debito\");",
 							"    pm.expect(response.paymentMethodStatus).eql(expectedWithoutBundles.paymentMethodStatus);",
 							"    pm.expect(response.belowThreshold).eql(expectedWithoutBundles.belowThreshold);",
 							"    pm.expect(response.bundles).to.be.not.empty;",
@@ -944,13 +1021,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/fees",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"fees"
 					]
 				}
@@ -1076,7 +1153,7 @@
 							"        \"belowThreshold\": true",
 							"    };",
 							"    pm.expect(response.paymentMethodName).eql(\"CARDS\");",
-							"    pm.expect(response.paymentMethodDescription).eql(\"description\");",
+							"    pm.expect(response.paymentMethodDescription).eql(\"Carta di credito o debito\");",
 							"    pm.expect(response.paymentMethodStatus).eql(expectedWithoutBundles.paymentMethodStatus);",
 							"    pm.expect(response.belowThreshold).eql(expectedWithoutBundles.belowThreshold);",
 							"    pm.expect(response.bundles).to.be.not.empty;",
@@ -1100,14 +1177,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/fees",
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/fees",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"v2",
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"fees"
 					]
 				}
@@ -1236,7 +1313,13 @@
 			],
 			"request": {
 				"method": "PATCH",
-				"header": [],
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"transactionId\": \"3d6fc69c949741e9af6cc5b7a05cbd0d\"\n}\n\n //b64 encoding -> PW_GnJSXQemvbMW3oFy9DQ",
@@ -1247,13 +1330,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}"
 					]
@@ -1305,13 +1388,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}"
 					]
@@ -1363,13 +1446,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}"
 					]
@@ -1415,6 +1498,11 @@
 						"key": "x-api-key",
 						"value": "{{PRIMARY_API_KEY}}",
 						"type": "text"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
 					}
 				],
 				"body": {
@@ -1427,13 +1515,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}/transactionId",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}",
 						"transactionId"
@@ -1490,13 +1578,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}/transactionId",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}",
 						"transactionId"
@@ -1547,13 +1635,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"raw": "{{HOSTNAME}}/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}/transactionId",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}",
 						"transactionId"
@@ -1601,6 +1689,11 @@
 						"key": "x-api-key",
 						"value": "{{PRIMARY_API_KEY}}",
 						"type": "text"
+					},
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
 					}
 				],
 				"body": {
@@ -1613,14 +1706,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}/transactionId",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"v2",
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}",
 						"transactionId"
@@ -1677,14 +1770,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}/transactionId",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"v2",
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}",
 						"transactionId"
@@ -1735,14 +1828,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{HOSTNAME}}/v2/payment-methods/{{PAYMENT_METHOD_ID_CHECKOUT}}/sessions/{{ORDER_ID}}/transactionId",
+					"raw": "{{HOSTNAME}}/v2/payment-methods/{{HANDLER_PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}/transactionId",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
 						"v2",
 						"payment-methods",
-						"{{PAYMENT_METHOD_ID_CHECKOUT}}",
+						"{{HANDLER_PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}",
 						"transactionId"
