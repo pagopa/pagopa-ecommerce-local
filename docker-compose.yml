@@ -114,7 +114,9 @@ services:
       - pagopa-ecommerce-net
     depends_on:
       mongo-init:
-        condition: service_completed_successfully
+          condition: service_completed_successfully
+      pagopa-ecommerce-payment-methods-handler:
+          condition: service_started
 
   pagopa-ecommerce-payment-methods-handler:
     container_name: pagopa-ecommerce-payment-methods-handler

@@ -1,9 +1,10 @@
 {
   "info": {
-    "_postman_id": "02d55483-9457-4720-999b-fb11611bf3b8",
+    "_postman_id": "64de7a3a-57a5-4c8d-b40c-b52af0ba4239",
     "name": "Transaction service for local eCommerce REDIRECT",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "23963988"
+    "_exporter_id": "23963988",
+    "_collection_link": "https://go.postman.co/collection/23963988-64de7a3a-57a5-4c8d-b40c-b52af0ba4239?source=collection_link"
   },
   "item": [
     {
@@ -30,55 +31,17 @@
               ""
             ],
             "type": "text/javascript",
-            "packages": {}
+            "packages": {},
+            "requests": {}
           }
         },
         {
           "listen": "prerequest",
           "script": {
             "exec": [
-              "const getPaymentMethodRequest = {",
-              "    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
-              "    method: 'GET',",
-              "    header: {",
-              "        'Content-Type': 'application/json',",
-              "        'x-client-id': 'CHECKOUT',",
-              "        'x-api-key': 'PRIMARY-KEY'",
-              "    }",
-              "};",
-              "",
-              "pm.sendRequest(getPaymentMethodRequest, (error, response) => {",
-              "    const responseBody = response.json();",
-              "    const redirectPaymentMethods = responseBody.paymentMethods.filter(function (paymentMethod) {",
-              "        return paymentMethod.methodManagement === \"REDIRECT\";",
-              "    });;",
-              "",
-              "    if (redirectPaymentMethods.length == 0) {",
-              "        createPaymentMethod();",
-              "    } else {",
-              "        pm.environment.set(\"PAYMENT_METHOD_ID\", redirectPaymentMethods[0].id);",
-              "    }",
-              "});",
-              "",
-              "function createPaymentMethod() {",
-              "    const createPaymentMethodRequestBody = {",
-              "        \"name\": \"Paga in conto\",",
-              "        \"description\": \"Paga in conto\",",
-              "        \"asset\": \"asset\",",
-              "        \"status\": \"ENABLED\",",
-              "        \"paymentTypeCode\": \"RBPR\",",
-              "        \"ranges\": [",
-              "            {",
-              "                \"min\": 0,",
-              "                \"max\": 10000",
-              "            }",
-              "        ],",
-              "        \"clientId\": \"CHECKOUT\",",
-              "        \"methodManagement\": \"REDIRECT\"",
-              "    };",
-              "",
-              "    const createPaymentMethodRequest = {",
-              "        url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods`,",
+              "function createSession(paymentMethodId) {",
+              "    const createSession = {",
+              "        url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"PAYMENT_METHOD_SERVICE_PORT\")}/payment-methods/${paymentMethodId}/sessions`,",
               "        method: 'POST',",
               "        header: {",
               "            'Content-Type': 'application/json',",
@@ -86,24 +49,27 @@
               "        },",
               "        body: {",
               "            mode: 'raw',",
-              "            raw: JSON.stringify(createPaymentMethodRequestBody)",
+              "            raw: ''",
               "        }",
               "    };",
-              "    pm.sendRequest(createPaymentMethodRequest, (error, response) => {",
+              "",
+              "    pm.sendRequest(createSession, (error, response) => {",
               "        if (error) {",
-              "            console.log(`Create payment method error: ${error}`);",
+              "            console.log(`Create session error: ${error.code}`);",
               "        } else {",
               "            const responseBody = response.json();",
-              "            const paymentMethodId = responseBody.id;",
-              "            pm.environment.set(\"PAYMENT_METHOD_ID\", paymentMethodId);",
+              "            pm.environment.set(\"ORDER_ID\", responseBody.orderId);",
+              "            pm.environment.set(\"CORRELATION_ID\", responseBody.correlationId);",
               "        }",
               "    });",
               "}",
-              "",
-              ""
+              "const paymentMethodId = \"378d0b4f-8b69-46b0-8215-07785fe1aad4\";",
+              "pm.environment.set(\"PAYMENT_METHOD_ID\", paymentMethodId);",
+              "createSession(paymentMethodId);"
             ],
             "type": "text/javascript",
-            "packages": {}
+            "packages": {},
+            "requests": {}
           }
         }
       ],
