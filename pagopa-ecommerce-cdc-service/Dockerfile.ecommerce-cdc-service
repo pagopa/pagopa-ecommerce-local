@@ -15,7 +15,8 @@ RUN apk add --no-cache findutils git gettext
 
 COPY --from=clone /workspace/pagopa-ecommerce-cdc-service/ ./
 RUN chmod +x ./gradlew
-RUN --mount=type=secret,id=GITHUB_TOKEN,env=GITHUB_TOKEN \
+RUN --mount=type=secret,id=GITHUB_TOKEN \
+    GITHUB_TOKEN=$(cat /run/secrets/GITHUB_TOKEN) \
     ./gradlew build -x test
 
 RUN mkdir build/extracted && \
