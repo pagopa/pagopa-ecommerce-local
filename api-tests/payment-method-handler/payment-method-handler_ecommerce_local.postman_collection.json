@@ -607,20 +607,20 @@
 			"response": []
 			},
 			{
-			"name": "Calculate Fees for Payment Method for CHECKOUT (Missing Touchpoint) [500]",
+			"name": "Calculate Fees for Payment Method for CHECKOUT (Missing Touchpoint) [400]",
 			"event": [
 				{
 				"listen": "test",
 				"script": {
 					"exec": [
-					"pm.test(\"Status code is 500 — Jackson MismatchedInputException on missing touchpoint\", function () {",
-					"    pm.response.to.have.status(500);",
+					"pm.test(\"Status code is 400 Bad Request on missing touchpoint\", function () {",
+					"    pm.response.to.have.status(400);",
 					"});",
 					"",
 					"pm.test(\"ProblemJson structure is valid\", function () {",
 					"    pm.response.to.be.json;",
 					"    const res = pm.response.json();",
-					"    pm.expect(res).to.have.property(\"status\").eql(500);",
+					"    pm.expect(res).to.have.property(\"status\").eql(400);",
 					"    pm.expect(res).to.have.property(\"title\").and.is.a(\"string\");",
 					"    pm.expect(res).to.have.property(\"detail\").and.is.a(\"string\");",
 					"});"
@@ -1136,20 +1136,20 @@
 			"response": []
 			},
 			{
-			"name": "Calculate Fees for Payment Method for IO (Missing Touchpoint) [500]",
+			"name": "Calculate Fees for Payment Method for IO (Missing Touchpoint) [400]",
 			"event": [
 				{
 				"listen": "test",
 				"script": {
 					"exec": [
-					"pm.test(\"Status code is 500 — Jackson MismatchedInputException on missing touchpoint\", function () {",
-					"    pm.response.to.have.status(500);",
+					"pm.test(\"Status code is 400 Bad Request on missing touchpoint\", function () {",
+					"    pm.response.to.have.status(400);",
 					"});",
 					"",
 					"pm.test(\"ProblemJson structure is valid\", function () {",
 					"    pm.response.to.be.json;",
 					"    const res = pm.response.json();",
-					"    pm.expect(res).to.have.property(\"status\").eql(500);",
+					"    pm.expect(res).to.have.property(\"status\").eql(400);",
 					"    pm.expect(res).to.have.property(\"title\").and.is.a(\"string\");",
 					"    pm.expect(res).to.have.property(\"detail\").and.is.a(\"string\");",
 					"});"
