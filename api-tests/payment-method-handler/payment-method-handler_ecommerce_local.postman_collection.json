@@ -607,20 +607,20 @@
 			"response": []
 			},
 			{
-			"name": "Calculate Fees for Payment Method for CHECKOUT (Missing Touchpoint) [500]",
+			"name": "Calculate Fees for Payment Method for CHECKOUT (Missing Touchpoint) [400]",
 			"event": [
 				{
 				"listen": "test",
 				"script": {
 					"exec": [
-					"pm.test(\"Status code is 500 — Jackson MismatchedInputException on missing touchpoint\", function () {",
-					"    pm.response.to.have.status(500);",
+					"pm.test(\"Status code is 400 Bad Request on missing touchpoint\", function () {",
+					"    pm.response.to.have.status(400);",
 					"});",
 					"",
 					"pm.test(\"ProblemJson structure is valid\", function () {",
 					"    pm.response.to.be.json;",
 					"    const res = pm.response.json();",
-					"    pm.expect(res).to.have.property(\"status\").eql(500);",
+					"    pm.expect(res).to.have.property(\"status\").eql(400);",
 					"    pm.expect(res).to.have.property(\"title\").and.is.a(\"string\");",
 					"    pm.expect(res).to.have.property(\"detail\").and.is.a(\"string\");",
 					"});"
@@ -1136,20 +1136,20 @@
 			"response": []
 			},
 			{
-			"name": "Calculate Fees for Payment Method for IO (Missing Touchpoint) [500]",
+			"name": "Calculate Fees for Payment Method for IO (Missing Touchpoint) [400]",
 			"event": [
 				{
 				"listen": "test",
 				"script": {
 					"exec": [
-					"pm.test(\"Status code is 500 — Jackson MismatchedInputException on missing touchpoint\", function () {",
-					"    pm.response.to.have.status(500);",
+					"pm.test(\"Status code is 400 Bad Request on missing touchpoint\", function () {",
+					"    pm.response.to.have.status(400);",
 					"});",
 					"",
 					"pm.test(\"ProblemJson structure is valid\", function () {",
 					"    pm.response.to.be.json;",
 					"    const res = pm.response.json();",
-					"    pm.expect(res).to.have.property(\"status\").eql(500);",
+					"    pm.expect(res).to.have.property(\"status\").eql(400);",
 					"    pm.expect(res).to.have.property(\"title\").and.is.a(\"string\");",
 					"    pm.expect(res).to.have.property(\"detail\").and.is.a(\"string\");",
 					"});"
@@ -1430,6 +1430,290 @@
 			"response": []
 		},
 		{
+			"name": "Create session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is a valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"const responseJson = pm.response.json();",
+							"",
+							"pm.test(\"Response has required CreateSessionResponse fields\", function () {",
+							"    pm.expect(responseJson).to.have.property('orderId').and.is.a('string');",
+							"    pm.expect(responseJson).to.have.property('correlationId').and.is.a('string');",
+							"    pm.expect(responseJson).to.have.property('paymentMethodData').and.is.an('object');",
+							"    pm.expect(responseJson.paymentMethodData).to.have.property('paymentMethod').and.is.a('string');",
+							"    pm.expect(responseJson.paymentMethodData).to.have.property('form').and.is.an('array');",
+							"});",
+							"",
+							"pm.test(\"orderId is saved for subsequent session requests\", function () {",
+							"    pm.expect(responseJson.orderId).to.have.length.greaterThan(0);",
+							"    pm.collectionVariables.set('orderId', responseJson.orderId);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/sessions",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{paymentMethodId}}",
+						"sessions"
+					]
+				},
+				"description": "Create frontend field data paired with a payment gateway (NPG) session"
+			},
+			"response": []
+		},
+		{
+			"name": "Get session payment method (card data)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is a valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response is a valid SessionPaymentMethodResponse\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson).to.have.property('bin').and.is.a('string');",
+							"    pm.expect(responseJson.bin).to.have.length.greaterThan(0);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/sessions/{{orderId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{paymentMethodId}}",
+						"sessions",
+						"{{orderId}}"
+					]
+				},
+				"description": "Retrieve card data information for a given payment method session"
+			},
+			"response": []
+		},
+		{
+			"name": "Get session payment method with invalid orderId (404)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404 Not Found\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"ProblemJson structure is valid\", function () {",
+							"    pm.response.to.be.json;",
+							"    const res = pm.response.json();",
+							"    pm.expect(res).to.have.property('status');",
+							"    pm.expect(res).to.have.property('title');",
+							"    pm.expect(res).to.have.property('detail');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/sessions/invalidOrderId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{paymentMethodId}}",
+						"sessions",
+						"invalidOrderId"
+					]
+				},
+				"description": "Tests the 404 Not Found response for a non-existent order id."
+			},
+			"response": []
+		},
+		{
+			"name": "Update session (associate transaction id)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 No Content\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"transactionId\": \"3d6fc69c949741e9af6cc5b7a05cbd0d\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/sessions/{{orderId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{paymentMethodId}}",
+						"sessions",
+						"{{orderId}}"
+					]
+				},
+				"description": "Associates a transaction id to an existing NPG session (expects 204)"
+			},
+			"response": []
+		},
+		{
+			"name": "Get transaction id for session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is a valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Response has transaction id matching the associated one\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson).to.have.property('transactionId').and.is.a('string');",
+							"    pm.expect(responseJson).to.have.property('base64TransactionId').and.is.a('string');",
+							"    pm.expect(responseJson.transactionId).to.eql('3d6fc69c949741e9af6cc5b7a05cbd0d');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{securityToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Client-Id",
+						"value": "CHECKOUT",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/sessions/{{orderId}}/transactionId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{paymentMethodId}}",
+						"sessions",
+						"{{orderId}}",
+						"transactionId"
+					]
+				},
+				"description": "Get the eCommerce transaction id for the given NPG session (Bearer security token required)"
+			},
+			"response": []
+		},
+		{
 			"name": "Get NPG SDK integrity hash",
 			"event": [
 				{
@@ -1535,6 +1819,14 @@
 		{
 			"key": "paymentMethodIdForIo",
 			"value": ""
+		},
+		{
+			"key": "orderId",
+			"value": ""
+		},
+		{
+			"key": "securityToken",
+			"value": "{{NPG_SECURITY_TOKEN}}"
 		}
 	]
 }
