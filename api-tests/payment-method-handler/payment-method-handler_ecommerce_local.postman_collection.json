@@ -861,14 +861,14 @@
 			"response": []
 			},
 			{
-			"name": "Calculate Fees for Payment Method for CHECKOUT (Missing x-language) [400]",
+			"name": "Calculate Fees for Payment Method for CHECKOUT (Missing x-language) [200]",
 			"event": [
 				{
 				"listen": "test",
 				"script": {
 					"exec": [
-					"pm.test(\"Status code is 400 Bad Request when x-language is missing\", function () {",
-					"    pm.response.to.have.status(400);",
+					"pm.test(\"Status code is 200 OK when x-language is missing (defaults to IT)\", function () {",
+					"    pm.response.to.have.status(200);",
 					"});"
 					],
 					"type": "text/javascript"
@@ -1390,14 +1390,14 @@
 			"response": []
 			},
 			{
-			"name": "Calculate Fees for Payment Method for IO (Missing x-language) [400]",
+			"name": "Calculate Fees for Payment Method for IO (Missing x-language) [200]",
 			"event": [
 				{
 				"listen": "test",
 				"script": {
 					"exec": [
-					"pm.test(\"Status code is 400 Bad Request when x-language is missing\", function () {",
-					"    pm.response.to.have.status(400);",
+					"pm.test(\"Status code is 200 OK when x-language is missing (defaults to IT)\", function () {",
+					"    pm.response.to.have.status(200);",
 					"});"
 					],
 					"type": "text/javascript"
@@ -1696,7 +1696,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{securityToken}}",
+							"value": "{{NPG_SECURITY_TOKEN}}",
 							"type": "string"
 						}
 					]
