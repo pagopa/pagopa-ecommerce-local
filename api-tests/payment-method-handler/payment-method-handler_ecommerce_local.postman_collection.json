@@ -558,11 +558,11 @@
 			"name": "Calculate Fees for Payment Method for CHECKOUT [200]",
 			"event": [
 				{
-				"listen": "test",
-				"script": {
-					"exec": [
+					"listen": "test",
+					"script": {
+						"exec": [
 					"pm.test(\"Status code is 200 OK\", function () {",
-					"    pm.response.to.have.status(200);",
+							"    pm.response.to.have.status(200);",
 					"});",
 					"",
 					"pm.test(\"Response is valid JSON\", function () {",
@@ -617,56 +617,56 @@
 					"            pm.expect(bundle.pspBusinessName).to.be.a(\"string\");",
 					"        }",
 					"    });",
-					"});"
-					],
+							"});"
+						],
 					"type": "text/javascript"
-				}
+					}
 				}
 			],
 			"request": {
 				"method": "POST",
 				"header": [
-				{
-					"key": "x-client-id",
-					"value": "CHECKOUT",
-					"type": "text"
-				},
-				{ 
-					"key": "x-language", 
-					"value": "IT", 
-					"type": "text" 
-				}
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT",
+						"type": "text"
+					},
+					{
+						"key": "x-language",
+						"value": "IT",
+						"type": "text"
+					}
 				],
 				"body": {
-				"mode": "raw",
-				"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"isAllCCP\": false,\n  \"paymentNotices\": [\n    {\n      \"paymentAmount\": 15050,\n      \"primaryCreditorInstitution\": \"PA_FISCAL_CODE_1\",\n      \"transferList\": [\n        {\n          \"creditorInstitution\": \"PA_FISCAL_CODE_1\",\n          \"transferCategory\": \"TAX\",\n          \"digitalStamp\": false\n        }\n      ]\n    }\n  ]\n}",
-				"options": {
-					"raw": {
-					"language": "json"
+					"mode": "raw",
+					"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"isAllCCP\": false,\n  \"paymentNotices\": [\n    {\n      \"paymentAmount\": 15050,\n      \"primaryCreditorInstitution\": \"PA_FISCAL_CODE_1\",\n      \"transferList\": [\n        {\n          \"creditorInstitution\": \"PA_FISCAL_CODE_1\",\n          \"transferCategory\": \"TAX\",\n          \"digitalStamp\": false\n        }\n      ]\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
 					}
-				}
 				},
 				"url": {
-				"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/fees",
-				"host": [
-					"{{baseUrl}}"
-				],
-				"path": [
-					"payment-methods",
-					"{{paymentMethodId}}",
-					"fees"
-				]
+					"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/fees",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{paymentMethodId}}",
+						"fees"
+					]
 				}
 			},
 			"response": []
-			},
-			{
+		},
+		{
 			"name": "Calculate Fees for Payment Method for CHECKOUT (Max Occurrences) [200]",
 			"event": [
 				{
-				"listen": "test",
-				"script": {
-					"exec": [
+					"listen": "test",
+					"script": {
+						"exec": [
 					"pm.test(\"Status code is 200 OK\", function () {",
 					"    pm.response.to.have.status(200);",
 					"});",
@@ -676,10 +676,10 @@
 					"pm.test(\"Bundles do not exceed maxOccurrences\", function () {",
 					"    pm.expect(res.bundles.length).to.be.at.most(3,",
 					"        `Expected at most 3 bundles, got ${res.bundles.length}`);",
-					"});"
-					],
+							"});"
+						],
 					"type": "text/javascript"
-				}
+					}
 				}
 			],
 			"request": {
@@ -690,7 +690,7 @@
 					"value": "CHECKOUT",
 					"type": "text"
 				},
-				{ 
+						{
 					"key": "x-language", 
 					"value": "IT", 
 					"type": "text" 
@@ -755,47 +755,47 @@
 			"request": {
 				"method": "POST",
 				"header": [
-				{
-					"key": "x-client-id",
-					"value": "CHECKOUT",
-					"type": "text"
-				},
-				{ 
-					"key": "x-language", 
-					"value": "IT", 
-					"type": "text" 
-				}
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT",
+						"type": "text"
+					},
+					{
+						"key": "x-language",
+						"value": "IT",
+						"type": "text"
+					}
 				],
 				"body": {
-				"mode": "raw",
+					"mode": "raw",
 				"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"isAllCCP\": false,\n  \"paymentNotices\": [\n    {\n      \"paymentAmount\": 5000,\n      \"primaryCreditorInstitution\": \"PA_FISCAL_CODE_1\",\n      \"transferList\": [\n        {\n          \"creditorInstitution\": \"PA_FISCAL_CODE_1\",\n          \"transferCategory\": \"TAX\",\n          \"digitalStamp\": false\n        }\n      ]\n    },\n    {\n      \"paymentAmount\": 10050,\n      \"primaryCreditorInstitution\": \"PA_FISCAL_CODE_2\",\n      \"transferList\": [\n        {\n          \"creditorInstitution\": \"PA_FISCAL_CODE_2\",\n          \"transferCategory\": \"TAX\",\n          \"digitalStamp\": false\n        }\n      ]\n    }\n  ]\n}",
-				"options": {
-					"raw": {
-					"language": "json"
+					"options": {
+						"raw": {
+							"language": "json"
+						}
 					}
-				}
 				},
 				"url": {
-				"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/fees",
-				"host": [
-					"{{baseUrl}}"
-				],
-				"path": [
-					"payment-methods",
-					"{{paymentMethodId}}",
-					"fees"
-				]
+					"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/fees",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{paymentMethodId}}",
+						"fees"
+					]
 				}
 			},
 			"response": []
-			},
-			{
+		},
+		{
 			"name": "Calculate Fees for Payment Method for CHECKOUT (Missing Touchpoint) [400]",
 			"event": [
 				{
-				"listen": "test",
-				"script": {
-					"exec": [
+					"listen": "test",
+					"script": {
+						"exec": [
 					"pm.test(\"Status code is 400 Bad Request on missing touchpoint\", function () {",
 					"    pm.response.to.have.status(400);",
 					"});",
@@ -806,10 +806,10 @@
 					"    pm.expect(res).to.have.property(\"status\").eql(400);",
 					"    pm.expect(res).to.have.property(\"title\").and.is.a(\"string\");",
 					"    pm.expect(res).to.have.property(\"detail\").and.is.a(\"string\");",
-					"});"
-					],
+							"});"
+						],
 					"type": "text/javascript"
-				}
+					}
 				}
 			],
 			"request": {
@@ -935,16 +935,16 @@
 			"request": {
 				"method": "POST",
 				"header": [
-				{
-					"key": "x-client-id",
-					"value": "CHECKOUT",
-					"type": "text"
-				},
-				{ 
-					"key": "x-language", 
-					"value": "IT", 
-					"type": "text" 
-				}
+					{
+						"key": "x-client-id",
+						"value": "CHECKOUT",
+						"type": "text"
+					},
+					{
+						"key": "x-language",
+						"value": "IT",
+						"type": "text"
+					}
 				],
 				"body": {
 				"mode": "raw",
@@ -1008,29 +1008,29 @@
 				}
 				],
 				"body": {
-				"mode": "raw",
-				"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"isAllCCP\": false,\n  \"paymentNotices\": [\n    {\n      \"paymentAmount\": 15050,\n      \"primaryCreditorInstitution\": \"PA_FISCAL_CODE_1\",\n      \"transferList\": [\n        {\n          \"creditorInstitution\": \"PA_FISCAL_CODE_1\",\n          \"transferCategory\": \"TAX\",\n          \"digitalStamp\": false\n        }\n      ]\n    }\n  ]\n}",
-				"options": {
-					"raw": {
-					"language": "json"
+					"mode": "raw",
+					"raw": "{\n  \"touchpoint\": \"CHECKOUT\",\n  \"isAllCCP\": false,\n  \"paymentNotices\": [\n    {\n      \"paymentAmount\": 15050,\n      \"primaryCreditorInstitution\": \"PA_FISCAL_CODE_1\",\n      \"transferList\": [\n        {\n          \"creditorInstitution\": \"PA_FISCAL_CODE_1\",\n          \"transferCategory\": \"TAX\",\n          \"digitalStamp\": false\n        }\n      ]\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
 					}
-				}
 				},
 				"url": {
-				"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/fees",
-				"host": [
-					"{{baseUrl}}"
-				],
-				"path": [
-					"payment-methods",
-					"{{paymentMethodId}}",
-					"fees"
-				]
+					"raw": "{{baseUrl}}/payment-methods/{{paymentMethodId}}/fees",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment-methods",
+						"{{paymentMethodId}}",
+						"fees"
+					]
 				}
 			},
 			"response": []
-			},
-			{
+		},
+		{
 			"name": "Calculate Fees for Payment Method for CHECKOUT (Missing x-language) [200]",
 			"event": [
 				{
@@ -1948,7 +1948,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"transactionId\": \"3d6fc69c949741e9af6cc5b7a05cbd0d\"\n}",
+					"raw": "{\n    \"transactionId\": \"3d6fc69c-9497-41e9-af6c-c5b7a05cbd0d\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -2006,7 +2006,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"transactionId\": \"3d6fc69c949741e9af6cc5b7a05cbd0d\"\n}",
+					"raw": "{\n    \"transactionId\": \"3d6fc69c-9497-41e9-af6c-c5b7a05cbd0d\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -2052,7 +2052,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"transactionId\": \"3d6fc69c949741e9af6cc5b7a05cbd0d\"\n}",
+					"raw": "{\n    \"transactionId\": \"3d6fc69c-9497-41e9-af6c-c5b7a05cbd0d\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -2085,7 +2085,8 @@
 							"  const responseJson = pm.response.json();",
 							"  pm.expect(responseJson.transactionId).to.be.a('string');",
 							"  pm.expect(responseJson.base64TransactionId).to.be.a('string');",
-							"  pm.expect(responseJson.transactionId).to.eq('3d6fc69c949741e9af6cc5b7a05cbd0d');",
+							"  pm.expect(responseJson.transactionId).to.eq('3d6fc69c-9497-41e9-af6c-c5b7a05cbd0d');",
+							"  pm.expect(responseJson.base64TransactionId).to.eq('PW_GnJSXQemvbMW3oFy9DQ');",
 							"  pm.expect(pm.response.code).to.eql(200);",
 							"});"
 						],
