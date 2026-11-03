@@ -393,63 +393,6 @@
         }
       },
       "response": []
-    },
-    {
-      "name": "Get transaction by id V2",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id V2 checking that add user receipts have been processed\", () => {",
-              "  const responseJson = pm.response.json();",
-              "  pm.expect(responseJson.transactionId).to.be.a('string');",
-              "  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
-              "  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\",\"NOTIFICATION_ERROR\"]);",
-              "  pm.expect(responseJson.gatewayInfo.gateway).to.be.eq(\"NPG\");",
-              "  pm.expect(responseJson.nodeInfo.sendPaymentResultOutcome).to.be.eq(\"OK\");",
-              "  pm.response.to.have.status(200);",
-              "});",
-              ""
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        }
-      ],
-      "request": {
-        "auth": {
-          "type": "apikey",
-          "apikey": [
-            {
-              "key": "value",
-              "value": "{{PRIMARY_API_KEY}}",
-              "type": "string"
-            },
-            {
-              "key": "key",
-              "value": "x-api-key",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}",
-          "host": [
-            "{{HOSTNAME}}"
-          ],
-          "port": "{{TRANSACTION_SERVICE_PORT}}",
-          "path": [
-            "v2",
-            "transactions",
-            "{{TRANSACTION_ID}}"
-          ]
-        }
-      },
-      "response": []
     }
   ],
   "event": [
