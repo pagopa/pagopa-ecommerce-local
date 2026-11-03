@@ -110,13 +110,13 @@
           }
         },
         "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions",
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2.1/transactions",
           "host": [
             "{{HOSTNAME}}"
           ],
           "port": "{{TRANSACTION_SERVICE_PORT}}",
           "path": [
-            "v2",
+            "v2.1",
             "transactions"
           ]
         }
@@ -848,13 +848,13 @@
           }
         },
         "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions",
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2.1/transactions",
           "host": [
             "{{HOSTNAME}}"
           ],
           "port": "{{TRANSACTION_SERVICE_PORT}}",
           "path": [
-            "v2",
+            "v2.1",
             "transactions"
           ]
         }
