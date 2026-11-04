@@ -95,7 +95,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"emailToken\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
+          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -833,7 +833,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"emailToken\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{DIGITAL_STAMP_RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"test-order-digital-stamp\"\n}",
+          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{DIGITAL_STAMP_RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"test-order-digital-stamp\"\n}",
           "options": {
             "raw": {
               "language": "json"
