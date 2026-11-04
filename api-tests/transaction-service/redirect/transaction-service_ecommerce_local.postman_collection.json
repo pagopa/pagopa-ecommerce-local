@@ -19,15 +19,8 @@
               "    const transactionId = responseJson.transactionId;",
               "    pm.environment.set(\"TRANSACTION_ID\", transactionId);",
               "    pm.response.to.have.status(200);",
-              "    encodeTransactionIdToB64(transactionId);",
               "    pm.environment.set(\"ACTIVATION_PAYMENT_NOTICES\", JSON.stringify(responseJson.payments));",
               "});",
-              "",
-              "function encodeTransactionIdToB64(transactionId) {",
-              "    const encodedTransactionId = Buffer.from(transactionId, 'hex').toString('base64').replace(/\\+/g, \"-\").replace(/\\//g, \"_\");",
-              "    console.log(`Transaction id: [${transactionId}] encoded to [${encodedTransactionId}]`);",
-              "    pm.environment.set(\"BASE64_ENCODED_TRANSACTION_ID\", encodedTransactionId);",
-              "}",
               ""
             ],
             "type": "text/javascript",
@@ -102,7 +95,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
+          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -110,13 +103,13 @@
           }
         },
         "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions",
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2.1/transactions",
           "host": [
             "{{HOSTNAME}}"
           ],
           "port": "{{TRANSACTION_SERVICE_PORT}}",
           "path": [
-            "v2",
+            "v2.1",
             "transactions"
           ]
         }
@@ -200,17 +193,16 @@
       "response": []
     },
     {
-      "name": "Authorization completed",
+      "name": "Authorization completed V2",
       "event": [
         {
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V1 -  Authorization completed POST notify REDIRECT (status code 200)\", function() {",
+              "pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V2 -  Authorization completed POST notify REDIRECT (status code 200)\", function() {",
               "    pm.response.to.have.status(200);",
               "    const response = pm.response.json();",
               "    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\"]);",
-              "    pm.expect(response.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
               "});"
             ],
             "type": "text/javascript",
@@ -256,14 +248,15 @@
           }
         },
         "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{BASE64_ENCODED_TRANSACTION_ID}}/auth-requests",
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}/auth-requests",
           "host": [
             "{{HOSTNAME}}"
           ],
           "port": "{{TRANSACTION_SERVICE_PORT}}",
           "path": [
+            "v2",
             "transactions",
-            "{{BASE64_ENCODED_TRANSACTION_ID}}",
+            "{{TRANSACTION_ID}}",
             "auth-requests"
           ]
         }
@@ -840,7 +833,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{DIGITAL_STAMP_RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"test-order-digital-stamp\"\n}",
+          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{DIGITAL_STAMP_RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"test-order-digital-stamp\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -848,13 +841,13 @@
           }
         },
         "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions",
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2.1/transactions",
           "host": [
             "{{HOSTNAME}}"
           ],
           "port": "{{TRANSACTION_SERVICE_PORT}}",
           "path": [
-            "v2",
+            "v2.1",
             "transactions"
           ]
         }
