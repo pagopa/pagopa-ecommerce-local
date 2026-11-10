@@ -378,74 +378,19 @@
         {
           "listen": "prerequest",
           "script": {
-            "exec": [
-              "const getTransaction = {",
-              "    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
-              "    method: 'GET',",
-              "    header: {",
-              "        'Content-Type': 'application/json',",
-              "        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
-              "    }",
-              "};",
-              "",
-              "executeGetTransactionRequest()",
-              "",
-              "",
-              "async function executeGetTransactionRequest (){",
-              "        const maxAttempts = 10;",
-              "        var counter = 0;",
-              "        var transactionStatus = null;",
-              "        const waitForStatus = \"CLOSED\";",
-              "        while (counter < maxAttempts && transactionStatus != waitForStatus) {",
-              "            await new Promise(r => setTimeout(r, 1000));",
-              "            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {",
-              "                if (error) {",
-              "                    console.log(`Error retrieving transaction by id: ${error.code}`);",
-              "                    reject(error)",
-              "                } else {",
-              "                    const responseBody = response.json();",
-              "                    transactionStatus = responseBody.status;",
-              "                    console.log(`The transaction status: ${transactionStatus}`)",
-              "                    resolve(transactionStatus);",
-              "                }",
-              "            }));",
-              "        counter++;",
-              "    }",
-              "    if(waitForStatus !== transactionStatus){",
-              "        throw new Error(`Wanted transaction in status: ${waitForStatus} but was: ${transactionStatus}`);",
-              "    }",
-              "",
-              "}",
-              "",
-              ""
-            ],
             "type": "text/javascript",
-            "packages": {},
-            "requests": {}
+            "exec": [
+              ""
+            ]
           }
         },
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 422) for mismatch in payment token\", function() {",
-              "    pm.response.to.have.status(422);",
-              "    const response = pm.response.json();",
-              "    pm.expect(response.detail.toString().split(\"\\n\")[0]).to.be.eq(\"eCommerce and Nodo payment tokens mismatch detected!\");",
-              "});"
-            ],
             "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        },
-        {
-          "listen": "prerequest",
-          "script": {
             "exec": [
-              ""
-            ],
-            "type": "text/javascript"
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 422) for mismatch in payment token\", function() {\n    pm.response.to.have.status(422);\n    const response = pm.response.json();\n    pm.expect(response.detail.toString().split(\"\\n\")[0]).to.be.eq(\"eCommerce and Nodo payment tokens mismatch detected!\");\n});"
+            ]
           }
         }
       ],
@@ -497,91 +442,19 @@
         {
           "listen": "prerequest",
           "script": {
-            "exec": [
-              "const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));",
-              "",
-              "const addUserReceiptRequest = {",
-              "    outcome: \"OK\",",
-              "    paymentDate: \"2023-01-01T00:00:00.000Z\",",
-              "    payments: Array.from(activationPaymentNotices).map(p =>({",
-              "      paymentToken: p.paymentToken,",
-              "      description: p.reason,",
-              "      creditorReferenceId: \"creditorReferenceId\",",
-              "      fiscalCode: \"fiscalCode\",",
-              "      companyName: \"companyName\",",
-              "      officeName: \"officeName\",",
-              "      debtor: \"debtor\"",
-              "    }))",
-              "}",
-              "",
-              "pm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));",
-              "const getTransaction = {",
-              "    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
-              "    method: 'GET',",
-              "    header: {",
-              "        'Content-Type': 'application/json',",
-              "        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
-              "    }",
-              "};",
-              "",
-              "executeGetTransactionRequest()",
-              "",
-              "",
-              "async function executeGetTransactionRequest (){",
-              "        const maxAttempts = 10;",
-              "        var counter = 0;",
-              "        var transactionStatus = null;",
-              "        const waitForStatus = \"CLOSED\";",
-              "        while (counter < maxAttempts && transactionStatus != waitForStatus) {",
-              "            await new Promise(r => setTimeout(r, 1000));",
-              "            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {",
-              "                if (error) {",
-              "                    console.log(`Error retrieving transaction by id: ${error.code}`);",
-              "                    reject(error)",
-              "                } else {",
-              "                    const responseBody = response.json();",
-              "                    transactionStatus = responseBody.status;",
-              "                    console.log(`The transaction status: ${transactionStatus}`)",
-              "                    resolve(transactionStatus);",
-              "                }",
-              "            }));",
-              "        counter++;",
-              "    }",
-              "    if(waitForStatus !== transactionStatus){",
-              "        throw new Error(`Wanted transaction in status: ${waitForStatus} but was: ${transactionStatus}`);",
-              "    }",
-              "",
-              "}",
-              "",
-              ""
-            ],
             "type": "text/javascript",
-            "packages": {},
-            "requests": {}
+            "exec": [
+              "const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));\n\nconst addUserReceiptRequest = {\n    outcome: \"OK\",\n    paymentDate: \"2023-01-01T00:00:00.000Z\",\n    payments: Array.from(activationPaymentNotices).map(p =>({\n      paymentToken: p.paymentToken,\n      description: p.reason,\n      creditorReferenceId: \"creditorReferenceId\",\n      fiscalCode: \"fiscalCode\",\n      companyName: \"companyName\",\n      officeName: \"officeName\",\n      debtor: \"debtor\"\n    }))\n}\n\npm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));\nawait new Promise(r => setTimeout(r, 3000));"
+            ]
           }
         },
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 200)\", function() {",
-              "    pm.response.to.have.status(200);",
-              "    const response = pm.response.json();",
-              "    pm.expect(response.outcome).to.be.eq(\"OK\");",
-              "});"
-            ],
             "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        },
-        {
-          "listen": "prerequest",
-          "script": {
             "exec": [
-              ""
-            ],
-            "type": "text/javascript"
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 200)\", function() {\n    pm.response.to.have.status(200);\n    const response = pm.response.json();\n    pm.expect(response.outcome).to.be.eq(\"OK\");\n});"
+            ]
           }
         }
       ],
@@ -628,84 +501,24 @@
       "response": []
     },
     {
-      "name": "Get transaction by id",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id (status code 200) for NPG transaction\", () => {",
-              "  const responseJson = pm.response.json();",
-              "  pm.expect(responseJson.transactionId).to.be.a('string');",
-              "  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
-              "  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\",\"NOTIFICATION_ERROR\"]);",
-              "  pm.expect(responseJson.gateway).to.be.eq(\"NPG\");",
-              "  pm.expect(responseJson.sendPaymentResultOutcome).to.be.eq(\"OK\");",
-              "  pm.response.to.have.status(200);",
-              "});",
-              ""
-            ],
-            "type": "text/javascript",
-            "packages": {}
-          }
-        }
-      ],
-      "request": {
-        "auth": {
-          "type": "apikey",
-          "apikey": [
-            {
-              "key": "value",
-              "value": "{{PRIMARY_API_KEY}}",
-              "type": "string"
-            },
-            {
-              "key": "key",
-              "value": "x-api-key",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}",
-          "host": [
-            "{{HOSTNAME}}"
-          ],
-          "port": "{{TRANSACTION_SERVICE_PORT}}",
-          "path": [
-            "transactions",
-            "{{TRANSACTION_ID}}"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
       "name": "Get transaction outcomes by id",
       "event": [
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for NPG transaction\", () => {",
-              "  const responseJson = pm.response.json();",
-              "  pm.expect(responseJson.outcome).to.be.a('number');",
-              "  pm.expect(responseJson.outcome).to.be.oneOf([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18, 25, 99, 116, 117, 121]);",
-              "  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');",
-              "  if (responseJson.totalAmount !== undefined) {",
-              "    pm.expect(responseJson.totalAmount).to.be.a('number');",
-              "  }",
-              "  if (responseJson.fees !== undefined) {",
-              "    pm.expect(responseJson.fees).to.be.a('number');",
-              "  }",
-              "  pm.response.to.have.status(200);",
-              "});",
-              ""
-            ],
             "type": "text/javascript",
-            "packages": {}
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for NPG transaction\", () => {\n  const responseJson = pm.response.json();\n  pm.expect(responseJson.outcome).to.be.a('number');\n  pm.expect(responseJson.outcome).to.be.equal(0);\n  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');\n  if (responseJson.totalAmount !== undefined) {\n    pm.expect(responseJson.totalAmount).to.be.a('number');\n  }\n  if (responseJson.fees !== undefined) {\n    pm.expect(responseJson.fees).to.be.a('number');\n  }\n  pm.response.to.have.status(200);\n});\n"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const getTransaction = {\n    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}/outcomes`,\n    method: 'GET',\n    header: {\n        'Content-Type': 'application/json',\n        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`\n    }\n};\n\nexecuteGetTransactionRequest()\n\nasync function executeGetTransactionRequest (){\n        const maxAttempts = 10;\n        var counter = 0;\n        var transactionOutcome = null;\n        var isFinal = false;\n        const waitForStatus = 0;\n        while (counter < maxAttempts && transactionOutcome != waitForStatus && isFinal == false) {\n            await new Promise(r => setTimeout(r, 1000));\n            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {\n                if (error) {\n                    console.log(`Error retrieving transaction by id: ${error.code}`);\n                    reject(error)\n                } else {\n                    const responseBody = response.json();\n                    transactionOutcome = responseBody.outcome;\n                    isFinal = responseBody.isFinalStatus;\n                    console.log(`Transaction outcome: ${transactionOutcome}`)\n                    resolve(transactionOutcome);\n                }\n            }));\n        counter++;\n    }\n    if(waitForStatus !== transactionOutcome){\n        throw new Error(`Wanted transaction in status: ${waitForStatus} but was: ${transactionOutcome}`);\n    }\n\n}\n\n"
+            ]
           }
         }
       ],
@@ -737,62 +550,6 @@
             "transactions",
             "{{TRANSACTION_ID}}",
             "outcomes"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Get transaction by id V2",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id V2 (status code 200) for NPG transaction\", () => {",
-              "  const responseJson = pm.response.json();",
-              "  pm.expect(responseJson.transactionId).to.be.a('string');",
-              "  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
-              "  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\",\"NOTIFICATION_ERROR\"]);",
-              "  pm.expect(responseJson.gatewayInfo.gateway).to.be.eq(\"NPG\");",
-              "  pm.expect(responseJson.nodeInfo.sendPaymentResultOutcome).to.be.eq(\"OK\");",
-              "  pm.response.to.have.status(200);",
-              "});",
-              ""
-            ],
-            "type": "text/javascript",
-            "packages": {}
-          }
-        }
-      ],
-      "request": {
-        "auth": {
-          "type": "apikey",
-          "apikey": [
-            {
-              "key": "value",
-              "value": "{{PRIMARY_API_KEY}}",
-              "type": "string"
-            },
-            {
-              "key": "key",
-              "value": "x-api-key",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}",
-          "host": [
-            "{{HOSTNAME}}"
-          ],
-          "port": "{{TRANSACTION_SERVICE_PORT}}",
-          "path": [
-            "v2",
-            "transactions",
-            "{{TRANSACTION_ID}}"
           ]
         }
       },
