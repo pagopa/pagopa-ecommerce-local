@@ -508,7 +508,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for NPG transaction\", () => {\n  const responseJson = pm.response.json();\n  pm.expect(responseJson.outcome).to.be.a('number');\n  pm.expect(responseJson.outcome).to.be.equal(0);\n  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');\n  if (responseJson.totalAmount !== undefined) {\n    pm.expect(responseJson.totalAmount).to.be.a('number');\n  }\n  if (responseJson.fees !== undefined) {\n    pm.expect(responseJson.fees).to.be.a('number');\n  }\n  pm.response.to.have.status(200);\n});\n"
+              pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for NPG transaction\", () => {\n  const responseJson = pm.response.json();\n  pm.expect(responseJson.outcome).to.be.a('number');\n  pm.expect(responseJson.outcome).to.be.equal(0);\n  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');\n  pm.expect(responseJson.isFinalStatus).to.be.equal(true);\n  if (responseJson.totalAmount !== undefined) {\n    pm.expect(responseJson.totalAmount).to.be.a('number');\n  }\n  if (responseJson.fees !== undefined) {\n    pm.expect(responseJson.fees).to.be.a('number');\n  }\n  pm.response.to.have.status(200);\n});\n"
             ]
           }
         },
