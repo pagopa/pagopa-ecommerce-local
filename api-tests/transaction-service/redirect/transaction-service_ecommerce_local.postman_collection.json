@@ -19,15 +19,8 @@
               "    const transactionId = responseJson.transactionId;",
               "    pm.environment.set(\"TRANSACTION_ID\", transactionId);",
               "    pm.response.to.have.status(200);",
-              "    encodeTransactionIdToB64(transactionId);",
               "    pm.environment.set(\"ACTIVATION_PAYMENT_NOTICES\", JSON.stringify(responseJson.payments));",
               "});",
-              "",
-              "function encodeTransactionIdToB64(transactionId) {",
-              "    const encodedTransactionId = Buffer.from(transactionId, 'hex').toString('base64').replace(/\\+/g, \"-\").replace(/\\//g, \"_\");",
-              "    console.log(`Transaction id: [${transactionId}] encoded to [${encodedTransactionId}]`);",
-              "    pm.environment.set(\"BASE64_ENCODED_TRANSACTION_ID\", encodedTransactionId);",
-              "}",
               ""
             ],
             "type": "text/javascript",
@@ -102,7 +95,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
+          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"{{ORDER_ID}}\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -110,13 +103,13 @@
           }
         },
         "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions",
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2.1/transactions",
           "host": [
             "{{HOSTNAME}}"
           ],
           "port": "{{TRANSACTION_SERVICE_PORT}}",
           "path": [
-            "v2",
+            "v2.1",
             "transactions"
           ]
         }
@@ -200,17 +193,16 @@
       "response": []
     },
     {
-      "name": "Authorization completed",
+      "name": "Authorization completed V2",
       "event": [
         {
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V1 -  Authorization completed POST notify REDIRECT (status code 200)\", function() {",
+              "pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V2 -  Authorization completed POST notify REDIRECT (status code 200)\", function() {",
               "    pm.response.to.have.status(200);",
               "    const response = pm.response.json();",
               "    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSED\"]);",
-              "    pm.expect(response.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
               "});"
             ],
             "type": "text/javascript",
@@ -256,14 +248,15 @@
           }
         },
         "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{BASE64_ENCODED_TRANSACTION_ID}}/auth-requests",
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}/auth-requests",
           "host": [
             "{{HOSTNAME}}"
           ],
           "port": "{{TRANSACTION_SERVICE_PORT}}",
           "path": [
+            "v2",
             "transactions",
-            "{{BASE64_ENCODED_TRANSACTION_ID}}",
+            "{{TRANSACTION_ID}}",
             "auth-requests"
           ]
         }
@@ -276,86 +269,19 @@
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 422) for mismatch in payment token\", function() {",
-              "    pm.response.to.have.status(422);",
-              "    const response = pm.response.json();",
-              "    pm.expect(response.detail.toString().split(\"\\n\")[0]).to.be.eq(\"eCommerce and Nodo payment tokens mismatch detected!\");",
-              "});"
-            ],
             "type": "text/javascript",
-            "packages": {},
-            "requests": {}
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 422) for mismatch in payment token\", function() {\n    pm.response.to.have.status(422);\n    const response = pm.response.json();\n    pm.expect(response.detail.toString().split(\"\\n\")[0]).to.be.eq(\"eCommerce and Nodo payment tokens mismatch detected!\");\n});"
+            ]
           }
         },
         {
           "listen": "prerequest",
           "script": {
-            "exec": [
-              "const getTransaction = {",
-              "    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
-              "    method: 'GET',",
-              "    header: {",
-              "        'Content-Type': 'application/json',",
-              "        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
-              "    }",
-              "};",
-              "",
-              "const maxIteration = 10;",
-              "const timeoutBetweenAttemptsMillis = 1000;",
-              "",
-              "let lastTransactionStatus;",
-              "",
-              "pm.sendRequest(getTransaction, (error, response) => {",
-              "    if (error) {",
-              "        console.log(`Error while retrieving transaction status: ${error.code}`);",
-              "        endPolling = true;",
-              "    } else {",
-              "        const responseBody = response.json();",
-              "        lastTransactionStatus = responseBody.status;",
-              "        console.log(`Transaction status: ${lastTransactionStatus}`);",
-              "        if (lastTransactionStatus != \"CLOSED\") {",
-              "            pollTransactionStatus();",
-              "        }",
-              "    }",
-              "});",
-              "async function pollTransactionStatus() {",
-              "    let endPolling = false;",
-              "    let currentIteration = 0;",
-              "    const waitForStatus = \"CLOSED\";",
-              "    console.log(\"Start polling transaction service to wait for transaction status to become CLOSED\");",
-              "    while (!endPolling) {",
-              "        getTransactionStatus();",
-              "        currentIteration++;",
-              "        endPolling = lastTransactionStatus == waitForStatus || currentIteration == maxIteration;",
-              "        console.log(`Transaction status: ${lastTransactionStatus}, current iteration: ${currentIteration}, max iteration: ${maxIteration}, end polling: ${endPolling}`);",
-              "        if (!endPolling) {",
-              "            await new Promise(r => setTimeout(r, timeoutBetweenAttemptsMillis));",
-              "        }",
-              "",
-              "    }",
-              "    if(waitForStatus !== lastTransactionStatus){",
-              "        throw new Error(`Wanted transaction in status: ${waitForStatus} but was: ${lastTransactionStatus}`);",
-              "    }",
-              "",
-              "    function getTransactionStatus() {",
-              "        pm.sendRequest(getTransaction, (error, response) => {",
-              "            if (error) {",
-              "                console.log(`Error while retrieving transaction status: ${error.code}`);",
-              "                throw error;",
-              "            } else {",
-              "                const responseBody = response.json();",
-              "                lastTransactionStatus = responseBody.status",
-              "            }",
-              "        }",
-              "        );",
-              "    }",
-              "}",
-              ""
-            ],
             "type": "text/javascript",
-            "packages": {},
-            "requests": {}
+            "exec": [
+              ""
+            ]
           }
         }
       ],
@@ -407,104 +333,19 @@
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 200)\", function() {",
-              "    pm.response.to.have.status(200);",
-              "    const response = pm.response.json();",
-              "    pm.expect(response.outcome).to.be.eq(\"OK\");",
-              "});"
-            ],
             "type": "text/javascript",
-            "packages": {},
-            "requests": {}
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Add user receipt (status code 200)\", function() {\n    pm.response.to.have.status(200);\n    const response = pm.response.json();\n    pm.expect(response.outcome).to.be.eq(\"OK\");\n});"
+            ]
           }
         },
         {
           "listen": "prerequest",
           "script": {
-            "exec": [
-              "const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));",
-              "",
-              "const addUserReceiptRequest = {",
-              "    outcome: \"OK\",",
-              "    paymentDate: \"2023-01-01T00:00:00.000Z\",",
-              "    payments: Array.from(activationPaymentNotices).map(p =>({",
-              "      paymentToken: p.paymentToken,",
-              "      description: p.reason,",
-              "      creditorReferenceId: \"creditorReferenceId\",",
-              "      fiscalCode: \"fiscalCode\",",
-              "      companyName: \"companyName\",",
-              "      officeName: \"officeName\",",
-              "      debtor: \"debtor\"",
-              "    }))",
-              "}",
-              "",
-              "pm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));",
-              "",
-              "const getTransaction = {",
-              "    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}`,",
-              "    method: 'GET',",
-              "    header: {",
-              "        'Content-Type': 'application/json',",
-              "        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`",
-              "    }",
-              "};",
-              "",
-              "const maxIteration = 10;",
-              "const timeoutBetweenAttemptsMillis = 1000;",
-              "",
-              "let lastTransactionStatus;",
-              "",
-              "pm.sendRequest(getTransaction, (error, response) => {",
-              "    if (error) {",
-              "        console.log(`Error while retrieving transaction status: ${error.code}`);",
-              "        endPolling = true;",
-              "    } else {",
-              "        const responseBody = response.json();",
-              "        lastTransactionStatus = responseBody.status;",
-              "        console.log(`Transaction status: ${lastTransactionStatus}`);",
-              "        if (lastTransactionStatus != \"CLOSED\") {",
-              "            pollTransactionStatus();",
-              "        }",
-              "    }",
-              "});",
-              "async function pollTransactionStatus() {",
-              "    let endPolling = false;",
-              "    let currentIteration = 0;",
-              "    const waitForStatus = \"CLOSED\";",
-              "    console.log(\"Start polling transaction service to wait for transaction status to become CLOSED\");",
-              "    while (!endPolling) {",
-              "        getTransactionStatus();",
-              "        currentIteration++;",
-              "        endPolling = lastTransactionStatus == waitForStatus || currentIteration == maxIteration;",
-              "        console.log(`Transaction status: ${lastTransactionStatus}, current iteration: ${currentIteration}, max iteration: ${maxIteration}, end polling: ${endPolling}`);",
-              "        if (!endPolling) {",
-              "            await new Promise(r => setTimeout(r, timeoutBetweenAttemptsMillis));",
-              "        }",
-              "",
-              "    }",
-              "    if(waitForStatus !== lastTransactionStatus){",
-              "        throw new Error(`Wanted transaction in status: ${waitForStatus} but was: ${lastTransactionStatus}`);",
-              "    }",
-              "",
-              "    function getTransactionStatus() {",
-              "        pm.sendRequest(getTransaction, (error, response) => {",
-              "            if (error) {",
-              "                console.log(`Error while retrieving transaction status: ${error.code}`);",
-              "                throw error;",
-              "            } else {",
-              "                const responseBody = response.json();",
-              "                lastTransactionStatus = responseBody.status",
-              "            }",
-              "        }",
-              "        );",
-              "    }",
-              "}",
-              ""
-            ],
             "type": "text/javascript",
-            "packages": {},
-            "requests": {}
+            "exec": [
+              "const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));\n\nconst addUserReceiptRequest = {\n    outcome: \"OK\",\n    paymentDate: \"2023-01-01T00:00:00.000Z\",\n    payments: Array.from(activationPaymentNotices).map(p =>({\n      paymentToken: p.paymentToken,\n      description: p.reason,\n      creditorReferenceId: \"creditorReferenceId\",\n      fiscalCode: \"fiscalCode\",\n      companyName: \"companyName\",\n      officeName: \"officeName\",\n      debtor: \"debtor\"\n    }))\n}\n\npm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));\nawait new Promise(r => setTimeout(r, 3000));"
+            ]
           }
         }
       ],
@@ -551,84 +392,15 @@
       "response": []
     },
     {
-      "name": "Get transaction by id",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id (status code 200) for REDIRECT transaction\", () => {",
-              "  const responseJson = pm.response.json();",
-              "  pm.expect(responseJson.transactionId).to.be.a('string');",
-              "  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
-              "  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\"]);",
-              "  pm.expect(responseJson.gateway).to.be.eq(\"REDIRECT\");",
-              "  pm.expect(responseJson.sendPaymentResultOutcome).to.be.eq(\"OK\");",
-              "  pm.response.to.have.status(200);",
-              "});",
-              ""
-            ],
-            "type": "text/javascript",
-            "packages": {}
-          }
-        }
-      ],
-      "request": {
-        "auth": {
-          "type": "apikey",
-          "apikey": [
-            {
-              "key": "value",
-              "value": "{{PRIMARY_API_KEY}}",
-              "type": "string"
-            },
-            {
-              "key": "key",
-              "value": "x-api-key",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}",
-          "host": [
-            "{{HOSTNAME}}"
-          ],
-          "port": "{{TRANSACTION_SERVICE_PORT}}",
-          "path": [
-            "transactions",
-            "{{TRANSACTION_ID}}"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
       "name": "Get transaction outcomes by id",
       "event": [
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for REDIRECT transaction\", () => {",
-              "  const responseJson = pm.response.json();",
-              "  pm.expect(responseJson.outcome).to.be.a('number');",
-              "  pm.expect(responseJson.outcome).to.be.oneOf([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18, 25, 99, 116, 117, 121]);",
-              "  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');",
-              "  if (responseJson.totalAmount !== undefined) {",
-              "    pm.expect(responseJson.totalAmount).to.be.a('number');",
-              "  }",
-              "  if (responseJson.fees !== undefined) {",
-              "    pm.expect(responseJson.fees).to.be.a('number');",
-              "  }",
-              "  pm.response.to.have.status(200);",
-              "});",
-              ""
-            ],
             "type": "text/javascript",
-            "packages": {}
+            "exec": [
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for REDIRECT transaction\", () => {\n  const responseJson = pm.response.json();\n  pm.expect(responseJson.outcome).to.be.a('number');\n  pm.expect(responseJson.outcome).to.be.equal(0);\n  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');\n  if (responseJson.totalAmount !== undefined) {\n    pm.expect(responseJson.totalAmount).to.be.a('number');\n  }\n  if (responseJson.fees !== undefined) {\n    pm.expect(responseJson.fees).to.be.a('number');\n  }\n  pm.response.to.have.status(200);\n});\n"
+            ]
           }
         }
       ],
@@ -660,62 +432,6 @@
             "transactions",
             "{{TRANSACTION_ID}}",
             "outcomes"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Get transaction by id V2",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id V2 (status code 200) for REDIRECT transaction\", () => {",
-              "  const responseJson = pm.response.json();",
-              "  pm.expect(responseJson.transactionId).to.be.a('string');",
-              "  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
-              "  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\",\"NOTIFICATION_ERROR\"]);",
-              "  pm.expect(responseJson.gatewayInfo.gateway).to.be.eq(\"REDIRECT\");",
-              "  pm.expect(responseJson.nodeInfo.sendPaymentResultOutcome).to.be.eq(\"OK\");",
-              "  pm.response.to.have.status(200);",
-              "});",
-              ""
-            ],
-            "type": "text/javascript",
-            "packages": {}
-          }
-        }
-      ],
-      "request": {
-        "auth": {
-          "type": "apikey",
-          "apikey": [
-            {
-              "key": "value",
-              "value": "{{PRIMARY_API_KEY}}",
-              "type": "string"
-            },
-            {
-              "key": "key",
-              "value": "x-api-key",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}",
-          "host": [
-            "{{HOSTNAME}}"
-          ],
-          "port": "{{TRANSACTION_SERVICE_PORT}}",
-          "path": [
-            "v2",
-            "transactions",
-            "{{TRANSACTION_ID}}"
           ]
         }
       },
@@ -840,7 +556,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{DIGITAL_STAMP_RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"test-order-digital-stamp\"\n}",
+          "raw": "{\n    \"emailToken\": \"{{EMAIL_TOKEN}}\",\n    \"paymentNotices\": [{\n        \"rptId\": \"{{DIGITAL_STAMP_RPT_ID}}\",\n        \"amount\": {{AMOUNT}}\n    }],\n    \"orderId\": \"test-order-digital-stamp\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -848,13 +564,13 @@
           }
         },
         "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions",
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2.1/transactions",
           "host": [
             "{{HOSTNAME}}"
           ],
           "port": "{{TRANSACTION_SERVICE_PORT}}",
           "path": [
-            "v2",
+            "v2.1",
             "transactions"
           ]
         }

@@ -194,13 +194,13 @@
       "response": []
     },
     {
-      "name": "Authorization completed",
+      "name": "Authorization completed V2",
       "event": [
         {
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V1 -  Authorization completed POST notify NPG (status code 200)\", function() {",
+              "pm.test(\"[pagopa-ecommerce-transaction-service] - PATCH auth request V2 -  Authorization completed POST notify NPG (status code 200)\", function() {",
               "    pm.response.to.have.status(200);",
               "    const response = pm.response.json();",
               "    pm.expect(response.status).to.be.oneOf([\"CLOSURE_REQUESTED\",\"CLOSURE_ERROR\"]);",
@@ -395,26 +395,29 @@
       "response": []
     },
     {
-      "name": "Get transaction by id V2",
+      "name": "Get transaction outcomes by id",
       "event": [
         {
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction by id V2 checking that add user receipts have been processed\", () => {",
+              "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for NPG transaction\", () => {",
               "  const responseJson = pm.response.json();",
-              "  pm.expect(responseJson.transactionId).to.be.a('string');",
-              "  pm.expect(responseJson.transactionId).to.be.eq(pm.environment.get(\"TRANSACTION_ID\"));",
-              "  pm.expect(responseJson.status).to.be.oneOf([\"NOTIFICATION_REQUESTED\",\"NOTIFIED_OK\",\"NOTIFICATION_ERROR\"]);",
-              "  pm.expect(responseJson.gatewayInfo.gateway).to.be.eq(\"NPG\");",
-              "  pm.expect(responseJson.nodeInfo.sendPaymentResultOutcome).to.be.eq(\"OK\");",
+              "  pm.expect(responseJson.outcome).to.be.a('number');",
+              "  pm.expect(responseJson.outcome).to.be.eq(0);",
+              "  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');",
+              "  if (responseJson.totalAmount !== undefined) {",
+              "    pm.expect(responseJson.totalAmount).to.be.a('number');",
+              "  }",
+              "  if (responseJson.fees !== undefined) {",
+              "    pm.expect(responseJson.fees).to.be.a('number');",
+              "  }",
               "  pm.response.to.have.status(200);",
               "});",
               ""
             ],
             "type": "text/javascript",
-            "packages": {},
-            "requests": {}
+            "packages": {}
           }
         }
       ],
@@ -437,15 +440,15 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/v2/transactions/{{TRANSACTION_ID}}",
+          "raw": "{{HOSTNAME}}:{{TRANSACTION_SERVICE_PORT}}/transactions/{{TRANSACTION_ID}}/outcomes",
           "host": [
             "{{HOSTNAME}}"
           ],
           "port": "{{TRANSACTION_SERVICE_PORT}}",
           "path": [
-            "v2",
             "transactions",
-            "{{TRANSACTION_ID}}"
+            "{{TRANSACTION_ID}}",
+            "outcomes"
           ]
         }
       },
