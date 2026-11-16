@@ -444,7 +444,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));\n\nconst addUserReceiptRequest = {\n    outcome: \"OK\",\n    paymentDate: \"2023-01-01T00:00:00.000Z\",\n    payments: Array.from(activationPaymentNotices).map(p =>({\n      paymentToken: p.paymentToken,\n      description: p.reason,\n      creditorReferenceId: \"creditorReferenceId\",\n      fiscalCode: \"fiscalCode\",\n      companyName: \"companyName\",\n      officeName: \"officeName\",\n      debtor: \"debtor\"\n    }))\n}\n\npm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));\nawait new Promise(r => setTimeout(r, 3000));"
+              "const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));\n\nconst addUserReceiptRequest = {\n    outcome: \"OK\",\n    paymentDate: \"2023-01-01T00:00:00.000Z\",\n    payments: Array.from(activationPaymentNotices).map(p =>({\n      paymentToken: p.paymentToken,\n      description: p.reason,\n      creditorReferenceId: \"creditorReferenceId\",\n      fiscalCode: \"fiscalCode\",\n      companyName: \"companyName\",\n      officeName: \"officeName\",\n      debtor: \"debtor\"\n    }))\n}\n\npm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));\n\nwait_ms(3000)\n\n// newman doesn't support top-level await, so we need a wrapper function\nasync function wait_ms(ms) {\n  await new Promise(r => setTimeout(r, ms));\n}"
             ]
           }
         },
