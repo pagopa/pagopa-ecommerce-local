@@ -344,7 +344,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));\n\nconst addUserReceiptRequest = {\n    outcome: \"OK\",\n    paymentDate: \"2023-01-01T00:00:00.000Z\",\n    payments: Array.from(activationPaymentNotices).map(p =>({\n      paymentToken: p.paymentToken,\n      description: p.reason,\n      creditorReferenceId: \"creditorReferenceId\",\n      fiscalCode: \"fiscalCode\",\n      companyName: \"companyName\",\n      officeName: \"officeName\",\n      debtor: \"debtor\"\n    }))\n}\n\npm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));\nawait new Promise(r => setTimeout(r, 3000));"
+              "const activationPaymentNotices = JSON.parse(pm.environment.get(\"ACTIVATION_PAYMENT_NOTICES\"));\n\nconst addUserReceiptRequest = {\n    outcome: \"OK\",\n    paymentDate: \"2023-01-01T00:00:00.000Z\",\n    payments: Array.from(activationPaymentNotices).map(p =>({\n      paymentToken: p.paymentToken,\n      description: p.reason,\n      creditorReferenceId: \"creditorReferenceId\",\n      fiscalCode: \"fiscalCode\",\n      companyName: \"companyName\",\n      officeName: \"officeName\",\n      debtor: \"debtor\"\n    }))\n}\n\npm.environment.set(\"ADD_USER_RECEIPT_REQUEST\", JSON.stringify(addUserReceiptRequest));\n\nwait_ms(3000)\n\n// newman doesn't support top-level await, so we need a wrapper function\nasync function wait_ms(ms) {\n  await new Promise(r => setTimeout(r, ms));\n}"
             ]
           }
         }
@@ -400,6 +400,15 @@
             "type": "text/javascript",
             "exec": [
               "pm.test(\"[pagopa-ecommerce-transaction-service] Get transaction outcomes by id (status code 200) for REDIRECT transaction\", () => {\n  const responseJson = pm.response.json();\n  pm.expect(responseJson.outcome).to.be.a('number');\n  pm.expect(responseJson.outcome).to.be.equal(0);\n  pm.expect(responseJson.isFinalStatus).to.be.a('boolean');\n  if (responseJson.totalAmount !== undefined) {\n    pm.expect(responseJson.totalAmount).to.be.a('number');\n  }\n  if (responseJson.fees !== undefined) {\n    pm.expect(responseJson.fees).to.be.a('number');\n  }\n  pm.response.to.have.status(200);\n});\n"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const getTransaction = {\n    url: `${pm.environment.get(\"HOSTNAME\")}:${pm.environment.get(\"TRANSACTION_SERVICE_PORT\")}/transactions/${pm.environment.get(\"TRANSACTION_ID\")}/outcomes`,\n    method: 'GET',\n    header: {\n        'Content-Type': 'application/json',\n        'x-api-key': `${pm.environment.get(\"PRIMARY_API_KEY\")}`\n    }\n};\n\nexecuteGetTransactionOutcome()\n\nasync function executeGetTransactionOutcome() {\n        const maxAttempts = 10;\n        var counter = 0;\n        var transactionOutcome = null;\n        var isFinal = false;\n        var responseBody = null;\n        while (counter < maxAttempts && isFinal == false) {\n            await new Promise(r => setTimeout(r, 1000));\n            await new Promise ((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {\n                if (error) {\n                    console.log(`Error retrieving transaction by id: ${error.code}`);\n                    reject(error)\n                } else {\n                    responseBody = response.json();\n                    transactionOutcome = responseBody.outcome;\n                    isFinal = responseBody.isFinalStatus;\n                    console.log(`Transaction outcome: ${transactionOutcome}, isFinal: ${isFinal}`);\n                    resolve(transactionOutcome);\n                }\n            }));\n        counter++;\n    }\n    if (isFinal == false) {\n        throw new Error(`Wanted transaction in final status but instead got ${responseBody}`);\n    }\n\n}"
             ]
           }
         }
