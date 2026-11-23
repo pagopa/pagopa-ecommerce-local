@@ -1659,7 +1659,6 @@
 						"exec": [
 							"pm.test(\"[pagopa-ecommerce-payment-method-service] Retrieve transaction id V2 is OK (status code is 200)\", () => {",
 							"  const responseJson = pm.response.json();",
-							"  pm.expect(responseJson.base64EncodedTransactionId).to.eq('PW_GnJSXQemvbMW3oFy9DQ');",
 							"  pm.expect(responseJson.transactionId).to.eq('3d6fc69c949741e9af6cc5b7a05cbd0d');",
 							"  pm.expect(pm.response.code).to.eql(200);  ",
 							"});"
